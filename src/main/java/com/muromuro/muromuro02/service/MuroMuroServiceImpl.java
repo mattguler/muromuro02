@@ -6,6 +6,7 @@ import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.service.evaluator.RepresentAccountStates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,78 +15,31 @@ import java.util.UUID;
 @Service
 public class MuroMuroServiceImpl implements MuroMuroService {
 
-    private static final String REPRESENT_ACCOUNT_STATES_INIT_SOLUTION =
-            "boolean isActive = false;";
-
-    private static final String REPRESENT_ACCOUNT_STATES_EVALUATOR_PREFIX =
-            "public class Evaluator {\n\n";
-
-    private static final String REPRESENT_ACCOUNT_STATES_EVALUATOR_SUFFIX =
-            "\n\nstatic void evalAccountState(AccountState accountState) {\n"
-                    + "  switch(accountState) {\n"
-                    + "    case INACTIVE:\n"
-                    + "      System.out.println(\\\"Account state INACTIVE.\\\");\n"
-                    + "      break;\n"
-                    + "    case ACTIVE:\n"
-                    + "      System.out.println(\\\"Account state ACTIVE.\\\");\n"
-                    + "      break;\n"
-                    + "    case SUSPENDED:\n"
-                    + "      System.out.println(\\\"Account state SUSPENDED.\\\");\n"
-                    + "      break;\n"
-                    + "    case DELETED:\n"
-                    + "      System.out.println(\\\"Account state DELETED.\\\");\n"
-                    + "      break;\n"
-                    + "    default:\n"
-                    + "      System.out.println(\\\"Invalid account state.\\\");\n"
-                    + "      break;\n"
-                    + "  }\n"
-                    + "}\n\n"
-                    + "public static void main(String[] args) {\n"
-                    + "  evalAccountState(AccountState.INACTIVE);\n"
-                    + "  evalAccountState(AccountState.ACTIVE);\n"
-                    + "  evalAccountState(AccountState.SUSPENDED);\n"
-                    + "  evalAccountState(AccountState.DELETED);\n"
-                    + "}\n"
-                    + "}\n"; // This closes out the class definition in the prefix.
-
     private final DockerClient dockerClient;
+    private final RepresentAccountStates representAccountStates;
 
     @Autowired
-    public MuroMuroServiceImpl(DockerClient dockerClient) {
+    public MuroMuroServiceImpl(
+            DockerClient dockerClient,
+            RepresentAccountStates representAccountStates) {
         this.dockerClient = dockerClient;
+        this.representAccountStates = representAccountStates;
     }
 
     @Override
     public String getRepresentAccountStatesInitSolution() {
-        return REPRESENT_ACCOUNT_STATES_INIT_SOLUTION;
+        return representAccountStates.getInitialSolution();
     }
 
     @Override
     public MuroMuroResponse evalRepresentAccountStatesSolution(String userInput) {
         String combinedCode =
-                REPRESENT_ACCOUNT_STATES_EVALUATOR_PREFIX
-                        + userInput
-                        + REPRESENT_ACCOUNT_STATES_EVALUATOR_SUFFIX;
+                representAccountStates.buildEvaluationCode(userInput);
         String containerId = startContainer(combinedCode);
         String output = getContainerOutput(containerId);
-//        stopContainer(containerId);
-        if (output.contains("Account state INACTIVE")
-                && output.contains("Account state ACTIVE")
-                && output.contains("Account state SUSPENDED")
-                && output.contains("Account state DELETED")) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
-        }
-        else if (output.contains("error: cannot find symbol")) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    "The solution does not seem to represent all the necessary account states.");
-        }
-        else {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    "The solution failed with error:\n"
-                            + output);
-        }
+        // Note: Comment this out when debugging the container logs.
+        cleanUpContainer(containerId);
+        return representAccountStates.analyzeEvaluation(output);
     }
 
     private String startContainer(String evaluatorCode) {
@@ -130,8 +84,7 @@ public class MuroMuroServiceImpl implements MuroMuroService {
         return logOutput.toString();
     }
 
-    private void stopContainer(String containerId) {
-        dockerClient.stopContainerCmd(containerId).exec();
+    private void cleanUpContainer(String containerId) {
         dockerClient.removeContainerCmd(containerId).exec();
     }
 }
