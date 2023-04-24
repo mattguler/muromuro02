@@ -1,34 +1,23 @@
-package com.muromuro.muromuro02;
+package com.muromuro.muromuro02.controller;
 
-import com.muromuro.muromuro02.controller.QuestionController;
-import com.muromuro.muromuro02.model.MuroMuroResponse;
-import com.muromuro.muromuro02.service.MuroMuroService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(QuestionController.class)
-public class QuestionControllerUnitTest {
-
-    private static final String INITIAL_SOLUTION = "initial solution";
-    private static final String USER_INPUT = "user input";
-    private static final String ERROR_MESSAGE = "error message";
-    private static final String TIMEOUT_MESSAGE = "timeout message";
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@AutoConfigureMockMvc
+public class QuestionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private MuroMuroService service;
 
     @Test
     public void testListQuestions() throws Exception {
@@ -47,12 +36,11 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
-        when(service.getRepresentAccountStatesInitSolution()).thenReturn(INITIAL_SOLUTION);
         this.mockMvc
                 .perform(get("/muromuro_questions/represent_account_states"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(content().string(containsString(INITIAL_SOLUTION)))
+                .andExpect(content().string(containsString("boolean isActive = false;")))
                 .andExpect(
                         content()
                                 .string(
@@ -63,12 +51,17 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_correctAnswer() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        String userInput =
+                "enum AccountState {\n"
+                + "  INACTIVE,\n"
+                + "  ACTIVE,\n"
+                + "  SUSPENDED,\n"
+                + "  DELETED\n"
+                + "}\n";
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
@@ -76,43 +69,34 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_wrongAnswer() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
+        String userInput = "boolean isActive = true;";
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
+                                                "Wrong answer: The solution does not seem to "
+                                                        + "represent all the necessary account states.")));
     }
 
     @Test
-    public void testEvalRepresentAccountStates_timeout() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
+    public void testEvalRepresentAccountStates_badInput() throws Exception {
+        String userInput = "blahblah";
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
-                                                "Unknown response: "
-                                                        + TIMEOUT_MESSAGE)));
+                                                "Wrong answer: The solution failed with error")));
     }
 }
