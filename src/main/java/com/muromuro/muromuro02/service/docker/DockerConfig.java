@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service;
+package com.muromuro.muromuro02.service.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;

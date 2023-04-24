@@ -4,7 +4,7 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RepresentAccountStatesImpl implements RepresentAccountStates {
+public class RepresentAccountStatesImpl implements Evaluator {
     private static final String INITIAL_SOLUTION =
             "boolean isActive = false;";
 
