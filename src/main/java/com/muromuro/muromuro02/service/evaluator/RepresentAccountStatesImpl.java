@@ -1,10 +1,13 @@
 package com.muromuro.muromuro02.service.evaluator;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.service.utils.Utils;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RepresentAccountStatesImpl implements Evaluator {
+    private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
+
     private static final String INITIAL_SOLUTION =
             "boolean isActive = false;";
 
@@ -46,6 +49,7 @@ public class RepresentAccountStatesImpl implements Evaluator {
 
     @Override
     public String buildEvaluationCode(String userInput) {
+        userInput = Utils.replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
         return EVALUATOR_PREFIX + userInput + EVALUATOR_SUFFIX;
     }
 

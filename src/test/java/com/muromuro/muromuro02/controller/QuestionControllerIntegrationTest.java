@@ -50,7 +50,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_correctAnswer() throws Exception {
+    public void testEvalRepresentAccountStates_correctAnswer_1() throws Exception {
         String userInput =
                 "enum AccountState {\n"
                 + "  INACTIVE,\n"
@@ -58,6 +58,24 @@ public class QuestionControllerIntegrationTest {
                 + "  SUSPENDED,\n"
                 + "  DELETED\n"
                 + "}\n";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(content().string(containsString("Correct answer.")));
+    }
+
+    @Test
+    public void testEvalRepresentAccountStates_correctAnswer_2() throws Exception {
+        String userInput =
+                "enum SomeEnumName {\n"
+                        + "  ACTIVE,\n"
+                        + "  INACTIVE,\n"
+                        + "  DELETED,\n"
+                        + "  SUSPENDED\n"
+                        + "}\n";
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
