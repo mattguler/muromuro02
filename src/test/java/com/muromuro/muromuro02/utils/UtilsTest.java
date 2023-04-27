@@ -106,4 +106,43 @@ public class UtilsTest {
                         + "public enum AccountState {THING1, THING2}",
                 newString);
     }
+
+    @Test
+    public void testReplaceTargetWords_success() {
+        String oldString = "public enum Blahblah {Blah1, Blah2, blah3}";
+        String newString =
+                Utils.replaceTargetWords(oldString, "BLAH1", "blah1", "Blah1");
+        newString =
+                Utils.replaceTargetWords(newString, "BLAH2", "blah2", "Blah2");
+        newString =
+                Utils.replaceTargetWords(newString, "BLAH3", "blah3", "Blah3");
+        assertEquals("public enum Blahblah {BLAH1, BLAH2, BLAH3}", newString);
+    }
+
+    @Test
+    public void testReplaceTargetWords_success_2() {
+        String oldString =
+                "enum SomeEnumName {\n" +
+                        "  Active,\n" +
+                        "  Inactive,\n" +
+                        "  Deleted,\n" +
+                        "  Suspended\n" +
+                        "}";
+        String newString =
+                Utils.replaceTargetWords(oldString, "INACTIVE", "Inactive", "inactive");
+        newString =
+                Utils.replaceTargetWords(newString, "ACTIVE", "Active", "Active");
+        newString =
+                Utils.replaceTargetWords(newString, "SUSPENDED", "Suspended", "suspended");
+        newString =
+                Utils.replaceTargetWords(newString, "DELETED", "Deleted", "deleted");
+        assertEquals(
+                "enum SomeEnumName {\n" +
+                        "  ACTIVE,\n" +
+                        "  INACTIVE,\n" +
+                        "  DELETED,\n" +
+                        "  SUSPENDED\n" +
+                        "}",
+                newString);
+    }
 }

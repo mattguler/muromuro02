@@ -71,10 +71,10 @@ public class QuestionControllerIntegrationTest {
     public void testEvalRepresentAccountStates_correctAnswer_2() throws Exception {
         String userInput =
                 "enum SomeEnumName {\n"
-                        + "  ACTIVE,\n"
-                        + "  INACTIVE,\n"
-                        + "  DELETED,\n"
-                        + "  SUSPENDED\n"
+                        + "  Active,\n"
+                        + "  Inactive,\n"
+                        + "  Deleted,\n"
+                        + "  Suspended\n"
                         + "}\n";
         this.mockMvc
                 .perform(

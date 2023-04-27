@@ -40,4 +40,15 @@ public class Utils {
         // Recurse to replace other remaining enum names in the given string.
         return replaceEnumNames(newString, replacement, startingIndex);
     }
+
+    /**
+     * Finds and replaces all the potential word targets in the given oldString with the replacement value.
+     */
+    public static String replaceTargetWords(String oldString, String replacement, String... targetWords) {
+        String newString = oldString;
+        for (String target : targetWords) {
+            newString = newString.replace(target, replacement);
+        }
+        return newString;
+    }
 }

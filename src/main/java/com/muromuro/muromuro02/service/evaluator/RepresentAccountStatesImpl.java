@@ -1,12 +1,18 @@
 package com.muromuro.muromuro02.service.evaluator;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
-import com.muromuro.muromuro02.service.utils.Utils;
 import org.springframework.stereotype.Service;
+
+import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
+import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
 
 @Service
 public class RepresentAccountStatesImpl implements Evaluator {
     private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
+    private static final String ACCOUNT_STATE_ACTIVE = "ACTIVE";
+    private static final String ACCOUNT_STATE_INACTIVE = "INACTIVE";
+    private static final String ACCOUNT_STATE_SUSPENDED = "SUSPENDED";
+    private static final String ACCOUNT_STATE_DELETED = "DELETED";
 
     private static final String INITIAL_SOLUTION =
             "boolean isActive = false;";
@@ -49,7 +55,12 @@ public class RepresentAccountStatesImpl implements Evaluator {
 
     @Override
     public String buildEvaluationCode(String userInput) {
-        userInput = Utils.replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
+        userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
+        // Note: The order of these replacements is important. Inactive should come before Active.
+        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
+        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_ACTIVE, "Active", "active");
+        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
+        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
         return EVALUATOR_PREFIX + userInput + EVALUATOR_SUFFIX;
     }
 
