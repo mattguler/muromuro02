@@ -28,6 +28,11 @@ public class MuroMuroServiceImpl implements MuroMuroService {
 
     @Override
     public MuroMuroResponse evalRepresentAccountStatesSolution(String userInput) {
+        MuroMuroResponse securityResponse =
+                representAccountStates.checkIfCodeSecure(userInput);
+        if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
+            return securityResponse;
+        }
         String combinedCode =
                 representAccountStates.buildEvaluationCode(userInput);
         String containerId = dockerProxy.startContainer(combinedCode);
