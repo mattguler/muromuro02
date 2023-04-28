@@ -1,6 +1,7 @@
 package com.muromuro.muromuro02.service.evaluator;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
@@ -54,6 +55,21 @@ public class RepresentAccountStatesImpl implements Evaluator {
     }
 
     @Override
+    public MuroMuroResponse checkIfCodeSecure(String userInput) {
+        Security.Response response = Security.isCodeSecure(userInput);
+        if (response.isSecure()) {
+            return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+        }
+        else {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    String.format(
+                            "The solution seems insecure, with forbidden keyword: %s",
+                            response.getProblemWord()));
+        }
+    }
+
+    @Override
     public String buildEvaluationCode(String userInput) {
         userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
@@ -80,8 +96,9 @@ public class RepresentAccountStatesImpl implements Evaluator {
         else {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "The solution failed with error:\n"
-                            + dockerEvalOutput);
+                    String.format(
+                            "The solution failed with error:\n%s",
+                            dockerEvalOutput));
         }
     }
 }

@@ -117,4 +117,38 @@ public class QuestionControllerIntegrationTest {
                                         containsString(
                                                 "Wrong answer: The solution failed with error")));
     }
+
+    @Test
+    public void testEvalRepresentAccountStates_insecureInput_1() throws Exception {
+        String userInput = "System.exit(0);";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The solution seems insecure, "
+                                                        + "with forbidden keyword: System")));
+    }
+
+    @Test
+    public void testEvalRepresentAccountStates_insecureInput_2() throws Exception {
+        String userInput = "Runtime.getRuntime().exec(\"rm -rf /\")";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The solution seems insecure, "
+                                                        + "with forbidden keyword: Runtime")));
+    }
 }
