@@ -6,6 +6,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -150,5 +153,26 @@ public class QuestionControllerIntegrationTest {
                                         containsString(
                                                 "Wrong answer: The solution seems insecure, "
                                                         + "with forbidden keyword: Runtime")));
+    }
+
+    @Test
+    public void testEvalRepresentAccountStates_lengthyInput() throws Exception {
+        int inputLength = 1001;
+        String userInput =
+                Stream.generate(() -> "a")
+                        .limit(inputLength)
+                        .collect(Collectors.joining());
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "The solution seems insecure, with length 1001 "
+                                                        + "exceeding the max length of 1000.")));
     }
 }

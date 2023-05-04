@@ -9,6 +9,8 @@ import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
 
 @Service
 public class RepresentAccountStatesImpl implements Evaluator {
+    private static final int USER_CODE_MAX_LENGTH = 1000;
+
     private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
     private static final String ACCOUNT_STATE_ACTIVE = "ACTIVE";
     private static final String ACCOUNT_STATE_INACTIVE = "INACTIVE";
@@ -56,6 +58,14 @@ public class RepresentAccountStatesImpl implements Evaluator {
 
     @Override
     public MuroMuroResponse checkIfCodeSecure(String userInput) {
+        if (userInput.length() > USER_CODE_MAX_LENGTH) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    String.format(
+                            "The solution seems insecure, with length %d exceeding the max length of %d.",
+                            userInput.length(),
+                            USER_CODE_MAX_LENGTH));
+        }
         Security.Response response = Security.isCodeSecure(userInput);
         if (response.isSecure()) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
