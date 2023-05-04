@@ -58,24 +58,9 @@ public class RepresentAccountStatesImpl implements Evaluator {
 
     @Override
     public MuroMuroResponse checkIfCodeSecure(String userInput) {
-        if (userInput.length() > USER_CODE_MAX_LENGTH) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    String.format(
-                            "The solution seems insecure, with length %d exceeding the max allowable length.",
-                            userInput.length()));
-        }
-        Security.Response response = Security.isCodeSecure(userInput);
-        if (response.isSecure()) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
-        }
-        else {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    String.format(
-                            "The solution seems insecure, with forbidden keyword: %s",
-                            response.getProblemWord()));
-        }
+        return MuroMuroResponse.combineResponses(
+                Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
+                Security.checkIfCodeSecure(userInput));
     }
 
     @Override

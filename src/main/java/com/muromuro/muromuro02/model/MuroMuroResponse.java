@@ -9,8 +9,8 @@ public class MuroMuroResponse {
         TIMEOUT
     }
 
-    private Status status;
-    private String errorMessage;
+    private final Status status;
+    private final String errorMessage;
 
     public MuroMuroResponse(Status status) {
         this(status, "");
@@ -25,15 +25,19 @@ public class MuroMuroResponse {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    /**
+     * Combines the given MuroMuroResponse objects into a single MuroMuroResponse object.
+     */
+    public static MuroMuroResponse combineResponses(MuroMuroResponse... responses) {
+        for (MuroMuroResponse response : responses) {
+            if (response.getStatus() != MuroMuroResponse.Status.SUCCESS) {
+                return response;
+            }
+        }
+        return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
     }
 }

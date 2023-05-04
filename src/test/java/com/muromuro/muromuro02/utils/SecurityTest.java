@@ -1,7 +1,11 @@
 package com.muromuro.muromuro02.utils;
 
+import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.junit.jupiter.api.Test;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,29 +19,59 @@ public class SecurityTest {
                     + "} \n";
 
     @Test
-    public void testIsCodeSecure() {
-        testIsCodeSecureHelper("System.exit(0);", false);
-        testIsCodeSecureHelper("System.out.println(\"Hello World!\");", false);
-        testIsCodeSecureHelper("Runtime.getRuntime().exec(\"rm -rf /\")", false);
-        testIsCodeSecureHelper("ProcessBuilder().command(\"rm\", \"-rf\", \"/\").start()", false);
-        testIsCodeSecureHelper("Thread.currentThread().sleep(1000);", false);
-        testIsCodeSecureHelper("SecurityManager.getClass()", false);
-        testIsCodeSecureHelper("ClassLoader", false);
-        testIsCodeSecureHelper(
+    public void testValidateCodeLength_fails() {
+        int maxLength = 1000;
+        String userInput = buildStringOfLength(maxLength + 1);
+        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
+        assertEquals(
+                "The solution seems insecure, with length 1001 exceeding the max allowable length.",
+                response.getErrorMessage());
+    }
+
+    @Test
+    public void testValidateCodeLength_passes() {
+        int maxLength = 1000;
+        String userInput = buildStringOfLength(maxLength);
+        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+    }
+
+    @Test
+    public void testCheckIfCodeSecure() {
+        validateCodeSecure("System.exit(0);", false);
+        validateCodeSecure("System.out.println(\"Hello World!\");", false);
+        validateCodeSecure("Runtime.getRuntime().exec(\"rm -rf /\")", false);
+        validateCodeSecure("ProcessBuilder().command(\"rm\", \"-rf\", \"/\").start()", false);
+        validateCodeSecure("Thread.currentThread().sleep(1000);", false);
+        validateCodeSecure("SecurityManager.getClass()", false);
+        validateCodeSecure("ClassLoader", false);
+        validateCodeSecure(
                 "Class.forName(\"java.lang.Something\").getMethod(\"exit\", int.class).invoke(null, 0);",
                 false);
 
-        testIsCodeSecureHelper("int i = 0;", true);
-        testIsCodeSecureHelper("int i = 5; i++;", true);
+        validateCodeSecure("int i = 0;", true);
+        validateCodeSecure("int i = 5; i++;", true);
+    }
+
+    private String buildStringOfLength(int length) {
+        return Stream.generate(() -> "a")
+                .limit(length)
+                .collect(Collectors.joining());
     }
 
     private String buildExampleJavaCode(String codeWithKeyword) {
         return String.format(EXAMPLE_JAVA_CODE_STR_FORMAT, codeWithKeyword);
     }
 
-    private void testIsCodeSecureHelper(String codeWithKeyword, boolean expectedResult) {
+    private void validateCodeSecure(String codeWithKeyword, boolean expectedResult) {
         String exampleJavaCode = buildExampleJavaCode(codeWithKeyword);
-        Security.Response actualResult = Security.isCodeSecure(exampleJavaCode);
-        assertEquals(expectedResult, actualResult.isSecure());
+        MuroMuroResponse response = Security.checkIfCodeSecure(exampleJavaCode);
+        if (expectedResult) {
+            assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        }
+        else {
+            assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
+        }
     }
 }
