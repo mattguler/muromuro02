@@ -173,6 +173,6 @@ public class QuestionControllerIntegrationTest {
                                 .string(
                                         containsString(
                                                 "The solution seems insecure, with length 1001 "
-                                                        + "exceeding the max length of 1000.")));
+                                                        + "exceeding the max allowable length.")));
     }
 }
