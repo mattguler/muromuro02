@@ -1,7 +1,6 @@
-package com.muromuro.muromuro02.utils;
+package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
-import com.muromuro.muromuro02.service.utils.Security;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;

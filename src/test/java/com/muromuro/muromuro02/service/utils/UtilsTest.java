@@ -1,6 +1,5 @@
-package com.muromuro.muromuro02.utils;
+package com.muromuro.muromuro02.service.utils;
 
-import com.muromuro.muromuro02.service.utils.Utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
