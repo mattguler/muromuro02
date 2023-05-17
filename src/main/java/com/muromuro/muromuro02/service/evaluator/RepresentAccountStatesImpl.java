@@ -1,7 +1,9 @@
 package com.muromuro.muromuro02.service.evaluator;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.utils.Security;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
@@ -51,20 +53,39 @@ public class RepresentAccountStatesImpl implements Evaluator {
                     + "}\n"
                     + "}\n"; // This closes out the class definition in the prefix.
 
+    private final DockerProxy dockerProxy;
+
+    @Autowired
+    public RepresentAccountStatesImpl(DockerProxy dockerProxy) {
+        this.dockerProxy = dockerProxy;
+    }
+
     @Override
     public String getInitialSolution() {
         return INITIAL_SOLUTION;
     }
 
     @Override
-    public MuroMuroResponse checkIfCodeSecure(String userInput) {
+    public MuroMuroResponse evaluateSolution(String userInput) {
+        MuroMuroResponse securityResponse = checkIfCodeSecure(userInput);
+        if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
+            return securityResponse;
+        }
+        String evaluationCode = buildEvaluationCode(userInput);
+        String containerId = dockerProxy.startContainer(evaluationCode);
+        String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
+        // Note: Comment this out when debugging the container logs.
+        dockerProxy.cleanUpContainer(containerId);
+        return analyzeEvaluation(dockerEvalOutput);
+    }
+
+    private MuroMuroResponse checkIfCodeSecure(String userInput) {
         return MuroMuroResponse.combineResponses(
                 Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 Security.checkIfCodeSecure(userInput));
     }
 
-    @Override
-    public String buildEvaluationCode(String userInput) {
+    private String buildEvaluationCode(String userInput) {
         userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
@@ -74,8 +95,7 @@ public class RepresentAccountStatesImpl implements Evaluator {
         return EVALUATOR_PREFIX + userInput + EVALUATOR_SUFFIX;
     }
 
-    @Override
-    public MuroMuroResponse analyzeEvaluation(String dockerEvalOutput) {
+    private MuroMuroResponse analyzeEvaluation(String dockerEvalOutput) {
         if (dockerEvalOutput.contains("Account state INACTIVE")
                 && dockerEvalOutput.contains("Account state ACTIVE")
                 && dockerEvalOutput.contains("Account state SUSPENDED")
