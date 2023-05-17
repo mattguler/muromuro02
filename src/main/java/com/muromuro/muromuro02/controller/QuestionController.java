@@ -2,8 +2,9 @@ package com.muromuro.muromuro02.controller;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.MuroMuroSolution;
-import com.muromuro.muromuro02.service.MuroMuroService;
+import com.muromuro.muromuro02.service.evaluator.Evaluator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("muromuro_questions")
 public class QuestionController {
 
-    private final MuroMuroService service;
+    private final Evaluator representAccountStates;
 
     @Autowired
-    public QuestionController(MuroMuroService service) {
-        this.service = service;
+    public QuestionController(
+            @Qualifier("representAccountStatesImpl") Evaluator representAccountStates) {
+        this.representAccountStates = representAccountStates;
     }
 
     @GetMapping("list")
@@ -31,7 +33,7 @@ public class QuestionController {
     public String representAccountStates(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
         if (muroMuroSolution.getUserInput().isEmpty()) {
-            muroMuroSolution.setUserInput(service.getRepresentAccountStatesInitSolution());
+            muroMuroSolution.setUserInput(representAccountStates.getInitialSolution());
         }
         model.addAttribute("muroMuroSolution", muroMuroSolution);
 
@@ -42,7 +44,7 @@ public class QuestionController {
     public String evalRepresentAccountStates(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
         MuroMuroResponse response =
-                service.evalRepresentAccountStatesSolution(muroMuroSolution.getUserInput());
+                representAccountStates.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
         return "questions/represent_account_states";
