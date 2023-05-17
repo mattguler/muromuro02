@@ -1,9 +1,10 @@
 package com.muromuro.muromuro02.controller;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
-import com.muromuro.muromuro02.service.MuroMuroService;
+import com.muromuro.muromuro02.service.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +28,8 @@ public class QuestionControllerUnitTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MuroMuroService service;
+    @Qualifier("representAccountStatesImpl")
+    private Evaluator representAccountStates;
 
     @Test
     public void testListQuestions() throws Exception {
@@ -46,7 +48,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
-        when(service.getRepresentAccountStatesInitSolution()).thenReturn(INITIAL_SOLUTION);
+        when(representAccountStates.getInitialSolution()).thenReturn(INITIAL_SOLUTION);
         this.mockMvc
                 .perform(get("/muromuro_questions/represent_account_states"))
                 .andExpect(status().isOk())
@@ -62,7 +64,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_correctAnswer() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(USER_INPUT))
                 .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
         this.mockMvc
                 .perform(
@@ -75,7 +77,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_wrongAnswer() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(USER_INPUT))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.FAILURE,
@@ -96,7 +98,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_timeout() throws Exception {
-        when(service.evalRepresentAccountStatesSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(USER_INPUT))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.TIMEOUT,
