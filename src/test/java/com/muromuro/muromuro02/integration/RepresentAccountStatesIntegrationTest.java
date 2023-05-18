@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.controller;
+package com.muromuro.muromuro02.integration;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class QuestionControllerIntegrationTest {
+public class RepresentAccountStatesIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Test
-    public void testListQuestions() throws Exception {
-        this.mockMvc
-                .perform(get("/muromuro_questions/list"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("The List of Muro Muro Questions")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Please select a question here below "
-                                                        + "and attempt to answer it.")))
-                .andExpect(content().string(containsString("Representing Account States")));
-    }
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
@@ -53,7 +38,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_correctAnswer_1() throws Exception {
+    public void testEval_withCorrectAnswer_1() throws Exception {
         String userInput =
                 "enum AccountState {\n"
                 + "  INACTIVE,\n"
@@ -71,7 +56,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_correctAnswer_2() throws Exception {
+    public void testEval_withCorrectAnswer_2() throws Exception {
         String userInput =
                 "enum SomeEnumName {\n"
                         + "  Active,\n"
@@ -89,7 +74,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_wrongAnswer() throws Exception {
+    public void testEval_withWrongAnswer() throws Exception {
         String userInput = "boolean isActive = true;";
         this.mockMvc
                 .perform(
@@ -106,7 +91,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_badInput() throws Exception {
+    public void testEval_withBadInput() throws Exception {
         String userInput = "blahblah";
         this.mockMvc
                 .perform(
@@ -122,7 +107,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_insecureInput_1() throws Exception {
+    public void testEval_withInsecureInput_1() throws Exception {
         String userInput = "System.exit(0);";
         this.mockMvc
                 .perform(
@@ -139,7 +124,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_insecureInput_2() throws Exception {
+    public void testEval_withInsecureInput_2() throws Exception {
         String userInput = "Runtime.getRuntime().exec(\"rm -rf /\")";
         this.mockMvc
                 .perform(
@@ -156,7 +141,7 @@ public class QuestionControllerIntegrationTest {
     }
 
     @Test
-    public void testEvalRepresentAccountStates_lengthyInput() throws Exception {
+    public void testEval_withLengthyInput() throws Exception {
         int inputLength = 1001;
         String userInput =
                 Stream.generate(() -> "a")
