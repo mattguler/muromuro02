@@ -2,8 +2,15 @@ package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 
+/**
+ * The Security class which is used to validate the security of the user's solution.
+ */
 public class Security {
 
+    /**
+     * Validates if the given user input code is below a certain given length.
+     * Returns a MuroMuroResponse object containing the status and the error message if applicable.
+     */
     public static MuroMuroResponse validateCodeLength(String userInput, int maxLength) {
         if (userInput.length() > maxLength) {
             return new MuroMuroResponse(

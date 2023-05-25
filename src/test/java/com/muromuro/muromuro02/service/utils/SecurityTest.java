@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/** Tests the methods in the Security class. */
+/** Unit tests the methods in the Security class. */
 public class SecurityTest {
     private static final String EXAMPLE_JAVA_CODE_STR_FORMAT =
             "public class Example { \n"

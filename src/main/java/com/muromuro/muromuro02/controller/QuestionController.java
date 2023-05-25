@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * The controller for listing the MuroMuro questions, and for evaluating the solutions.
+ */
 @Controller
 @RequestMapping("muromuro_questions")
 public class QuestionController {

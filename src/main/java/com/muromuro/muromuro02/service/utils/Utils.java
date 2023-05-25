@@ -1,5 +1,6 @@
 package com.muromuro.muromuro02.service.utils;
 
+/** The Utils class which is used to provide various utility methods. */
 public class Utils {
 
     /**

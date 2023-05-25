@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/** Runs integration tests for the Represent Account States Muromuro question. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class RepresentAccountStatesIntegrationTest {
@@ -133,6 +134,25 @@ public class RepresentAccountStatesIntegrationTest {
     }
 
     @Test
+    public void testEval_withInvalidDefinition() throws Exception {
+        String userInput =
+                "for (int i=0; i<5; i++) {\n"
+                        + "  int b = 7;\n"
+                        + "}\n";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid definition.")));
+    }
+
+    @Test
     public void testEval_withBadInput() throws Exception {
         String userInput = "blahblah";
         this.mockMvc
@@ -145,7 +165,7 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: The solution failed with syntax error.")));
+                                                "Wrong answer: Invalid definition.")));
     }
 
     @Test

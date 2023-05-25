@@ -1,7 +1,11 @@
 package com.muromuro.muromuro02.model;
 
+/**
+ * The response object for evaluating the solution of a MuroMuro question.
+ */
 public class MuroMuroResponse {
 
+    /** The status of a MuroMuro solution evaluation. */
     public enum Status {
         UNDEFINED,
         SUCCESS,
