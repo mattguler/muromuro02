@@ -74,7 +74,7 @@ public class RepresentAccountStatesIntegrationTest {
     }
 
     @Test
-    public void testEval_withWrongAnswer() throws Exception {
+    public void testEval_withWrongAnswer_1() throws Exception {
         String userInput = "boolean isActive = true;";
         this.mockMvc
                 .perform(
@@ -86,8 +86,50 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: The solution does not seem to "
-                                                        + "represent all the necessary account states.")));
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "(Hint: Can you use a better data type than boolean "
+                                                        + "to represent the account states?)")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_2() throws Exception {
+        String userInput = "int a = 5;";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "(Hint: Can you think of a better data type "
+                                                        + "to represent the account states?)")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_3() throws Exception {
+        String userInput =
+                "enum SomeEnumName {\n"
+                        + "  Active,\n"
+                        + "  Inactive\n"
+                        + "}\n";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + "The solution does not seem to represent "
+                                                        + "all the necessary account states, which are: "
+                                                        + "ACTIVE, INACTIVE, SUSPENDED, DELETED")));
     }
 
     @Test
@@ -103,7 +145,7 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: The solution failed with error")));
+                                                "Wrong answer: The solution failed with syntax error.")));
     }
 
     @Test
