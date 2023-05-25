@@ -11,6 +11,7 @@ import java.util.List;
 import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
 import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
 
+/** The evaluator for the RepresentAccountStates question. */
 @Service
 public class RepresentAccountStatesImpl implements Evaluator {
     private static final int USER_CODE_MAX_LENGTH = 1000;
@@ -68,11 +69,21 @@ public class RepresentAccountStatesImpl implements Evaluator {
         this.dockerProxy = dockerProxy;
     }
 
+    /**
+     * Returns the initial solution for the RepresentAccountStates question.
+     * This is the placeholder solution until the user enters their own solution.
+     */
     @Override
     public String getInitialSolution() {
         return INITIAL_SOLUTION;
     }
 
+    /**
+     * Evaluates the user's solution to the RepresentAccountStates question.
+     *
+     * @param userInput The user's solution to the RepresentAccountStates question.
+     * @return The evaluation response to the user's solution.
+     */
     @Override
     public MuroMuroResponse evaluateSolution(String userInput) {
         MuroMuroResponse securityResponse = checkIfCodeSecure(userInput);
@@ -87,13 +98,13 @@ public class RepresentAccountStatesImpl implements Evaluator {
         return analyzeEvaluation(dockerEvalOutput, userInput);
     }
 
-    private MuroMuroResponse checkIfCodeSecure(String userInput) {
+    private static MuroMuroResponse checkIfCodeSecure(String userInput) {
         return MuroMuroResponse.combineResponses(
                 Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 Security.checkIfCodeSecure(userInput));
     }
 
-    private String buildEvaluationCode(String userInput) {
+    private static String buildEvaluationCode(String userInput) {
         userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
@@ -103,14 +114,14 @@ public class RepresentAccountStatesImpl implements Evaluator {
         return EVALUATOR_PREFIX + userInput + EVALUATOR_SUFFIX;
     }
 
-    private MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, String userInput) {
+    private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, String userInput) {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }
         else if (!dockerEvalOutput.contains("error: cannot find symbol")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "The solution failed with syntax error.");
+                    "Invalid definition.");
         }
         StringBuilder errorMessage = new StringBuilder();
         if (!userInput.contains("enum") && userInput.contains("boolean")) {

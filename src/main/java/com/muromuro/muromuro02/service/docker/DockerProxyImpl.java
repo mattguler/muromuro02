@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/** The implementation of the Docker proxy. */
 @Service
 public class DockerProxyImpl implements DockerProxy {
 
@@ -20,6 +21,10 @@ public class DockerProxyImpl implements DockerProxy {
         this.dockerClient = dockerClient;
     }
 
+    /**
+     * Starts a Docker container and evaluates the user input solution.
+     * @return The ID of the started container.
+     */
     @Override
     public String startContainer(String evaluatorCode) {
         String imageId = "openjdk:11";
@@ -39,6 +44,9 @@ public class DockerProxyImpl implements DockerProxy {
         return container.getId();
     }
 
+    /**
+     * Returns the evaluation output from the Docker container with the given ID.
+     */
     @Override
     public String getContainerOutput(String containerId) {
         LogContainerCmd cmd =
@@ -64,6 +72,9 @@ public class DockerProxyImpl implements DockerProxy {
         return logOutput.toString();
     }
 
+    /**
+     * Cleans up and removes the Docker container with the given ID.
+     */
     @Override
     public void cleanUpContainer(String containerId) {
         dockerClient.removeContainerCmd(containerId).exec();

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static com.muromuro.muromuro02.model.MuroMuroResponse.combineResponses;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/** Runs unit tests for the MuroMuroResponse class. */
 public class MuroMuroResponseTest {
 
     @Test
