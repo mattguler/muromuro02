@@ -10,7 +10,8 @@ public class MuroMuroResponse {
         UNDEFINED,
         SUCCESS,
         FAILURE,
-        TIMEOUT
+        TIMEOUT,
+        UNKNOWN
     }
 
     private final Status status;

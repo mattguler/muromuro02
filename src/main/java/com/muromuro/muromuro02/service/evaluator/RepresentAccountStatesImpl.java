@@ -118,6 +118,11 @@ public class RepresentAccountStatesImpl implements Evaluator {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }
+        else if (dockerEvalOutput.contains("Killed")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.TIMEOUT,
+                    "The solution took too long to execute.");
+        }
         else if (!dockerEvalOutput.contains("error: cannot find symbol")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
