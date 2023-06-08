@@ -14,6 +14,8 @@ import java.util.UUID;
 @Service
 public class DockerProxyImpl implements DockerProxy {
 
+    private static final int TIMEOUT_IN_SECONDS = 10;
+
     private final DockerClient dockerClient;
 
     @Autowired
@@ -32,9 +34,13 @@ public class DockerProxyImpl implements DockerProxy {
         String[] command = {
                 "sh",
                 "-c",
-                "echo \""
-                        + evaluatorCode
-                        + "\" > Evaluator.java; javac Evaluator.java; java Evaluator"};
+                String.format(
+                        "echo \"%s\" > Evaluator.java; "
+                                + "javac Evaluator.java; "
+                                + "timeout -s SIGKILL %d java Evaluator",
+                        evaluatorCode,
+                        TIMEOUT_IN_SECONDS)};
+
         CreateContainerResponse container =
                 dockerClient.createContainerCmd(imageId)
                         .withCmd(command)

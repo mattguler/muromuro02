@@ -169,6 +169,39 @@ public class RepresentAccountStatesIntegrationTest {
     }
 
     @Test
+    public void testEval_withTimeout() throws Exception {
+        String userInput =
+                "enum AccountState {\n"
+                        + "  INACTIVE,\n"
+                        + "  ACTIVE,\n"
+                        + "  SUSPENDED,\n"
+                        + "  DELETED;\n"
+                        + "  \n"
+                        + "  private final int a;\n"
+                        + "  \n"
+                        + "  AccountState() {\n"
+                        + "    a = 2;\n"
+                        + "    int i = 5;\n"
+                        + "    int b = 7;\n"
+                        + "    while (i>0) {\n"
+                        + "      b = -b;\n"
+                        + "    }\n"
+                        + "  }\n"
+                        + "}\n";
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", userInput))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: The solution took too long to execute.")));
+    }
+
+    @Test
     public void testEval_withInsecureInput_1() throws Exception {
         String userInput = "System.exit(0);";
         this.mockMvc

@@ -24,6 +24,7 @@ public class QuestionControllerUnitTest {
     private static final String USER_INPUT = "user input";
     private static final String ERROR_MESSAGE = "error message";
     private static final String TIMEOUT_MESSAGE = "timeout message";
+    private static final String UNKNOWN_MESSAGE = "unknown message";
 
     @Autowired
     private MockMvc mockMvc;
@@ -114,7 +115,28 @@ public class QuestionControllerUnitTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Unknown response: "
+                                                "Server timed out: "
                                                         + TIMEOUT_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalRepresentAccountStates_unknownResponse() throws Exception {
+        when(representAccountStates.evaluateSolution(USER_INPUT))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_represent_account_states")
+                                .param("userInput", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + UNKNOWN_MESSAGE)));
     }
 }
