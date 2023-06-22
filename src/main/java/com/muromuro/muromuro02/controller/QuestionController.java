@@ -52,4 +52,9 @@ public class QuestionController {
 
         return "questions/represent_account_states";
     }
+
+    @GetMapping("design_api_with_pagination")
+    public String designApiWithPagination(Model model) {
+        return "questions/design_api_with_pagination";
+    }
 }
