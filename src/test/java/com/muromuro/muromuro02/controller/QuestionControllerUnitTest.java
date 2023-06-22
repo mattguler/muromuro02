@@ -139,4 +139,18 @@ public class QuestionControllerUnitTest {
                                                 "Unknown response: "
                                                         + UNKNOWN_MESSAGE)));
     }
+
+    @Test
+    public void testGetDesignApiWithPagination() throws Exception {
+        this.mockMvc
+                .perform(get("/muromuro_questions/design_api_with_pagination"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Please implement the call to your API function "
+                                                        + "and your actual API function definition")));
+    }
 }
