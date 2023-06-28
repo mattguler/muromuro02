@@ -50,7 +50,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
@@ -68,7 +68,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
@@ -80,7 +80,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -98,7 +98,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -120,7 +120,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -142,7 +142,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -158,7 +158,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -191,7 +191,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -207,7 +207,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -224,7 +224,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -245,7 +245,7 @@ public class RepresentAccountStatesIntegrationTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", userInput))
+                                .param("userInput.mainDefinition", userInput))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(

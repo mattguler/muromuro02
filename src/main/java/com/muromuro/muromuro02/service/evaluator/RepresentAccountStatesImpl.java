@@ -1,6 +1,7 @@
 package com.muromuro.muromuro02.service.evaluator;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,8 +75,8 @@ public class RepresentAccountStatesImpl implements Evaluator {
      * This is the placeholder solution until the user enters their own solution.
      */
     @Override
-    public String getInitialSolution() {
-        return INITIAL_SOLUTION;
+    public UserInput getInitialSolution() {
+        return new UserInput("", INITIAL_SOLUTION);
     }
 
     /**
@@ -85,17 +86,18 @@ public class RepresentAccountStatesImpl implements Evaluator {
      * @return The evaluation response to the user's solution.
      */
     @Override
-    public MuroMuroResponse evaluateSolution(String userInput) {
-        MuroMuroResponse securityResponse = checkIfCodeSecure(userInput);
+    public MuroMuroResponse evaluateSolution(UserInput userInput) {
+        String mainDefinition = userInput.getMainDefinition();
+        MuroMuroResponse securityResponse = checkIfCodeSecure(mainDefinition);
         if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return securityResponse;
         }
-        String evaluationCode = buildEvaluationCode(userInput);
+        String evaluationCode = buildEvaluationCode(mainDefinition);
         String containerId = dockerProxy.startContainer(evaluationCode);
         String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
         // Note: Comment this out when debugging the container logs.
         dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(dockerEvalOutput, userInput);
+        return analyzeEvaluation(dockerEvalOutput, mainDefinition);
     }
 
     private static MuroMuroResponse checkIfCodeSecure(String userInput) {
