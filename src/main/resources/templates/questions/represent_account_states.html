@@ -34,7 +34,7 @@
     <form action="#" th:action="@{/muromuro_questions/eval_represent_account_states}"
             th:object="${muroMuroSolution}" method="POST">
         <p><label th:for="userInput">Enter your solution here:</label></p>
-        <textarea rows="12" cols="80" th:field="*{userInput}"></textarea>
+        <textarea rows="12" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
         <div th:switch="*{response.status}">
             <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></b>
             <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"

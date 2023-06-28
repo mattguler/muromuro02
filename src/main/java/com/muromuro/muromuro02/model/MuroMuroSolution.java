@@ -1,24 +1,24 @@
 package com.muromuro.muromuro02.model;
 
 /**
- * Models the user input solution for a MuroMuro question, and
+ * Models the solution for a MuroMuro question, which includes the user's input and
  * the server-side evaluation of the solution.
  */
 public class MuroMuroSolution {
 
-    private String userInput;
+    private UserInput userInput;
     private MuroMuroResponse response;
 
     public MuroMuroSolution() {
-        userInput = "";
+        userInput = new UserInput();
         response = new MuroMuroResponse(MuroMuroResponse.Status.UNDEFINED);
     }
 
-    public String getUserInput() {
+    public UserInput getUserInput() {
         return userInput;
     }
 
-    public void setUserInput(String userInput) {
+    public void setUserInput(UserInput userInput) {
         this.userInput = userInput;
     }
 

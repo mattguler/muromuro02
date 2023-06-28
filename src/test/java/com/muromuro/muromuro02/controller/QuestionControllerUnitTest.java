@@ -1,6 +1,7 @@
 package com.muromuro.muromuro02.controller;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.evaluator.Evaluator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,7 +52,8 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
-        when(representAccountStates.getInitialSolution()).thenReturn(INITIAL_SOLUTION);
+        when(representAccountStates.getInitialSolution())
+                .thenReturn(new UserInput("", INITIAL_SOLUTION));
         this.mockMvc
                 .perform(get("/muromuro_questions/represent_account_states"))
                 .andExpect(status().isOk())
@@ -66,12 +69,12 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_correctAnswer() throws Exception {
-        when(representAccountStates.evaluateSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(any(UserInput.class)))
                 .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput.mainDefinition", USER_INPUT))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
@@ -79,7 +82,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_wrongAnswer() throws Exception {
-        when(representAccountStates.evaluateSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.FAILURE,
@@ -87,7 +90,7 @@ public class QuestionControllerUnitTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput.mainDefinition", USER_INPUT))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -100,7 +103,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_timeout() throws Exception {
-        when(representAccountStates.evaluateSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.TIMEOUT,
@@ -108,7 +111,7 @@ public class QuestionControllerUnitTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput.mainDefinition", USER_INPUT))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
@@ -121,7 +124,7 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testEvalRepresentAccountStates_unknownResponse() throws Exception {
-        when(representAccountStates.evaluateSolution(USER_INPUT))
+        when(representAccountStates.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.UNKNOWN,
@@ -129,7 +132,7 @@ public class QuestionControllerUnitTest {
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput", USER_INPUT))
+                                .param("userInput.mainDefinition", USER_INPUT))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
