@@ -55,6 +55,22 @@ public class QuestionController {
 
     @GetMapping("design_api_with_pagination")
     public String designApiWithPagination(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Populate the initial solution here, as necessary.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/design_api_with_pagination";
+    }
+
+    @PostMapping("eval_design_api_with_pagination")
+    public String evalDesignApiWithPagination(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Use a proper evaluator here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator for this solution is not implemented yet.");
+        muroMuroSolution.setResponse(response);
+
         return "questions/design_api_with_pagination";
     }
 }
