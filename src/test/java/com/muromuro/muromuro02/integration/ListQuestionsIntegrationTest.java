@@ -31,6 +31,7 @@ public class ListQuestionsIntegrationTest {
                                         containsString(
                                                 "Please select a question here below "
                                                         + "and attempt to answer it.")))
-                .andExpect(content().string(containsString("Representing Account States")));
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(content().string(containsString("Design API with Pagination")));
     }
 }

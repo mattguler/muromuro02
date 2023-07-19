@@ -9,6 +9,12 @@
     <!-- Bootstrap CSS link. -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
+    <style type = "text/css" media = "all">
+        .highlighted {
+            background-color: #FFFF00;
+        }
+    </style>
+
     <title>Design API with Pagination</title>
 </head>
 
@@ -76,14 +82,14 @@
     // All the employee lists to be populated by your API are included here for the
     // sake of this question. Please implement the calls to your API function here, and
     // populate all 4 lists in order, with the Employee objects returned from the calls
-    // to your API function. Each list is going to take in a max_size number of employees:
+    // to <span class="highlighted">your API function</span>. Each list is going to take in a maxSize number of employees:
     //
     void callerFunction(
         List&lt;Employee&gt; list1,  // The first list to populate and return to the caller.
         List&lt;Employee&gt; list2,  // The second list to populate and return to the caller.
         List&lt;Employee&gt; list3,  // The third list to populate and return to the caller.
         List&lt;Employee&gt; list4,  // The fourth list to populate and return to the caller.
-        int max_size,  // The maximum number of employees to be placed in each list.
+        int maxSize,  // The maximum number of employees to be placed in each list.
         long companyId,  // The company ID to be used in the database calls. Pass it into your API.
         DatabaseProxy dbProxy  // Please pass this into your API function as well.
     ) {
