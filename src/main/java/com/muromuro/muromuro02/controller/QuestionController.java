@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class QuestionController {
 
     private final Evaluator representAccountStates;
+    private final Evaluator designApiWithPagination;
 
     @Autowired
     public QuestionController(
-            @Qualifier("representAccountStatesImpl") Evaluator representAccountStates) {
+            @Qualifier("representAccountStatesImpl") Evaluator representAccountStates,
+            @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination) {
         this.representAccountStates = representAccountStates;
+        this.designApiWithPagination = designApiWithPagination;
     }
 
     @GetMapping("list")
@@ -35,9 +38,7 @@ public class QuestionController {
     @GetMapping("represent_account_states")
     public String representAccountStates(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        if (muroMuroSolution.getUserInput().isEmpty()) {
-            muroMuroSolution.setUserInput(representAccountStates.getInitialSolution());
-        }
+        muroMuroSolution.setUserInput(representAccountStates.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
 
         return "questions/represent_account_states";
@@ -56,7 +57,7 @@ public class QuestionController {
     @GetMapping("design_api_with_pagination")
     public String designApiWithPagination(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Populate the initial solution here, as necessary.
+        muroMuroSolution.setUserInput(designApiWithPagination.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/design_api_with_pagination";
     }
@@ -64,11 +65,8 @@ public class QuestionController {
     @PostMapping("eval_design_api_with_pagination")
     public String evalDesignApiWithPagination(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Use a proper evaluator here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator for this solution is not implemented yet.");
+                designApiWithPagination.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
         return "questions/design_api_with_pagination";

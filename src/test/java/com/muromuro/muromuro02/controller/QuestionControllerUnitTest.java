@@ -22,7 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(QuestionController.class)
 public class QuestionControllerUnitTest {
 
-    private static final String INITIAL_SOLUTION = "initial solution";
+    private static final String INITIAL_CALLER_CODE = "initial caller code";
+    private static final String INITIAL_MAIN_DEFINITION = "initial main definition";
     private static final String USER_INPUT = "user input";
     private static final String ERROR_MESSAGE = "error message";
     private static final String TIMEOUT_MESSAGE = "timeout message";
@@ -34,6 +35,10 @@ public class QuestionControllerUnitTest {
     @MockBean
     @Qualifier("representAccountStatesImpl")
     private Evaluator representAccountStates;
+
+    @MockBean
+    @Qualifier("designApiWithPaginationImpl")
+    private Evaluator designApiWithPagination;
 
     @Test
     public void testListQuestions() throws Exception {
@@ -53,12 +58,12 @@ public class QuestionControllerUnitTest {
     @Test
     public void testGetRepresentAccountStates() throws Exception {
         when(representAccountStates.getInitialSolution())
-                .thenReturn(new UserInput("", INITIAL_SOLUTION));
+                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
         this.mockMvc
                 .perform(get("/muromuro_questions/represent_account_states"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(content().string(containsString(INITIAL_SOLUTION)))
+                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
                 .andExpect(
                         content()
                                 .string(
@@ -145,10 +150,14 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetDesignApiWithPagination() throws Exception {
+        when(designApiWithPagination.getInitialSolution())
+                .thenReturn(new UserInput(INITIAL_CALLER_CODE, INITIAL_MAIN_DEFINITION));
         this.mockMvc
                 .perform(get("/muromuro_questions/design_api_with_pagination"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(content().string(containsString(INITIAL_CALLER_CODE)))
+                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
                 .andExpect(
                         content()
                                 .string(
