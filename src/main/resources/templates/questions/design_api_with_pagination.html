@@ -106,12 +106,15 @@
     // in the same sorted order as they are returned from the database.
 </label>
     <textarea rows="12" cols="80" th:field="*{userInput.mainDefinition}"></textarea></code></pre>
+<!-- The <pre><code> stuff here is only for the purposes of debugging during development. Plz remove it soon. -->
+<pre><code>
     <div th:switch="*{response.status}">
         <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></b>
         <b th:case="*"
                 th:text="'Unknown response: ' + *{response.errorMessage}"
                 class="text-warning"></b>
     </div>
+</code></pre>
     <br>
     <button type="submit" class="btn btn-info col-2">Submit</button>
     </form>
