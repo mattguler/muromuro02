@@ -13,7 +13,7 @@ import java.nio.file.Files;
 @Configuration
 public class EvaluationCodeConfig {
     @Bean(name = "designApiWithPagination")
-    public EvaluationCode getEvaluationCode(
+    public EvaluationCode getEvaluationCodeForDesignApiWithPagination(
             @Value("classpath:evaluators/DesignApiWithPaginationEval.java") Resource evaluatorResource)
             throws IOException {
         return buildEvaluationCode(evaluatorResource);

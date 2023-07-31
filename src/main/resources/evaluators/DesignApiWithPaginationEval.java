@@ -80,7 +80,7 @@ public class DesignApiWithPaginationEval {
             int maxSize,
             long companyId,
             DatabaseProxy dbProxy) {
-        // Start caller function implementation.
+        // Start caller code implementation.
         List<Employee> results =
                 retrieveEmployees(
                         dbProxy, companyId, /* offset= */ 0, maxSize);
@@ -97,10 +97,10 @@ public class DesignApiWithPaginationEval {
                 retrieveEmployees(
                         dbProxy, companyId, /* offset= */ 3 * maxSize, maxSize);
         list4.addAll(results);
-        // End caller function implementation.
+        // End caller code implementation.
     }
 
-    // Start API function implementation.
+    // Start main definition implementation.
     static List<Employee> retrieveEmployees(
             DatabaseProxy dbProxy,
             long companyId,
@@ -116,7 +116,7 @@ public class DesignApiWithPaginationEval {
         }
         return results;
     }
-    // End API function implementation.
+    // End main definition implementation.
 
     public static void main(String[] args) {
         DatabaseProxy dbProxy = new DatabaseProxyImpl();
