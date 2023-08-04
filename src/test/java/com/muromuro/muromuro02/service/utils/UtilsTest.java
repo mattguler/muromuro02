@@ -108,6 +108,15 @@ public class UtilsTest {
     }
 
     @Test
+    public void testReplaceEnumNames_justWithComments() {
+        String oldString =
+                "// There is no real enum here. Just this comment.";
+        String newString =
+                Utils.replaceEnumNames(oldString, "AccountState");
+        assertEquals(oldString, newString);
+    }
+
+    @Test
     public void testReplaceTargetWords_success() {
         String oldString = "public enum Blahblah {Blah1, Blah2, blah3}";
         String newString =
@@ -144,5 +153,54 @@ public class UtilsTest {
                         "  SUSPENDED\n" +
                         "}",
                 newString);
+    }
+
+    @Test
+    public void testGetClassName_success() {
+        String code = "public class SomeClass {};";
+        String className = Utils.getClassName(code);
+        assertEquals("SomeClass", className);
+    }
+
+    @Test
+    public void testGetClassName_empty() {
+        String code = "";
+        String className = Utils.getClassName(code);
+        assertEquals(null, className);
+    }
+
+    @Test
+    public void testGetClassName_failure1() {
+        String code = "// There is nothing to see here.";
+        String className = Utils.getClassName(code);
+        assertEquals(null, className);
+    }
+
+    @Test
+    public void testGetClassName_failure2() {
+        String code = "// There is no actual class in this code string.";
+        String className = Utils.getClassName(code);
+        assertEquals(null, className);
+    }
+
+    @Test
+    public void testGetClassName_withComments() {
+        String code =
+                "// There is the word class in this comment.\n"
+                        + "public class SomeClass {};";
+        String className = Utils.getClassName(code);
+        assertEquals("SomeClass", className);
+    }
+
+    @Test
+    public void testGetClassName_withInnerClass() {
+        String code =
+                "// There is the word class in this comment.\n"
+                        + "public class SomeClass {\n"
+                        + "    public static class InnerClass {}\n"
+                        + "}";
+        // Should return the outer class only.
+        String className = Utils.getClassName(code);
+        assertEquals("SomeClass", className);
     }
 }

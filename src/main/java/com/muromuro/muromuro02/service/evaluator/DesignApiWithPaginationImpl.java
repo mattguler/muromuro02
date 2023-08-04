@@ -28,6 +28,6 @@ public class DesignApiWithPaginationImpl implements Evaluator {
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.UNKNOWN,
                 "Evaluator file content, for debugging purposes:\n"
-                        + evaluationCode.getContent());
+                        + evaluationCode.getFormattedContent());
     }
 }

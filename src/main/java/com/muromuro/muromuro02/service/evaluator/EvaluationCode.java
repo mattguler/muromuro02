@@ -19,8 +19,12 @@ class EvaluationCode {
         this.content = content;
     }
 
-    public String getContent() {
-        return content;
+    /**
+     * Returns the content of the evaluation code where the quotes are escaped with backslashes.
+     * This will enable the evaluation code to be run properly on the remote Docker container.
+     */
+    public String getFormattedContent() {
+        return content.replace("\"", "\\\"");
     }
 
     /** Replaces the caller code in the evaluation code with the given string. */
