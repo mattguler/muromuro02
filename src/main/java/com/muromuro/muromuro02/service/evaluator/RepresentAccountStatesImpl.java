@@ -5,6 +5,7 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,42 +33,15 @@ public class RepresentAccountStatesImpl implements Evaluator {
     private static final String INITIAL_SOLUTION =
             "boolean isActive = false;";
 
-    private static final String EVALUATOR_PREFIX =
-            "public class Evaluator {\n\n";
-
-    private static final String EVALUATOR_SUFFIX =
-            "\n\nstatic void evalAccountState(AccountState accountState) {\n"
-                    + "  switch(accountState) {\n"
-                    + "    case INACTIVE:\n"
-                    + "      System.out.println(\\\"Account state INACTIVE.\\\");\n"
-                    + "      break;\n"
-                    + "    case ACTIVE:\n"
-                    + "      System.out.println(\\\"Account state ACTIVE.\\\");\n"
-                    + "      break;\n"
-                    + "    case SUSPENDED:\n"
-                    + "      System.out.println(\\\"Account state SUSPENDED.\\\");\n"
-                    + "      break;\n"
-                    + "    case DELETED:\n"
-                    + "      System.out.println(\\\"Account state DELETED.\\\");\n"
-                    + "      break;\n"
-                    + "    default:\n"
-                    + "      System.out.println(\\\"Invalid account state.\\\");\n"
-                    + "      break;\n"
-                    + "  }\n"
-                    + "}\n\n"
-                    + "public static void main(String[] args) {\n"
-                    + "  evalAccountState(AccountState.INACTIVE);\n"
-                    + "  evalAccountState(AccountState.ACTIVE);\n"
-                    + "  evalAccountState(AccountState.SUSPENDED);\n"
-                    + "  evalAccountState(AccountState.DELETED);\n"
-                    + "}\n"
-                    + "}\n"; // This closes out the class definition in the prefix.
-
     private final DockerProxy dockerProxy;
+    private final EvaluationCode evaluationCode;
 
     @Autowired
-    public RepresentAccountStatesImpl(DockerProxy dockerProxy) {
+    public RepresentAccountStatesImpl(
+            DockerProxy dockerProxy,
+            @Qualifier("representAccountStates") EvaluationCode evaluationCode) {
         this.dockerProxy = dockerProxy;
+        this.evaluationCode = evaluationCode;
     }
 
     /**
@@ -106,14 +80,16 @@ public class RepresentAccountStatesImpl implements Evaluator {
                 Security.checkIfCodeSecure(userInput));
     }
 
-    private static String buildEvaluationCode(String userInput) {
+    private String buildEvaluationCode(String userInput) {
         userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_ACTIVE, "Active", "active");
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
         userInput = replaceTargetWords(userInput, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
-        return EVALUATOR_PREFIX + userInput + EVALUATOR_SUFFIX;
+        return evaluationCode
+                .replaceMainDefinition(userInput)
+                .getFormattedContent();
     }
 
     private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, String userInput) {

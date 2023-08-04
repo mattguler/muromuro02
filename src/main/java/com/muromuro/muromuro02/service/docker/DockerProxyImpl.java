@@ -5,12 +5,16 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
+import com.muromuro.muromuro02.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-/** The implementation of the Docker proxy. */
+/**
+ * The implementation of the Docker proxy.
+ * TODO: Write some tests for this class.
+ */
 @Service
 public class DockerProxyImpl implements DockerProxy {
 
@@ -31,15 +35,23 @@ public class DockerProxyImpl implements DockerProxy {
     public String startContainer(String evaluatorCode) {
         String imageId = "openjdk:11";
         String containerName = UUID.randomUUID().toString();
+        String className = Utils.getClassName(evaluatorCode);
+        if (className == null) {
+            throw new IllegalArgumentException(
+                    "Could not find class name in given code:\n" + evaluatorCode);
+        }
         String[] command = {
                 "sh",
                 "-c",
                 String.format(
-                        "echo \"%s\" > Evaluator.java; "
-                                + "javac Evaluator.java; "
-                                + "timeout -s SIGKILL %d java Evaluator",
+                        "echo \"%s\" > %s.java; "
+                                + "javac %s.java; "
+                                + "timeout -s SIGKILL %d java %s",
                         evaluatorCode,
-                        TIMEOUT_IN_SECONDS)};
+                        className,
+                        className,
+                        TIMEOUT_IN_SECONDS,
+                        className)};
 
         CreateContainerResponse container =
                 dockerClient.createContainerCmd(imageId)
