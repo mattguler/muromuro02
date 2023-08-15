@@ -84,4 +84,28 @@ public class Utils {
         actualTargetStr = actualTargetStr.trim();
         return actualTargetStr;
     }
+
+    /**
+     * If any of the first 3 words in the given code string is not the word "static",
+     * then prepends "static" to the string.
+     * TODO: Make this skip over the code comments at the beginning of the code, if possible.
+     * TODO: Maybe we should use a proper Java code parser in this codebase.
+     */
+    public static String prependStaticIfMissing(String code) {
+        if (code == null || code.isEmpty()) {
+            return code;
+        }
+        String[] words = code.split("\\s+");
+        boolean containsStatic = false;
+        for (int i = 0; i < 3 && i < words.length; i++) {
+            if (words[i].equals("static")) {
+                containsStatic = true;
+                break;
+            }
+        }
+        if (!containsStatic) {
+            return "static " + code;
+        }
+        return code;
+    }
 }

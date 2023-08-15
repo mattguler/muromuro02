@@ -15,7 +15,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/** Runs integration tests for the Represent Account States Muromuro question. */
+/**
+ * Runs integration tests for the Represent Account States MuroMuro question.
+ * TODO: Refactor this test to remove some of the duplication here.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class RepresentAccountStatesIntegrationTest {

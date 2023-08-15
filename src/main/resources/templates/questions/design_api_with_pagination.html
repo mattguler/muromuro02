@@ -110,6 +110,12 @@
 <pre><code>
     <div th:switch="*{response.status}">
         <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></b>
+        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
+                th:text="'Correct answer.'" class="text-success"></b>
+        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
+                th:text="'Wrong answer: ' + *{response.errorMessage}" class="text-danger"></b>
+        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
+                th:text="'Server timed out: ' + *{response.errorMessage}" class="text-warning"></b>
         <b th:case="*"
                 th:text="'Unknown response: ' + *{response.errorMessage}"
                 class="text-warning"></b>
