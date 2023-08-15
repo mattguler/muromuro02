@@ -20,11 +20,13 @@ class EvaluationCode {
     }
 
     /**
-     * Returns the content of the evaluation code where the quotes are escaped with backslashes.
+     * Returns the content of the evaluation code where certain characters are escaped.
      * This will enable the evaluation code to be run properly on the remote Docker container.
      */
     public String getFormattedContent() {
-        return content.replace("\"", "\\\"");
+        String formattedContent = content.replace("\"", "\\\"");
+        formattedContent = formattedContent.replace("\\n", "\\\\\\n");
+        return formattedContent;
     }
 
     /** Replaces the caller code in the evaluation code with the given string. */

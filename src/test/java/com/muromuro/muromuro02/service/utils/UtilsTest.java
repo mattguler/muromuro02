@@ -203,4 +203,32 @@ public class UtilsTest {
         String className = Utils.getClassName(code);
         assertEquals("SomeClass", className);
     }
+
+    @Test
+    public void testPrependStaticIfMissing_empty() {
+        String code = "";
+        String newCode = Utils.prependStaticIfMissing(code);
+        assertEquals("", newCode);
+    }
+
+    @Test
+    public void testPrependStaticIfMissing_success() {
+        String code = "public void someMethod() {}";
+        String newCode = Utils.prependStaticIfMissing(code);
+        assertEquals("static public void someMethod() {}", newCode);
+    }
+
+    @Test
+    public void testPrependStaticIfMissing_success2() {
+        String code = "void someMethod();";
+        String newCode = Utils.prependStaticIfMissing(code);
+        assertEquals("static void someMethod();", newCode);
+    }
+
+    @Test
+    public void testPrependStaticIfMissing_noReplacement() {
+        String code = "public static void someMethod();";
+        String newCode = Utils.prependStaticIfMissing(code);
+        assertEquals(code, newCode);
+    }
 }

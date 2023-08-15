@@ -64,12 +64,31 @@ public class DesignApiWithPaginationEval {
         }
     }
 
-    static void printEmployees(String title, List<Employee> employees) {
-        System.out.println(title);
+    static void printEmployees(String listTitle, List<Employee> employees) {
+        System.out.println(listTitle);
         for (Employee employee : employees) {
             System.out.println(employee);
         }
         System.out.println();
+    }
+
+    static void verifyEmployees(
+            String listTitle, List<Employee> employees, int startIndex, int endIndex) {
+        for (int i = startIndex; i <= endIndex; i++) {
+            Employee employee;
+            try {
+                employee = employees.get(i);
+            } catch (IndexOutOfBoundsException e) {
+                System.out.printf("%s is incorrectly formed.\n", listTitle);
+                return;
+            }
+            if (employee.getId() != i || !employee.getFirstName().equals("first_name_" + i)
+                    || !employee.getLastName().equals("last_name_" + i)) {
+                System.out.printf("%s is incorrectly formed.\n", listTitle);
+                return;
+            }
+        }
+        System.out.printf("%s is correctly formed.\n", listTitle);
     }
 
     static void callerFunction(
@@ -133,5 +152,12 @@ public class DesignApiWithPaginationEval {
         printEmployees("List 2", list2);
         printEmployees("List 3", list3);
         printEmployees("List 4", list4);
+
+        System.out.println();
+
+        verifyEmployees("List 1", list1, 0, MAX_SIZE - 1);
+        verifyEmployees("List 2", list2, MAX_SIZE, 2 * MAX_SIZE - 1);
+        verifyEmployees("List 3", list3, 2 * MAX_SIZE, 3 * MAX_SIZE - 1);
+        verifyEmployees("List 4", list4, 3 * MAX_SIZE, 4 * MAX_SIZE - 1);
     }
 }
