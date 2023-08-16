@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,22 +16,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Runs integration tests for the Represent Account States MuroMuro question.
- * TODO: Refactor this test to remove some of the duplication here.
- */
+/** Runs integration tests for the Represent Account States MuroMuro question. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class RepresentAccountStatesIntegrationTest {
+
+    private static final String GET_URL = "/muromuro_questions/represent_account_states";
+    private static final String EVAL_URL = "/muromuro_questions/eval_represent_account_states";
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
-        this.mockMvc
-                .perform(get("/muromuro_questions/represent_account_states"))
-                .andExpect(status().isOk())
+        performGet()
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("boolean isActive = false;")))
                 .andExpect(
@@ -50,11 +49,7 @@ public class RepresentAccountStatesIntegrationTest {
                 + "  SUSPENDED,\n"
                 + "  DELETED\n"
                 + "}\n";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
     }
@@ -68,11 +63,7 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  Deleted,\n"
                         + "  Suspended\n"
                         + "}\n";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
     }
@@ -80,11 +71,7 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testEval_withWrongAnswer_1() throws Exception {
         String userInput = "boolean isActive = true;";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -98,11 +85,7 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testEval_withWrongAnswer_2() throws Exception {
         String userInput = "int a = 5;";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -120,11 +103,7 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  Active,\n"
                         + "  Inactive\n"
                         + "}\n";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -142,11 +121,7 @@ public class RepresentAccountStatesIntegrationTest {
                 "for (int i=0; i<5; i++) {\n"
                         + "  int b = 7;\n"
                         + "}\n";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -158,11 +133,7 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testEval_withBadInput() throws Exception {
         String userInput = "blahblah";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -191,11 +162,7 @@ public class RepresentAccountStatesIntegrationTest {
                         + "    }\n"
                         + "  }\n"
                         + "}\n";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -207,11 +174,7 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testEval_withInsecureInput_1() throws Exception {
         String userInput = "System.exit(0);";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -224,11 +187,7 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testEval_withInsecureInput_2() throws Exception {
         String userInput = "Runtime.getRuntime().exec(\"rm -rf /\")";
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -245,11 +204,7 @@ public class RepresentAccountStatesIntegrationTest {
                 Stream.generate(() -> "a")
                         .limit(inputLength)
                         .collect(Collectors.joining());
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", userInput))
-                .andExpect(status().isOk())
+        performEval(userInput)
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
@@ -257,5 +212,19 @@ public class RepresentAccountStatesIntegrationTest {
                                         containsString(
                                                 "The solution seems insecure, with length 1001 "
                                                         + "exceeding the max allowable length.")));
+    }
+
+    private ResultActions performGet() throws Exception {
+        return this.mockMvc
+                .perform(get(GET_URL))
+                .andExpect(status().isOk());
+    }
+
+    private ResultActions performEval(String mainDefinition) throws Exception {
+        return this.mockMvc
+                .perform(
+                        post(EVAL_URL)
+                                .param("userInput.mainDefinition", mainDefinition))
+                .andExpect(status().isOk());
     }
 }

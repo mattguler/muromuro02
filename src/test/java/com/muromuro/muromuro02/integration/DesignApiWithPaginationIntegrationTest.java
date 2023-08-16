@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DesignApiWithPaginationIntegrationTest {
 
     private static final String GET_URL = "/muromuro_questions/design_api_with_pagination";
-    private static final String POST_URL = "/muromuro_questions/eval_design_api_with_pagination";
+    private static final String EVAL_URL = "/muromuro_questions/eval_design_api_with_pagination";
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withInsecureInput_1() throws Exception {
-        performPost("System.exit(0);", "")
+        performEval("System.exit(0);", "")
                 .andExpect(
                         content()
                                 .string(
@@ -50,7 +50,7 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withInsecureInput_2() throws Exception {
-        performPost("", "Runtime.getRuntime().exec(\"rm -rf /\");")
+        performEval("", "Runtime.getRuntime().exec(\"rm -rf /\");")
                 .andExpect(
                         content()
                                 .string(
@@ -61,7 +61,7 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withBadlyFormedInput() throws Exception {
-        performPost("", "// This is a comment")
+        performEval("", "// This is a comment")
                 .andExpect(
                         content()
                                 .string(
@@ -72,7 +72,7 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withLengthyInput_1() throws Exception {
-        performPost("a".repeat(2501), "")
+        performEval("a".repeat(2501), "")
                 .andExpect(
                         content()
                                 .string(
@@ -84,7 +84,7 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withLengthyInput_2() throws Exception {
-        performPost("", "a".repeat(2501))
+        performEval("", "a".repeat(2501))
                 .andExpect(
                         content()
                                 .string(
@@ -100,10 +100,10 @@ public class DesignApiWithPaginationIntegrationTest {
                 .andExpect(status().isOk());
     }
 
-    private ResultActions performPost(String callerCode, String mainDefinition) throws Exception {
+    private ResultActions performEval(String callerCode, String mainDefinition) throws Exception {
         return this.mockMvc
                 .perform(
-                        post(POST_URL)
+                        post(EVAL_URL)
                                 .param("userInput.callerCode", callerCode)
                                 .param("userInput.mainDefinition", mainDefinition))
                 .andExpect(status().isOk());
