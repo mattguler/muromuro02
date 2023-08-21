@@ -210,7 +210,7 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "The solution seems insecure, with length 1001 "
+                                                "The solution seems insecure, with its length "
                                                         + "exceeding the max allowable length.")));
     }
 

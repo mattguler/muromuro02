@@ -61,11 +61,11 @@ public class RepresentAccountStatesImpl implements Evaluator {
      */
     @Override
     public MuroMuroResponse evaluateSolution(UserInput userInput) {
-        String mainDefinition = userInput.getMainDefinition();
-        MuroMuroResponse securityResponse = checkIfCodeSecure(mainDefinition);
+        MuroMuroResponse securityResponse = checkIfCodeSecureAndCorrect(userInput);
         if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return securityResponse;
         }
+        String mainDefinition = userInput.getMainDefinition();
         String evaluationCode = buildEvaluationCode(mainDefinition);
         String containerId = dockerProxy.startContainer(evaluationCode);
         String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
@@ -74,7 +74,7 @@ public class RepresentAccountStatesImpl implements Evaluator {
         return analyzeEvaluation(dockerEvalOutput, mainDefinition);
     }
 
-    private static MuroMuroResponse checkIfCodeSecure(String userInput) {
+    private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
                 Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 Security.checkIfCodeSecure(userInput));

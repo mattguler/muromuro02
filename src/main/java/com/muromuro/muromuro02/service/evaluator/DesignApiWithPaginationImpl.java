@@ -52,10 +52,8 @@ public class DesignApiWithPaginationImpl implements Evaluator {
 
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
-                Security.validateCodeLength(userInput.getMainDefinition(), USER_CODE_MAX_LENGTH),
-                Security.checkIfCodeSecure(userInput.getMainDefinition()),
-                Security.validateCodeLength(userInput.getCallerCode(), USER_CODE_MAX_LENGTH),
-                Security.checkIfCodeSecure(userInput.getCallerCode()),
+                Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
+                Security.checkIfCodeSecure(userInput),
                 checkIfCodeCorrectlyFormed(userInput));
     }
 

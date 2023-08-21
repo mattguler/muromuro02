@@ -77,9 +77,8 @@ public class DesignApiWithPaginationIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: The solution seems insecure, "
-                                                        + "with length 2501 "
-                                                        + "exceeding the max allowable length.")));
+                                                "Wrong answer: The solution seems insecure, with its "
+                                                        + "length exceeding the max allowable length.")));
     }
 
     @Test
@@ -89,9 +88,8 @@ public class DesignApiWithPaginationIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: The solution seems insecure, "
-                                                        + "with length 2501 "
-                                                        + "exceeding the max allowable length.")));
+                                                "Wrong answer: The solution seems insecure, with its "
+                                                        + "length exceeding the max allowable length.")));
     }
 
     private ResultActions performGet() throws Exception {
