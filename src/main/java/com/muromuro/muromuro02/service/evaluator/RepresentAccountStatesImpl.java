@@ -65,13 +65,12 @@ public class RepresentAccountStatesImpl implements Evaluator {
         if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return securityResponse;
         }
-        String mainDefinition = userInput.getMainDefinition();
-        String evaluationCode = buildEvaluationCode(mainDefinition);
+        String evaluationCode = buildEvaluationCode(userInput);
         String containerId = dockerProxy.startContainer(evaluationCode);
         String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
         // Note: Comment this out when debugging the container logs.
         dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(dockerEvalOutput, mainDefinition);
+        return analyzeEvaluation(dockerEvalOutput, userInput);
     }
 
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
@@ -80,19 +79,24 @@ public class RepresentAccountStatesImpl implements Evaluator {
                 Security.checkIfCodeSecure(userInput));
     }
 
-    private String buildEvaluationCode(String userInput) {
-        userInput = replaceEnumNames(userInput, ACCOUNT_STATE_ENUM_NAME);
+    private String buildEvaluationCode(UserInput userInput) {
+        String mainDefinition = userInput.getMainDefinition();
+        mainDefinition = replaceEnumNames(mainDefinition, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
-        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
-        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_ACTIVE, "Active", "active");
-        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
-        userInput = replaceTargetWords(userInput, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
+        mainDefinition =
+                replaceTargetWords(mainDefinition, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
+        mainDefinition =
+                replaceTargetWords(mainDefinition, ACCOUNT_STATE_ACTIVE, "Active", "active");
+        mainDefinition =
+                replaceTargetWords(mainDefinition, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
+        mainDefinition =
+                replaceTargetWords(mainDefinition, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
         return evaluationCode
-                .replaceMainDefinition(userInput)
+                .replaceMainDefinition(mainDefinition)
                 .getFormattedContent();
     }
 
-    private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, String userInput) {
+    private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, UserInput userInput) {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }
@@ -107,12 +111,13 @@ public class RepresentAccountStatesImpl implements Evaluator {
                     "Invalid definition.");
         }
         StringBuilder errorMessage = new StringBuilder();
-        if (!userInput.contains("enum") && userInput.contains("boolean")) {
+        String mainDefinition = userInput.getMainDefinition();
+        if (!mainDefinition.contains("enum") && mainDefinition.contains("boolean")) {
             errorMessage.append("Incorrect solution. ");
             errorMessage.append(
                     "(Hint: Can you use a better data type than boolean to represent the account states?)");
         }
-        else if (!userInput.contains("enum")) {
+        else if (!mainDefinition.contains("enum")) {
             errorMessage.append("Incorrect solution. ");
             errorMessage.append(
                     "(Hint: Can you think of a better data type to represent the account states?)");
