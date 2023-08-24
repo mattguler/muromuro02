@@ -73,20 +73,20 @@ public class DesignApiWithPaginationEval {
     }
 
     static void verifyEmployees(
-            String listTitle, List<Employee> employees, int startIndex, int endIndex) {
-        for (int i = startIndex; i <= endIndex; i++) {
-            Employee employee;
-            try {
-                employee = employees.get(i);
-            } catch (IndexOutOfBoundsException e) {
+            String listTitle, List<Employee> employees, int startId, int endId) {
+        if (employees.size() != endId - startId + 1) {
+            System.out.printf("%s is incorrectly formed.\n", listTitle);
+            return;
+        }
+        int id = startId;
+        for (int i = 0; i < endId - startId + 1; i++) {
+            Employee employee = employees.get(i);
+            if (employee.getId() != id || !employee.getFirstName().equals("first_name_" + id)
+                    || !employee.getLastName().equals("last_name_" + id)) {
                 System.out.printf("%s is incorrectly formed.\n", listTitle);
                 return;
             }
-            if (employee.getId() != i || !employee.getFirstName().equals("first_name_" + i)
-                    || !employee.getLastName().equals("last_name_" + i)) {
-                System.out.printf("%s is incorrectly formed.\n", listTitle);
-                return;
-            }
+            id++;
         }
         System.out.printf("%s is correctly formed.\n", listTitle);
     }
@@ -155,9 +155,9 @@ public class DesignApiWithPaginationEval {
 
         System.out.println();
 
-        verifyEmployees("List 1", list1, 0, MAX_SIZE - 1);
-        verifyEmployees("List 2", list2, MAX_SIZE, 2 * MAX_SIZE - 1);
-        verifyEmployees("List 3", list3, 2 * MAX_SIZE, 3 * MAX_SIZE - 1);
-        verifyEmployees("List 4", list4, 3 * MAX_SIZE, 4 * MAX_SIZE - 1);
+        verifyEmployees("List 1", list1, 1, MAX_SIZE);
+        verifyEmployees("List 2", list2, MAX_SIZE + 1, 2 * MAX_SIZE);
+        verifyEmployees("List 3", list3, 2 * MAX_SIZE + 1, 3 * MAX_SIZE);
+        verifyEmployees("List 4", list4, 3 * MAX_SIZE + 1, 4 * MAX_SIZE);
     }
 }

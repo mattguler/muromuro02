@@ -30,7 +30,6 @@ public class RepresentAccountStatesIntegrationTest {
     @Test
     public void testGetRepresentAccountStates() throws Exception {
         performGet()
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("boolean isActive = false;")))
                 .andExpect(
                         content()
@@ -50,7 +49,6 @@ public class RepresentAccountStatesIntegrationTest {
                 + "  DELETED\n"
                 + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
     }
 
@@ -64,7 +62,6 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  Suspended\n"
                         + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Correct answer.")));
     }
 
@@ -72,7 +69,6 @@ public class RepresentAccountStatesIntegrationTest {
     public void testEval_withWrongAnswer_1() throws Exception {
         String userInput = "boolean isActive = true;";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -86,7 +82,6 @@ public class RepresentAccountStatesIntegrationTest {
     public void testEval_withWrongAnswer_2() throws Exception {
         String userInput = "int a = 5;";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -104,7 +99,6 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  Inactive\n"
                         + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -122,7 +116,6 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  int b = 7;\n"
                         + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -134,7 +127,6 @@ public class RepresentAccountStatesIntegrationTest {
     public void testEval_withBadInput() throws Exception {
         String userInput = "blahblah";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -163,7 +155,6 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  }\n"
                         + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -175,7 +166,6 @@ public class RepresentAccountStatesIntegrationTest {
     public void testEval_withInsecureInput_1() throws Exception {
         String userInput = "System.exit(0);";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -188,7 +178,6 @@ public class RepresentAccountStatesIntegrationTest {
     public void testEval_withInsecureInput_2() throws Exception {
         String userInput = "Runtime.getRuntime().exec(\"rm -rf /\")";
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -205,7 +194,6 @@ public class RepresentAccountStatesIntegrationTest {
                         .limit(inputLength)
                         .collect(Collectors.joining());
         performEval(userInput)
-                .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(
                         content()
                                 .string(
@@ -217,7 +205,8 @@ public class RepresentAccountStatesIntegrationTest {
     private ResultActions performGet() throws Exception {
         return this.mockMvc
                 .perform(get(GET_URL))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")));
     }
 
     private ResultActions performEval(String mainDefinition) throws Exception {
@@ -225,6 +214,7 @@ public class RepresentAccountStatesIntegrationTest {
                 .perform(
                         post(EVAL_URL)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Representing Account States")));
     }
 }
