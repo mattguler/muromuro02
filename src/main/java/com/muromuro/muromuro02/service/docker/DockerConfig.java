@@ -1,7 +1,10 @@
 package com.muromuro.muromuro02.service.docker;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.core.DockerClientBuilder;
+import com.github.dockerjava.core.DefaultDockerClientConfig;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.core.DockerClientImpl;
+import com.github.dockerjava.zerodep.ZerodepDockerHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +19,33 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DockerConfig {
 
+    private static final String DOCKER_DEFAULT_SOCKET = "unix:///var/run/docker.sock";
+    private static final int MAX_CONNECTIONS = 100;
+
     @Bean
-    public DockerClient provideDockerClient() {
-        return DockerClientBuilder.getInstance().build();
+    public DockerClientConfig provideDockerClientConfig() {
+        return DefaultDockerClientConfig.createDefaultConfigBuilder()
+                .withDockerHost(DOCKER_DEFAULT_SOCKET)
+                // TODO: Maybe enable TLS verification in the future, for a more secure connection.
+                .withDockerTlsVerify(false)
+                .build();
+    }
+
+    // NOTE: We need the ZerodepDockerHttpClient due to the issues that DockerClient has
+    // with the Spring Boot version 3 Jakarta dependencies.
+    @Bean
+    public ZerodepDockerHttpClient provideZerodepDockerHttpClient(
+            DockerClientConfig dockerClientConfig) {
+        return new ZerodepDockerHttpClient.Builder()
+                .dockerHost(dockerClientConfig.getDockerHost())
+                .sslConfig(dockerClientConfig.getSSLConfig())
+                .maxConnections(MAX_CONNECTIONS)
+                .build();
+    }
+
+    @Bean
+    public DockerClient provideDockerClient(
+            DockerClientConfig dockerClientConfig, ZerodepDockerHttpClient dockerHttpClient) {
+        return DockerClientImpl.getInstance(dockerClientConfig, dockerHttpClient);
     }
 }

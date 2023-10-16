@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.9</version>
+		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.muromuro</groupId>
@@ -14,7 +14,7 @@
 	<name>muromuro02</name>
 	<description>Spring Boot implementation of Muro Muro</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -35,8 +35,20 @@
 		<!-- In order to run some arbitrary user entered code inside a Docker container. -->
 		<dependency>
 			<groupId>com.github.docker-java</groupId>
-			<artifactId>docker-java</artifactId>
-			<version>3.2.10</version>
+			<artifactId>docker-java-core</artifactId>
+			<version>3.3.3</version>
+		</dependency>
+		<!-- NOTE: This is needed for DockerClient to work with Spring Boot 3 Jakarta dependencies. -->
+		<dependency>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java-transport-zerodep</artifactId>
+			<version>3.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-properties-migrator</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
