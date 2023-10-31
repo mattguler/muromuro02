@@ -107,18 +107,21 @@
 </label>
     <textarea rows="12" cols="80" th:field="*{userInput.mainDefinition}"></textarea></code></pre>
     <div th:switch="*{response.status}">
-        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></b>
-        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
-                th:text="'Correct answer.'" class="text-success"></b>
-        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
-                th:text="'Wrong answer: ' + *{response.errorMessage}" class="text-danger"></b>
-        <b th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
-                th:text="'Server timed out: ' + *{response.errorMessage}" class="text-warning"></b>
-        <b th:case="*"
-                th:text="'Unknown response: ' + *{response.errorMessage}"
-                class="text-warning"></b>
+        <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>
+        <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
+                class="alert alert-success col-lg-6">
+            <b th:text="'Correct answer.'"></b></div>
+        <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
+                class="alert alert-danger col-lg-6">
+            <b th:text="'Wrong answer: ' + *{response.errorMessage}"></b></div>
+        <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
+                class="alert alert-warning col-lg-6">
+            <b th:text="'Server timed out: ' + *{response.errorMessage}"></b></div>
+        <div th:case="*"
+                class="alert alert-warning col-lg-6">
+            <b th:text="'Unknown response: ' + *{response.errorMessage}"></b>
+        </div>
     </div>
-    <br>
     <button type="submit" class="btn btn-info col-2">Submit</button>
     </form>
 </div>
