@@ -71,4 +71,9 @@ public class QuestionController {
 
         return "questions/design_api_with_pagination";
     }
+
+    @GetMapping("refactor_too_many_ifs")
+    public String refactorTooManyIfs(Model model) {
+        return "questions/refactor_too_many_ifs";
+    }
 }
