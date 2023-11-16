@@ -21,13 +21,16 @@ public class QuestionController {
 
     private final Evaluator representAccountStates;
     private final Evaluator designApiWithPagination;
+    private final Evaluator refactorTooManyIfs;
 
     @Autowired
     public QuestionController(
             @Qualifier("representAccountStatesImpl") Evaluator representAccountStates,
-            @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination) {
+            @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination,
+            @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs) {
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
+        this.refactorTooManyIfs = refactorTooManyIfs;
     }
 
     @GetMapping("list")
@@ -74,6 +77,9 @@ public class QuestionController {
 
     @GetMapping("refactor_too_many_ifs")
     public String refactorTooManyIfs(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        muroMuroSolution.setUserInput(refactorTooManyIfs.getInitialSolution());
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/refactor_too_many_ifs";
     }
 }

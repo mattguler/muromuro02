@@ -24,17 +24,18 @@
     </p>
     <p>
         Could you please refactor this code in a way that reduces the if statements and
-        makes it more readable?
+        makes the code more readable?
     </p>
     <hr>
     <!-- TODO: Change this form's method to POST when implementing its backend. -->
     <form action="#" th:action="@{/muromuro_questions/refactor_too_many_ifs}"
-            method="GET">
+            th:object="${muroMuroSolution}" method="GET">
         <pre><code>
-<!-- Update the for, id, and name here to use th:for and th:field. -->
-<label for="mainDefinition">Please refactor the code here:</label>
+<label th:for="userInput.mainDefinition" id="mainDefLabel">
+Please refactor the code here:
+</label>
 
-<textarea rows="12" cols="80" id="mainDefinition" name="mainDefinition"></textarea>
+<textarea rows="12" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
         </code></pre>
         <button type="submit" class="btn btn-info col-2">Submit</button>
     </form>
