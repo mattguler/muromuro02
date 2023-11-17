@@ -40,6 +40,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("designApiWithPaginationImpl")
     private Evaluator designApiWithPagination;
 
+    @MockBean
+    @Qualifier("refactorTooManyIfsImpl")
+    private Evaluator refactorTooManyIfs;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -164,5 +168,22 @@ public class QuestionControllerUnitTest {
                                         containsString(
                                                 "Please implement the call to your API function "
                                                         + "and your actual API function definition")));
+    }
+
+    @Test
+    public void testGetRefactorTooManyIfs() throws Exception {
+        when(refactorTooManyIfs.getInitialSolution())
+                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
+        this.mockMvc
+                .perform(get("/muromuro_questions/refactor_too_many_ifs"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Could you please refactor this code in a "
+                                                        + "way that reduces the if statements")));
     }
 }
