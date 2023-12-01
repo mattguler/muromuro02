@@ -82,4 +82,14 @@ public class QuestionController {
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/refactor_too_many_ifs";
     }
+
+    @PostMapping("eval_refactor_too_many_ifs")
+    public String evalRefactorTooManyIfs(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        MuroMuroResponse response =
+                refactorTooManyIfs.evaluateSolution(muroMuroSolution.getUserInput());
+        muroMuroSolution.setResponse(response);
+
+        return "questions/refactor_too_many_ifs";
+    }
 }

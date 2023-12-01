@@ -8,12 +8,27 @@ public class RefactorTooManyIfsSoln {
 
     // Start initial solution implementation.
     public int calculateSomething(String input) {
-        int result = 0;
+        int result = input;
         if (input.equals("a")) {
             result += 1;
         }
-        if (input.equals("b")) {
-            result += 2;
+        else if (input.equals("b")) {
+            result -= 5;
+        }
+        else if (input.equals("c")) {
+            result *= 4;
+        }
+        else if (input.equals("d")) {
+            result *= result;
+        }
+        else if (input.equals("e")) {
+            result %= 10;
+        }
+        else if (input.equals("f")) {
+            result += 7;
+        }
+        else {
+            result = result;
         }
         return result;
     }

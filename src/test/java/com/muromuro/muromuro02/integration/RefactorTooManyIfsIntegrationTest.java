@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RefactorTooManyIfsIntegrationTest {
 
     private static final String GET_URL = "/muromuro_questions/refactor_too_many_ifs";
+    private static final String EVAL_URL = "/muromuro_questions/eval_refactor_too_many_ifs";
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,10 +46,29 @@ public class RefactorTooManyIfsIntegrationTest {
                                                 "result += 1;")));
     }
 
+    // TODO: Replace this once the evaluator implementation is complete.
+    @Test
+    public void testEval_withUnimplementedEvaluator() throws Exception {
+        String userInput = "xyz();";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: This Muromuro question "
+                                                        + "has not been implemented yet.")));
+    }
+
     private ResultActions performGet() throws Exception {
         return mockMvc
                 .perform(get(GET_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Refactoring Too Many Ifs")));
+    }
+
+    private ResultActions performEval(String mainDefinition) throws Exception {
+        return mockMvc
+                .perform(post(EVAL_URL).param("userInput.mainDefinition", mainDefinition))
+                .andExpect(status().isOk());
     }
 }

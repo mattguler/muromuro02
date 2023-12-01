@@ -25,6 +25,6 @@ public class InitialSolutionTest {
             assertTrue(content.contains("if (input.equals(\"a\"))"));
             assertTrue(content.contains("result += 1;"));
             assertTrue(content.contains("if (input.equals(\"b\"))"));
-            assertTrue(content.contains("result += 2;"));
+            assertTrue(content.contains("result -= 5;"));
         }
 }
