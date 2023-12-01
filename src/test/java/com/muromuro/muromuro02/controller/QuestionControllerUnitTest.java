@@ -56,7 +56,9 @@ public class QuestionControllerUnitTest {
                                         containsString(
                                                 "Please select a question here below "
                                                         + "and attempt to answer it.")))
-                .andExpect(content().string(containsString("Representing Account States")));
+                .andExpect(content().string(containsString("Representing Account States")))
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")));
     }
 
     @Test
@@ -171,6 +173,86 @@ public class QuestionControllerUnitTest {
     }
 
     @Test
+    public void testEvalDesignApiWithPagination_correctAnswer() throws Exception {
+        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_design_api_with_pagination")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(content().string(containsString("Correct answer.")));
+    }
+
+    @Test
+    public void testEvalDesignApiWithPagination_wrongAnswer() throws Exception {
+        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                ERROR_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_design_api_with_pagination")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + ERROR_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalDesignApiWithPagination_timeout() throws Exception {
+        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.TIMEOUT,
+                                TIMEOUT_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_design_api_with_pagination")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: "
+                                                        + TIMEOUT_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalDesignApiWithPagination_unknownResponse() throws Exception {
+        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_design_api_with_pagination")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Design API with Pagination")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + UNKNOWN_MESSAGE)));
+    }
+
+    @Test
     public void testGetRefactorTooManyIfs() throws Exception {
         when(refactorTooManyIfs.getInitialSolution())
                 .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
@@ -185,5 +267,81 @@ public class QuestionControllerUnitTest {
                                         containsString(
                                                 "Could you please refactor this code in a "
                                                         + "way that reduces the if statements")));
+    }
+
+    @Test
+    public void testEvalRefactorTooManyIfs_correctAnswer() throws Exception {
+        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_refactor_too_many_ifs")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(content().string(containsString("Correct answer.")));
+    }
+
+    @Test
+    public void testEvalRefactorTooManyIfs_wrongAnswer() throws Exception {
+        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                ERROR_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_refactor_too_many_ifs")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + ERROR_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalRefactorTooManyIfs_timeout() throws Exception {
+        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.TIMEOUT,
+                                TIMEOUT_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_refactor_too_many_ifs")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: "
+                                                        + TIMEOUT_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalRefactorTooManyIfs_unknownResponse() throws Exception {
+        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_refactor_too_many_ifs")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + UNKNOWN_MESSAGE)));
     }
 }
