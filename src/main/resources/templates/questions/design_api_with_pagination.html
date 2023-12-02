@@ -91,7 +91,7 @@
         DatabaseProxy dbProxy  // Please pass this into your API function as well.
     ) {
 </label>
-        <textarea rows="6" cols="80" th:field="*{userInput.callerCode}"></textarea>
+        <textarea rows="20" cols="80" th:field="*{userInput.callerCode}"></textarea>
     }
 
 <label th:for="userInput.mainDefinition" id="mainDefLabel">
@@ -102,7 +102,7 @@
     // Your function should return List&lt;Employee&gt; as a subset of the employees,
     // in the same sorted order as they are returned from the database.
 </label>
-    <textarea rows="12" cols="80" th:field="*{userInput.mainDefinition}"></textarea></code></pre>
+    <textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea></code></pre>
     <div th:switch="*{response.status}">
         <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>
         <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
