@@ -7,7 +7,7 @@
 public class RefactorTooManyIfsSoln {
 
     // Start initial solution implementation.
-    public int calculateSomething(String input) {
+    public int doCalculation(String strInput, int intInput) {
         int result = input;
         if (input.equals("a")) {
             result += 1;
