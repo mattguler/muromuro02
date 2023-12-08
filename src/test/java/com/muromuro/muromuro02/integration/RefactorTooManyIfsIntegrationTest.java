@@ -38,7 +38,7 @@ public class RefactorTooManyIfsIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "public int calculateSomething(String input)")))
+                                                "public int doCalculation(String strInput, int intInput)")))
                 .andExpect(
                         content()
                                 .string(

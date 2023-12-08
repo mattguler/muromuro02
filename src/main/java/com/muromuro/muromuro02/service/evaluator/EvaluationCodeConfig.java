@@ -19,6 +19,13 @@ public class EvaluationCodeConfig {
         return buildEvaluationCode(evaluatorResource);
     }
 
+    @Bean(name = "refactorTooManyIfs")
+    public EvaluationCode getEvaluationCodeForRefactorTooManyIfs(
+            @Value("classpath:evaluators/RefactorTooManyIfsEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "representAccountStates")
     public EvaluationCode getEvaluationCodeForRepresentAccountStates(
             @Value("classpath:evaluators/RepresentAccountStatesEval.java") Resource evaluatorResource)

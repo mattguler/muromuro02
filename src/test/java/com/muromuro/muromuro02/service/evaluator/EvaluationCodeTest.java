@@ -19,12 +19,18 @@ public class EvaluationCodeTest {
             "List<Employee> employees = getAllEmployees(dbProxy);";
     private static final String PAGINATION_API_MAIN_DEFINITION =
             "static List<Employee> getAllEmployees(DatabaseProxy dbProxy) { return null; }";
+    private static final String REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION =
+            "static int doCalculation(String strInput, int intInput) { return 0; }";
     private static final String REPRESENT_ACCOUNT_STATES_MAIN_DEFINITION =
             "public enum SomeAccountState {}";
 
     @Autowired
     @Qualifier("designApiWithPagination")
     private EvaluationCode designApiWithPaginationEval;
+
+    @Autowired
+    @Qualifier("refactorTooManyIfs")
+    private EvaluationCode refactorTooManyIfsEval;
 
     @Autowired
     @Qualifier("representAccountStates")
@@ -82,6 +88,42 @@ public class EvaluationCodeTest {
         assertTrue(content.contains(PAGINATION_API_MAIN_DEFINITION));
         assertTrue(content.contains("public static void main(String[] args)"));
         assertTrue(content.contains("DatabaseProxy dbProxy = new DatabaseProxyImpl();"));
+    }
+
+    @Test
+    public void testGetContent_refactorTooManyIfsEval() {
+        String content = refactorTooManyIfsEval.getFormattedContent();
+        assertTrue(content.contains("public class RefactorTooManyIfsEval"));
+        assertTrue(content.contains("static int doCalculation(String strInput, int intInput)"));
+        assertTrue(content.contains("validateCalculation(\\\"a\\\", intInput, 16)"));
+        assertTrue(content.contains("validateCalculation(\\\"b\\\", intInput, 10)"));
+        assertTrue(content.contains("static void doValidation1()"));
+        assertTrue(content.contains("static void doValidation2()"));
+        assertTrue(content.contains("static boolean validateCalculation("));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testReplaceMainDefinition_refactorTooManyIfsEval() {
+        String content = refactorTooManyIfsEval
+                .replaceMainDefinition(REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION)
+                .getFormattedContent();
+        assertTrue(content.contains("public class RefactorTooManyIfsEval"));
+        assertTrue(content.contains(REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION));
+        assertTrue(content.contains("validateCalculation(\\\"a\\\", intInput, 16)"));
+        assertTrue(content.contains("validateCalculation(\\\"b\\\", intInput, 10)"));
+        assertTrue(content.contains("static void doValidation1()"));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testReplaceCallerCode_refactorTooManyIfsEval() {
+        Exception thrown = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    refactorTooManyIfsEval.replaceCallerCode("//");
+                });
+        assertTrue(thrown.getMessage().contains("Could not find the beginning or end sequence."));
     }
 
     @Test
