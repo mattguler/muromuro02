@@ -21,6 +21,65 @@ public class RefactorTooManyIfsIntegrationTest {
     private static final String GET_URL = "/muromuro_questions/refactor_too_many_ifs";
     private static final String EVAL_URL = "/muromuro_questions/eval_refactor_too_many_ifs";
 
+    private static final String WRONG_SOLUTION =
+            """
+                    public int doCalculation(String strInput, int intInput) {
+                            int result = intInput;
+                            if (strInput.equals("a")) {
+                                result += 1;
+                            }
+                            else if (strInput.equals("b")) {
+                                result -= 5;
+                            }
+                            else if (strInput.equals("c")) {
+                                result *= 4;
+                            }
+                            else if (strInput.equals("d")) {
+                                result *= result;
+                            }
+                            else if (strInput.equals("e")) {
+                                result %= 10;
+                            }
+                            else if (strInput.equals("f")) {
+                                result += 7;
+                            }
+                            else {
+                                result = result;
+                            }
+                            return result;
+                        }
+                    """;
+
+    private static final String CORRECT_SOLUTION =
+            """
+                    public int doCalculation(String strInput, int intInput) {
+                            int result = intInput;
+                            switch (strInput) {
+                                case "a":
+                                    result += 1;
+                                    break;
+                                case "b":
+                                    result -= 5;
+                                    break;
+                                case "c":
+                                    result *= 4;
+                                    break;
+                                case "d":
+                                    result *= result;
+                                    break;
+                                case "e":
+                                    result %= 10;
+                                    break;
+                                case "f":
+                                    result += 7;
+                                    break;
+                                default:
+                                    result = result;
+                            }
+                            return result;
+                        }
+                    """;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -45,19 +104,6 @@ public class RefactorTooManyIfsIntegrationTest {
                                         containsString(
                                                 "result += 1;")));
     }
-
-    // TODO: Remove this once the evaluator implementation is complete.
-//    @Test
-//    public void testEval_withUnimplementedEvaluator() throws Exception {
-//        String userInput = "public int doCalculation(String strInput, int intInput) { return 0; }";
-//        performEval(userInput)
-//                .andExpect(
-//                        content()
-//                                .string(
-//                                        containsString(
-//                                                "Unknown response: Evaluator "
-//                                                        + "not fully implemented yet.")));
-//    }
 
     @Test
     public void testEval_withInsecureInput_1() throws Exception {
@@ -157,6 +203,46 @@ public class RefactorTooManyIfsIntegrationTest {
                                         containsString(
                                                 "Server timed out: The solution took "
                                                         +"too long to execute.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_1() throws Exception {
+        String userInput =
+                "public int doCalculation(String strInput, int intInput) {\n"
+                        + "  return 0;\n"
+                        + "}\n";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "The calculation output is wrong "
+                                                        + "for some inputs.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_2() throws Exception {
+        performEval(WRONG_SOLUTION)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: While the solution "
+                                                        + "technically works, it still "
+                                                        + "contains too many if statements.")));
+    }
+
+    @Test
+    public void testEval_withCorrectAnswer() throws Exception {
+        performEval(CORRECT_SOLUTION)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
     }
 
     private ResultActions performGet() throws Exception {

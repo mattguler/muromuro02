@@ -14,6 +14,7 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
 public class RefactorTooManyIfsImpl implements Evaluator {
+
     private static final int USER_CODE_MAX_LENGTH = 2500;
 
     private final InitialSolution initialSolution;
@@ -46,7 +47,7 @@ public class RefactorTooManyIfsImpl implements Evaluator {
         String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
         // Note: Comment this out when debugging the container logs.
         dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(evalCode, dockerEvalOutput, userInput);
+        return analyzeEvaluation(dockerEvalOutput, userInput);
     }
 
     // TODO: Also prevent the user from entering “import” statements, here and
@@ -67,7 +68,6 @@ public class RefactorTooManyIfsImpl implements Evaluator {
     }
 
     private static MuroMuroResponse analyzeEvaluation(
-            String evalCode, // TODO: Remove this parameter once the evaluator is complete.
             String dockerEvalOutput,
             UserInput userInput) {
         if (dockerEvalOutput.contains("error: not a statement")
@@ -93,24 +93,17 @@ public class RefactorTooManyIfsImpl implements Evaluator {
                     MuroMuroResponse.Status.FAILURE,
                     "Incorrect solution.");
         }
-        if (getIfCountInCode(userInput) > 2) {
+        else if (getIfCountInCode(userInput) > 2) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     "While the solution technically works, "
                             + "it still contains too many if statements.");
         }
+
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.SUCCESS,
                 "The solution looks correct, but your interviewer "
                         + "will be the final judge.");
-        // TODO: Remove this once the integration tests are implemented.
-//        return new MuroMuroResponse(
-//                MuroMuroResponse.Status.UNKNOWN,
-//                String.format(
-//                        "Evaluator not fully implemented yet.\n"
-//                                + "Eval code:\n%s\n\nThe dockerEvalOutput:\n%s",
-//                        evalCode,
-//                        dockerEvalOutput));
     }
 
     private static int getIfCountInCode(UserInput userInput) {
