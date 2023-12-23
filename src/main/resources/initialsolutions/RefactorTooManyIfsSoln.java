@@ -8,23 +8,23 @@ public class RefactorTooManyIfsSoln {
 
     // Start initial solution implementation.
     public int doCalculation(String strInput, int intInput) {
-        int result = input;
-        if (input.equals("a")) {
+        int result = intInput;
+        if (strInput.equals("a")) {
             result += 1;
         }
-        else if (input.equals("b")) {
+        else if (strInput.equals("b")) {
             result -= 5;
         }
-        else if (input.equals("c")) {
+        else if (strInput.equals("c")) {
             result *= 4;
         }
-        else if (input.equals("d")) {
+        else if (strInput.equals("d")) {
             result *= result;
         }
-        else if (input.equals("e")) {
+        else if (strInput.equals("e")) {
             result %= 10;
         }
-        else if (input.equals("f")) {
+        else if (strInput.equals("f")) {
             result += 7;
         }
         else {

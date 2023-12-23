@@ -1,5 +1,8 @@
 package com.muromuro.muromuro02.service.utils;
 
+import com.muromuro.muromuro02.model.MuroMuroResponse;
+import com.muromuro.muromuro02.model.UserInput;
+
 /** The Utils class which is used to provide various utility methods. */
 public class Utils {
 
@@ -107,5 +110,39 @@ public class Utils {
             return "static " + code;
         }
         return code;
+    }
+
+    /**
+     * Validates and makes sure that the main definition in the user input does not start
+     * with a comment. This is to help with the successful operation of the
+     * prependStaticIfMissing() method. Returns a MuroMuroResponse object containing the status.
+     * TODO: Write the unit tests for this.
+     */
+    public static MuroMuroResponse validateNotStartsWithComments(UserInput userInput) {
+        String mainDefinition = userInput.getMainDefinition();
+        if (mainDefinition.trim().startsWith("//") || mainDefinition.trim().startsWith("/*")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "The main definition should not start with a comment.");
+        }
+        return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS, "");
+    }
+
+    /**
+     * Counts and returns how many times the given keyword string appears in the given code string.
+     * TODO: Write the unit tests for this.
+     */
+    public static int countKeywordOccurrences(String code, String keyword) {
+        int count = 0;
+        int index = 0;
+        while (index < code.length()) {
+            index = code.indexOf(keyword, index);
+            if (index < 0) {
+                break;
+            }
+            count++;
+            index += keyword.length();
+        }
+        return count;
     }
 }

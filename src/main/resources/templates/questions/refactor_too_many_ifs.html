@@ -20,14 +20,13 @@
     <h2>Refactoring Too Many Ifs</h2>
     <hr>
     <p>
-        You are given the following code, which seems to contain too many if statements.
+        You are given the following code. You are told it seems to contain too many if statements.
     </p>
     <p>
-        Could you please refactor this code in a way that reduces the if statements and
-        makes the code more readable?
+        Could you please refactor this code in a way that reduces the if statements in an attempt
+        to make the code more readable?
     </p>
     <hr>
-    <!-- TODO: Change this form's method to POST when implementing its backend. -->
     <form action="#" th:action="@{/muromuro_questions/eval_refactor_too_many_ifs#mainDefLabel}"
             th:object="${muroMuroSolution}" method="POST">
         <pre><code>
@@ -41,7 +40,7 @@ Please refactor the code here:
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
                     class="alert alert-success col-lg-6">
-                <b th:text="'Correct answer.'"></b></div>
+                <b th:text="'Correct answer: ' + *{response.errorMessage}"></b></div>
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
                     class="alert alert-danger col-lg-6">
                 <b th:text="'Wrong answer: ' + *{response.errorMessage}"></b></div>
@@ -50,7 +49,10 @@ Please refactor the code here:
                 <b th:text="'Server timed out: ' + *{response.errorMessage}"></b></div>
             <div th:case="*"
                     class="alert alert-warning col-lg-6">
-                <b th:text="'Unknown response: ' + *{response.errorMessage}"></b></div>
+                <pre><code>
+<b th:text="'Unknown response: ' + *{response.errorMessage}"></b>
+                </code></pre>
+            </div>
         </div>
         <button type="submit" class="btn btn-info col-2" onclick="disableButtonAndSubmitForm(this);">
             Submit
