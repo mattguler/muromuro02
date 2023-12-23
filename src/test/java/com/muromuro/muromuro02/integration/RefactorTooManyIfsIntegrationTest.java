@@ -46,17 +46,117 @@ public class RefactorTooManyIfsIntegrationTest {
                                                 "result += 1;")));
     }
 
-    // TODO: Replace this once the evaluator implementation is complete.
+    // TODO: Remove this once the evaluator implementation is complete.
+//    @Test
+//    public void testEval_withUnimplementedEvaluator() throws Exception {
+//        String userInput = "public int doCalculation(String strInput, int intInput) { return 0; }";
+//        performEval(userInput)
+//                .andExpect(
+//                        content()
+//                                .string(
+//                                        containsString(
+//                                                "Unknown response: Evaluator "
+//                                                        + "not fully implemented yet.")));
+//    }
+
     @Test
-    public void testEval_withUnimplementedEvaluator() throws Exception {
-        String userInput = "xyz();";
+    public void testEval_withInsecureInput_1() throws Exception {
+        String userInput = "System.exit(0);";
         performEval(userInput)
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
-                                                "Unknown response: This Muromuro question "
-                                                        + "has not been implemented yet.")));
+                                                "Wrong answer: The solution seems insecure, "
+                                                        + "with forbidden keyword: System")));
+    }
+
+    @Test
+    public void testEval_withInsecureInput_2() throws Exception {
+        String userInput = "Runtime.getRuntime().exec(\"rm -rf /\");";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The solution seems insecure, "
+                                                        + "with forbidden keyword: Runtime")));
+    }
+
+    @Test
+    public void testEval_withBadlyFormedInput_1() throws Exception {
+        String userInput = "// This is a comment";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The main definition should not "
+                                                        + "start with a comment.")));
+    }
+
+    @Test
+    public void testEval_withLengthyInput() throws Exception {
+        String userInput = "a".repeat(2501);
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The solution seems insecure, with its "
+                                                        + "length exceeding the max allowable length.")));
+    }
+
+    @Test
+    public void testEval_withEmptyInput() throws Exception {
+        String userInput = "";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid solution.")));
+    }
+
+    @Test
+    public void testEval_withBadInput_1() throws Exception {
+        String userInput = "blahblah";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid solution.")));
+    }
+
+    @Test
+    public void testEval_withBadInput_2() throws Exception {
+        String userInput = "public int doCalculation() { return 0; }";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid solution.")));
+    }
+
+    @Test
+    public void testEval_withTimeout() throws Exception {
+        String userInput =
+                "public int doCalculation(String strInput, int intInput) {\n"
+                        + "  int a = 5;\n"
+                        + "  while (a != 0) {\n"
+                        + "    a = -a;\n"
+                        + "  }\n"
+                        + "  return 0;\n"
+                        + "}\n";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: The solution took "
+                                                        +"too long to execute.")));
     }
 
     private ResultActions performGet() throws Exception {

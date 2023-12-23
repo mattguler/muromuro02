@@ -3,13 +3,14 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
-import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
+import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
 import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
 import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
 
@@ -75,8 +76,8 @@ public class RepresentAccountStatesImpl implements Evaluator {
 
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
-                Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                Security.checkIfCodeSecure(userInput));
+                validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
+                checkIfCodeSecure(userInput));
     }
 
     private String buildEvaluationCode(UserInput userInput) {

@@ -279,7 +279,7 @@ public class QuestionControllerUnitTest {
                                 .param("userInput.mainDefinition", USER_INPUT))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(content().string(containsString("Correct answer.")));
+                .andExpect(content().string(containsString("Correct answer")));
     }
 
     @Test

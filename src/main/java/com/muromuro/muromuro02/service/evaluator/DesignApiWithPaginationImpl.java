@@ -3,11 +3,14 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
-import com.muromuro.muromuro02.service.utils.Security;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
+import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
 import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
+import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithComments;
 
 /** The evaluator for the DesignApiWithPagination question. */
 @Service
@@ -17,6 +20,7 @@ public class DesignApiWithPaginationImpl implements Evaluator {
     private final DockerProxy dockerProxy;
     private final EvaluationCode evaluationCode;
 
+    @Autowired
     public DesignApiWithPaginationImpl(
             DockerProxy dockerProxy,
             @Qualifier("designApiWithPagination") EvaluationCode evaluationCode) {
@@ -45,19 +49,9 @@ public class DesignApiWithPaginationImpl implements Evaluator {
 
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
-                Security.validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                Security.checkIfCodeSecure(userInput),
-                checkIfCodeCorrectlyFormed(userInput));
-    }
-
-    private static MuroMuroResponse checkIfCodeCorrectlyFormed(UserInput userInput) {
-        String mainDefinition = userInput.getMainDefinition();
-        if (mainDefinition.trim().startsWith("//") || mainDefinition.trim().startsWith("/*")) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    "The main definition should not start with a comment.");
-        }
-        return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS, "");
+                validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
+                checkIfCodeSecure(userInput),
+                validateNotStartsWithComments(userInput));
     }
 
     private String buildEvaluationCode(UserInput userInput) {
