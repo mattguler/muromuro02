@@ -3,8 +3,7 @@ package com.muromuro.muromuro02.service.utils;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /** Unit tests the methods in the Utils class. */
 public class UtilsTest {
@@ -168,21 +167,21 @@ public class UtilsTest {
     public void testGetClassName_empty() {
         String code = "";
         String className = Utils.getClassName(code);
-        assertEquals(null, className);
+        assertNull(className);
     }
 
     @Test
     public void testGetClassName_failure1() {
         String code = "// There is nothing to see here.";
         String className = Utils.getClassName(code);
-        assertEquals(null, className);
+        assertNull(className);
     }
 
     @Test
     public void testGetClassName_failure2() {
         String code = "// There is no actual class in this code string.";
         String className = Utils.getClassName(code);
-        assertEquals(null, className);
+        assertNull(className);
     }
 
     @Test
@@ -246,7 +245,7 @@ public class UtilsTest {
     public void testValidateNotStartsWithComments_withComment_1() {
         String code =
                 "// This code has some comments.\n"
-                + "public class SomeClass {}";
+                        + "public class SomeClass {}";
         MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
