@@ -51,7 +51,7 @@ public class DesignApiWithPaginationImpl implements Evaluator {
         return MuroMuroResponse.combineResponses(
                 validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput));
+                validateNotStartsWithComments(userInput.getMainDefinition()));
     }
 
     private String buildEvaluationCode(UserInput userInput) {

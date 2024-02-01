@@ -1,8 +1,10 @@
 package com.muromuro.muromuro02.service.utils;
 
+import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Unit tests the methods in the Utils class. */
 public class UtilsTest {
@@ -230,5 +232,83 @@ public class UtilsTest {
         String code = "public static void someMethod();";
         String newCode = Utils.prependStaticIfMissing(code);
         assertEquals(code, newCode);
+    }
+
+    @Test
+    public void testValidateNotStartsWithComments_noComment() {
+        String code = "public class SomeClass {}";
+        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        assertTrue(response.getErrorMessage().isEmpty());
+    }
+
+    @Test
+    public void testValidateNotStartsWithComments_withComment_1() {
+        String code =
+                "// This code has some comments.\n"
+                + "public class SomeClass {}";
+        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
+        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
+        assertEquals(
+                "The main definition should not start with a comment.",
+                response.getErrorMessage());
+    }
+
+    @Test
+    public void testValidateNotStartsWithComments_withComment_2() {
+        String code =
+                "    \n/* This code has some comments. */\n"
+                        + "public class SomeClass {}";
+        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
+        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
+        assertEquals(
+                "The main definition should not start with a comment.",
+                response.getErrorMessage());
+    }
+
+    @Test
+    public void testValidateNotStartsWithComments_withLaterComment() {
+        String code =
+                "public class SomeClass {}\n"
+                        + "// The comment is here instead.";
+        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        assertTrue(response.getErrorMessage().isEmpty());
+    }
+
+    @Test
+    public void testValidateNotStartsWithComments_empty() {
+        String code = "";
+        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        assertTrue(response.getErrorMessage().isEmpty());
+    }
+
+    @Test
+    public void testCountKeywordOccurrences_empty() {
+        String code = "";
+        int count = Utils.countKeywordOccurrences(code, "static");
+        assertEquals(0, count);
+    }
+
+    @Test
+    public void testCountKeywordOccurrences_noKeyword() {
+        String code = "public class SomeClass {}";
+        int count = Utils.countKeywordOccurrences(code, "static");
+        assertEquals(0, count);
+    }
+
+    @Test
+    public void testCountKeywordOccurrences_singleKeyword() {
+        String code = "public static class SomeClass {}";
+        int count = Utils.countKeywordOccurrences(code, "static");
+        assertEquals(1, count);
+    }
+
+    @Test
+    public void testCountKeywordOccurrences_multipleKeywords() {
+        String code = "public static class SomeClass { static int someField; }";
+        int count = Utils.countKeywordOccurrences(code, "static");
+        assertEquals(2, count);
     }
 }
