@@ -15,23 +15,23 @@ public class MuroMuroResponse {
     }
 
     private final Status status;
-    private final String errorMessage;
+    private final String message;
 
     public MuroMuroResponse(Status status) {
         this(status, "");
     }
 
-    public MuroMuroResponse(Status status, String errorMessage) {
+    public MuroMuroResponse(Status status, String message) {
         this.status = status;
-        this.errorMessage = errorMessage;
+        this.message = message;
     }
 
     public Status getStatus() {
         return status;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
     /**

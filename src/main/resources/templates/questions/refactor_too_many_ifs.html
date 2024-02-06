@@ -40,17 +40,17 @@ Please refactor the code here:
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
                     class="alert alert-success col-lg-6">
-                <b th:text="'Correct answer: ' + *{response.errorMessage}"></b></div>
+                <b th:text="'Correct answer: ' + *{response.message}"></b></div>
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
                     class="alert alert-danger col-lg-6">
-                <b th:text="'Wrong answer: ' + *{response.errorMessage}"></b></div>
+                <b th:text="'Wrong answer: ' + *{response.message}"></b></div>
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
                     class="alert alert-warning col-lg-6">
-                <b th:text="'Server timed out: ' + *{response.errorMessage}"></b></div>
+                <b th:text="'Server timed out: ' + *{response.message}"></b></div>
             <div th:case="*"
                     class="alert alert-warning col-lg-6">
                 <pre><code>
-<b th:text="'Unknown response: ' + *{response.errorMessage}"></b>
+<b th:text="'Unknown response: ' + *{response.message}"></b>
                 </code></pre>
             </div>
         </div>

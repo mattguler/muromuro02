@@ -238,7 +238,7 @@ public class UtilsTest {
         String code = "public class SomeClass {}";
         MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getErrorMessage().isEmpty());
+        assertTrue(response.getMessage().isEmpty());
     }
 
     @Test
@@ -250,7 +250,7 @@ public class UtilsTest {
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The main definition should not start with a comment.",
-                response.getErrorMessage());
+                response.getMessage());
     }
 
     @Test
@@ -262,7 +262,7 @@ public class UtilsTest {
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The main definition should not start with a comment.",
-                response.getErrorMessage());
+                response.getMessage());
     }
 
     @Test
@@ -272,7 +272,7 @@ public class UtilsTest {
                         + "// The comment is here instead.";
         MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getErrorMessage().isEmpty());
+        assertTrue(response.getMessage().isEmpty());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class UtilsTest {
         String code = "";
         MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getErrorMessage().isEmpty());
+        assertTrue(response.getMessage().isEmpty());
     }
 
     @Test
