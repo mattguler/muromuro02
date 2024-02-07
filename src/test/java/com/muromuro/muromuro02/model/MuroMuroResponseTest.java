@@ -23,12 +23,12 @@ public class MuroMuroResponseTest {
                 combineResponses(response1, response2, response3).getStatus());
         assertEquals(
                 "Error",
-                combineResponses(response1, response2, response3).getErrorMessage());
+                combineResponses(response1, response2, response3).getMessage());
         assertEquals(
                 MuroMuroResponse.Status.TIMEOUT,
                 combineResponses(response1, response4, response3).getStatus());
         assertEquals(
                 "Timeout",
-                combineResponses(response1, response4, response3).getErrorMessage());
+                combineResponses(response1, response4, response3).getMessage());
     }
 }

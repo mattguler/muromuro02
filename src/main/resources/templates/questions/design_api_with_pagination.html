@@ -110,13 +110,13 @@
             <b th:text="'Correct answer.'"></b></div>
         <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
                 class="alert alert-danger col-lg-6">
-            <b th:text="'Wrong answer: ' + *{response.errorMessage}"></b></div>
+            <b th:text="'Wrong answer: ' + *{response.message}"></b></div>
         <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
                 class="alert alert-warning col-lg-6">
-            <b th:text="'Server timed out: ' + *{response.errorMessage}"></b></div>
+            <b th:text="'Server timed out: ' + *{response.message}"></b></div>
         <div th:case="*"
                 class="alert alert-warning col-lg-6">
-            <b th:text="'Unknown response: ' + *{response.errorMessage}"></b>
+            <b th:text="'Unknown response: ' + *{response.message}"></b>
         </div>
     </div>
     <button type="submit" class="btn btn-info col-2" onclick="disableButtonAndSubmitForm(this);">

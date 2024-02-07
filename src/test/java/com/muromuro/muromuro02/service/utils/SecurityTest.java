@@ -27,7 +27,7 @@ public class SecurityTest {
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The solution seems insecure, with its length exceeding the max allowable length.",
-                response.getErrorMessage());
+                response.getMessage());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class SecurityTest {
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The solution seems insecure, with its length exceeding the max allowable length.",
-                response.getErrorMessage());
+                response.getMessage());
     }
 
     @Test
