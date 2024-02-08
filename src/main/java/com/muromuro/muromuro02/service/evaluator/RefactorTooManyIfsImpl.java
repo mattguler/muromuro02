@@ -50,13 +50,12 @@ public class RefactorTooManyIfsImpl implements Evaluator {
         return analyzeEvaluation(dockerEvalOutput, userInput);
     }
 
-    // TODO: Also prevent the user from entering “import” statements, here and
-    // in the other evaluators.
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
                 validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput.getMainDefinition()));
+                validateNotStartsWithComments(userInput.getMainDefinition()),
+                validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     private String buildEvaluationCode(UserInput userInput) {

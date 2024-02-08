@@ -284,6 +284,34 @@ public class UtilsTest {
     }
 
     @Test
+    public void testValidateNotStartsWithImports_noImport() {
+        String code = "public class SomeClass {}";
+        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        assertTrue(response.getMessage().isEmpty());
+    }
+
+    @Test
+    public void testValidateNotStartsWithImports_withImport() {
+        String code =
+                "\n    \nimport java.util.*;\n"
+                        + "public class SomeClass {}";
+        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
+        assertEquals(
+                "The code should not contain any import statements.",
+                response.getMessage());
+    }
+
+    @Test
+    public void testValidateNotStartsWithImports_empty() {
+        String code = "";
+        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
+        assertTrue(response.getMessage().isEmpty());
+    }
+
+    @Test
     public void testCountKeywordOccurrences_empty() {
         String code = "";
         int count = Utils.countKeywordOccurrences(code, "static");

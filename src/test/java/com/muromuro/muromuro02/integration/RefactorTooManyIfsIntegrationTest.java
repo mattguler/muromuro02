@@ -130,7 +130,7 @@ public class RefactorTooManyIfsIntegrationTest {
     }
 
     @Test
-    public void testEval_withBadlyFormedInput_1() throws Exception {
+    public void testEval_inputWithComment() throws Exception {
         String userInput = "// This is a comment";
         performEval(userInput)
                 .andExpect(
@@ -139,6 +139,18 @@ public class RefactorTooManyIfsIntegrationTest {
                                         containsString(
                                                 "Wrong answer: The main definition should not "
                                                         + "start with a comment.")));
+    }
+
+    @Test
+    public void testEval_inputWithImport() throws Exception {
+        String userInput = "import java.util.*;";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The code should not contain "
+                                                        + "any import statements.")));
     }
 
     @Test

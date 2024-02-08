@@ -187,6 +187,18 @@ public class RepresentAccountStatesIntegrationTest {
     }
 
     @Test
+    public void testEval_inputWithImport() throws Exception {
+        String userInput = "import java.util.*;";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The code should not contain "
+                                                        + "any import statements.")));
+    }
+
+    @Test
     public void testEval_withLengthyInput() throws Exception {
         int inputLength = 1001;
         String userInput =

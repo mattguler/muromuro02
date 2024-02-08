@@ -1,3 +1,7 @@
+import java.util.*;
+import java.util.stream.*;
+
+
 /**
  * The evaluator for the RefactorTooManyIfs question.
  * This is a resource file, not part of the main codebase.
