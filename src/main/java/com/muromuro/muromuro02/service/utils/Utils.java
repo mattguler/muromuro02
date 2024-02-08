@@ -126,6 +126,18 @@ public class Utils {
     }
 
     /**
+     * Validates that the given code string does not start with any import statements.
+     */
+    public static MuroMuroResponse validateNotStartsWithImports(String code) {
+        if (code.trim().startsWith("import ")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "The code should not contain any import statements.");
+        }
+        return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS, "");
+    }
+
+    /**
      * Counts and returns how many times the given keyword string appears in the given code string.
      */
     public static int countKeywordOccurrences(String code, String keyword) {

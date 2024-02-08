@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
 import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
-import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithComments;
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the DesignApiWithPagination question. */
 @Service
@@ -51,7 +50,8 @@ public class DesignApiWithPaginationImpl implements Evaluator {
         return MuroMuroResponse.combineResponses(
                 validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
                 checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput.getMainDefinition()));
+                validateNotStartsWithComments(userInput.getMainDefinition()),
+                validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     private String buildEvaluationCode(UserInput userInput) {

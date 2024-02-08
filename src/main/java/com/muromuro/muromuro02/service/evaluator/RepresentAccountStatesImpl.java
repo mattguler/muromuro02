@@ -11,8 +11,7 @@ import java.util.List;
 
 import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
 import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
-import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RepresentAccountStates question. */
 @Service
@@ -77,7 +76,8 @@ public class RepresentAccountStatesImpl implements Evaluator {
     private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
                 validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                checkIfCodeSecure(userInput));
+                checkIfCodeSecure(userInput),
+                validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     private String buildEvaluationCode(UserInput userInput) {
