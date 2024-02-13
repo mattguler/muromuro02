@@ -7,54 +7,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
 /** The evaluator for the DesignApiWithPagination question. */
 @Service
-public class DesignApiWithPaginationImpl implements Evaluator {
+public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2500;
-
-    private final DockerProxy dockerProxy;
-    private final EvaluationCode evaluationCode;
 
     @Autowired
     public DesignApiWithPaginationImpl(
             DockerProxy dockerProxy,
             @Qualifier("designApiWithPagination") EvaluationCode evaluationCode) {
-        this.dockerProxy = dockerProxy;
-        this.evaluationCode = evaluationCode;
+        super(dockerProxy, evaluationCode);
     }
 
     @Override
-    public UserInput getInitialSolution() {
-        return new UserInput("", "");
+    protected int getUserCodeMaxLength() {
+        return USER_CODE_MAX_LENGTH;
     }
 
     @Override
-    public MuroMuroResponse evaluateSolution(UserInput userInput) {
-        MuroMuroResponse securityResponse = checkIfCodeSecureAndCorrect(userInput);
-        if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
-            return securityResponse;
-        }
-        String evalCode = buildEvaluationCode(userInput);
-        String containerId = dockerProxy.startContainer(evalCode);
-        String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
-        // Note: Comment this out when debugging the container logs.
-        dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(dockerEvalOutput);
-    }
-
-    private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
-        return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput.getMainDefinition()),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
-    }
-
-    private String buildEvaluationCode(UserInput userInput) {
+    protected String buildEvaluationCode(UserInput userInput) {
         String callerCode = userInput.getCallerCode();
         String mainDefinition = userInput.getMainDefinition();
         mainDefinition = prependStaticIfMissing(mainDefinition);
@@ -64,7 +37,9 @@ public class DesignApiWithPaginationImpl implements Evaluator {
                 .getFormattedContent();
     }
 
-    private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput) {
+    @Override
+    protected MuroMuroResponse analyzeEvaluation(
+            String dockerEvalOutput, UserInput unusedUserInput) {
         if (dockerEvalOutput.contains("error: not a statement")
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")

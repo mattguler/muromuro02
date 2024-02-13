@@ -7,28 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.Utils.countKeywordOccurrences;
+import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
-public class RefactorTooManyIfsImpl implements Evaluator {
+public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 2500;
 
     private final InitialSolution initialSolution;
-    private final EvaluationCode evaluationCode;
-    private final DockerProxy dockerProxy;
 
     @Autowired
     public RefactorTooManyIfsImpl(
             @Qualifier("refactorTooManyIfsSoln") InitialSolution initialSolution,
             @Qualifier("refactorTooManyIfs") EvaluationCode evaluationCode,
             DockerProxy dockerProxy) {
+        super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
-        this.evaluationCode = evaluationCode;
-        this.dockerProxy = dockerProxy;
     }
 
     @Override
@@ -37,28 +33,12 @@ public class RefactorTooManyIfsImpl implements Evaluator {
     }
 
     @Override
-    public MuroMuroResponse evaluateSolution(UserInput userInput) {
-        MuroMuroResponse securityResponse = checkIfCodeSecureAndCorrect(userInput);
-        if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
-            return securityResponse;
-        }
-        String evalCode = buildEvaluationCode(userInput);
-        String containerId = dockerProxy.startContainer(evalCode);
-        String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
-        // Note: Comment this out when debugging the container logs.
-        dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(dockerEvalOutput, userInput);
+    protected int getUserCodeMaxLength() {
+        return USER_CODE_MAX_LENGTH;
     }
 
-    private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
-        return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput.getMainDefinition()),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
-    }
-
-    private String buildEvaluationCode(UserInput userInput) {
+    @Override
+    protected String buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
         mainDefinition = prependStaticIfMissing(mainDefinition);
         return evaluationCode
@@ -66,9 +46,9 @@ public class RefactorTooManyIfsImpl implements Evaluator {
                 .getFormattedContent();
     }
 
-    private static MuroMuroResponse analyzeEvaluation(
-            String dockerEvalOutput,
-            UserInput userInput) {
+    @Override
+    protected MuroMuroResponse analyzeEvaluation(
+            String dockerEvalOutput, UserInput userInput) {
         if (dockerEvalOutput.contains("error: not a statement")
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")
