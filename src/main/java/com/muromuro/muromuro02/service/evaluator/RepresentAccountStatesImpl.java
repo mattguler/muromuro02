@@ -9,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
+import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
 
 /** The evaluator for the RepresentAccountStates question. */
 @Service
-public class RepresentAccountStatesImpl implements Evaluator {
+public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 1000;
 
     private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
@@ -33,15 +32,11 @@ public class RepresentAccountStatesImpl implements Evaluator {
     private static final String INITIAL_SOLUTION =
             "boolean isActive = false;";
 
-    private final DockerProxy dockerProxy;
-    private final EvaluationCode evaluationCode;
-
     @Autowired
     public RepresentAccountStatesImpl(
             DockerProxy dockerProxy,
             @Qualifier("representAccountStates") EvaluationCode evaluationCode) {
-        this.dockerProxy = dockerProxy;
-        this.evaluationCode = evaluationCode;
+        super(dockerProxy, evaluationCode);
     }
 
     /**
@@ -53,34 +48,13 @@ public class RepresentAccountStatesImpl implements Evaluator {
         return new UserInput("", INITIAL_SOLUTION);
     }
 
-    /**
-     * Evaluates the user's solution to the RepresentAccountStates question.
-     *
-     * @param userInput The user's solution to the RepresentAccountStates question.
-     * @return The evaluation response to the user's solution.
-     */
     @Override
-    public MuroMuroResponse evaluateSolution(UserInput userInput) {
-        MuroMuroResponse securityResponse = checkIfCodeSecureAndCorrect(userInput);
-        if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
-            return securityResponse;
-        }
-        String evaluationCode = buildEvaluationCode(userInput);
-        String containerId = dockerProxy.startContainer(evaluationCode);
-        String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
-        // Note: Comment this out when debugging the container logs.
-        dockerProxy.cleanUpContainer(containerId);
-        return analyzeEvaluation(dockerEvalOutput, userInput);
+    protected int getUserCodeMaxLength() {
+        return USER_CODE_MAX_LENGTH;
     }
 
-    private static MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
-        return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, USER_CODE_MAX_LENGTH),
-                checkIfCodeSecure(userInput),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
-    }
-
-    private String buildEvaluationCode(UserInput userInput) {
+    @Override
+    protected String buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
         mainDefinition = replaceEnumNames(mainDefinition, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
@@ -97,7 +71,9 @@ public class RepresentAccountStatesImpl implements Evaluator {
                 .getFormattedContent();
     }
 
-    private static MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, UserInput userInput) {
+    @Override
+    protected MuroMuroResponse analyzeEvaluation(
+            String dockerEvalOutput, UserInput userInput) {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }

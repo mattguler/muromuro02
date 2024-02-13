@@ -187,6 +187,18 @@ public class RepresentAccountStatesIntegrationTest {
     }
 
     @Test
+    public void testEval_inputWithComment() throws Exception {
+        String userInput = "\n\n// This is a comment\n";
+        performEval(userInput)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: The main definition should not "
+                                                        + "start with a comment.")));
+    }
+
+    @Test
     public void testEval_inputWithImport() throws Exception {
         String userInput = "import java.util.*;";
         performEval(userInput)
