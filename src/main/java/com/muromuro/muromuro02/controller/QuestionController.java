@@ -92,4 +92,9 @@ public class QuestionController {
 
         return "questions/refactor_too_many_ifs";
     }
+
+    @GetMapping("device_database")
+    public String deviceDatabase(Model model) {
+        return "questions/device_database";
+    }
 }
