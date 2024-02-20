@@ -49,9 +49,7 @@ Please refactor the code here:
                 <b th:text="'Server timed out: ' + *{response.message}"></b></div>
             <div th:case="*"
                     class="alert alert-warning col-lg-6">
-                <pre><code>
-<b th:text="'Unknown response: ' + *{response.message}"></b>
-                </code></pre>
+<pre><code><b th:text="'Unknown response: ' + *{response.message}"></b><</code></pre>
             </div>
         </div>
         <button type="submit" class="btn btn-info col-2" onclick="disableButtonAndSubmitForm(this);">

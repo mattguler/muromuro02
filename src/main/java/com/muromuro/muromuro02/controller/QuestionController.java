@@ -95,6 +95,20 @@ public class QuestionController {
 
     @GetMapping("device_database")
     public String deviceDatabase(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Obtain the initial solution from the evaluator.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/device_database";
+    }
+
+    @PostMapping("eval_device_database")
+    public String evalDeviceDatabase(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Evaluate the solution.
+        MuroMuroResponse response =
+                new MuroMuroResponse(MuroMuroResponse.Status.UNKNOWN, "Not yet implemented.");
+        muroMuroSolution.setResponse(response);
+
         return "questions/device_database";
     }
 }
