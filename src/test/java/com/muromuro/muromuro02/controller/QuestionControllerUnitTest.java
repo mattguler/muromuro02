@@ -344,4 +344,39 @@ public class QuestionControllerUnitTest {
                                                 "Unknown response: "
                                                         + UNKNOWN_MESSAGE)));
     }
+
+    @Test
+    public void testGetDeviceDatabase() throws Exception {
+        // TODO: Include the Evaluator mocking here once it's implemented.
+        // TODO: Include verification for the initial caller & main code as well.
+        this.mockMvc
+                .perform(get("/muromuro_questions/device_database"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "which of these devices exists")));
+
+    }
+
+    @Test
+    public void testEvalDeviceDatabase_unknownResponse() throws Exception {
+        // TODO: Include the Evaluator mocking here once it's implemented.
+        // TODO: Also fix the unknown response message.
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_device_database")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Not yet implemented.")));
+    }
 }
