@@ -58,7 +58,8 @@ public class QuestionControllerUnitTest {
                                                         + "and attempt to answer it.")))
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")));
+                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
+                .andExpect(content().string(containsString("Device Database")));
     }
 
     @Test
