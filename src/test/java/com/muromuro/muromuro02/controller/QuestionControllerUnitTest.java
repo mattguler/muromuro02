@@ -44,6 +44,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("refactorTooManyIfsImpl")
     private Evaluator refactorTooManyIfs;
 
+    @MockBean
+    @Qualifier("deviceDatabaseImpl")
+    private Evaluator deviceDatabase;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -348,8 +352,8 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetDeviceDatabase() throws Exception {
-        // TODO: Include the Evaluator mocking here once it's implemented.
-        // TODO: Include verification for the initial caller & main code as well.
+        when(deviceDatabase.getInitialSolution())
+                .thenReturn(new UserInput(INITIAL_CALLER_CODE, INITIAL_MAIN_DEFINITION));
         this.mockMvc
                 .perform(get("/muromuro_questions/device_database"))
                 .andExpect(status().isOk())
@@ -358,14 +362,76 @@ public class QuestionControllerUnitTest {
                         content()
                                 .string(
                                         containsString(
-                                                "which of these devices exists")));
+                                                "which of these devices exists")))
+                .andExpect(content().string(containsString(INITIAL_CALLER_CODE)))
+                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)));
+    }
 
+    @Test
+    public void testEvalDeviceDatabase_correctAnswer() throws Exception {
+        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_device_database")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(content().string(containsString("Correct answer")));
+    }
+
+    @Test
+    public void testEvalDeviceDatabase_wrongAnswer() throws Exception {
+        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                ERROR_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_device_database")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + ERROR_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalDeviceDatabase_timeout() throws Exception {
+        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.TIMEOUT,
+                                TIMEOUT_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_device_database")
+                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: "
+                                                        + TIMEOUT_MESSAGE)));
     }
 
     @Test
     public void testEvalDeviceDatabase_unknownResponse() throws Exception {
-        // TODO: Include the Evaluator mocking here once it's implemented.
-        // TODO: Also fix the unknown response message.
+        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_device_database")
@@ -378,6 +444,6 @@ public class QuestionControllerUnitTest {
                                 .string(
                                         containsString(
                                                 "Unknown response: "
-                                                        + "Not yet implemented.")));
+                                                        + UNKNOWN_MESSAGE)));
     }
 }

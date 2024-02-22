@@ -22,15 +22,18 @@ public class QuestionController {
     private final Evaluator representAccountStates;
     private final Evaluator designApiWithPagination;
     private final Evaluator refactorTooManyIfs;
+    private final Evaluator deviceDatabase;
 
     @Autowired
     public QuestionController(
             @Qualifier("representAccountStatesImpl") Evaluator representAccountStates,
             @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination,
-            @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs) {
+            @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs,
+            @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
+        this.deviceDatabase = deviceDatabase;
     }
 
     @GetMapping("list")
@@ -96,7 +99,7 @@ public class QuestionController {
     @GetMapping("device_database")
     public String deviceDatabase(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Obtain the initial solution from the evaluator.
+        muroMuroSolution.setUserInput(deviceDatabase.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/device_database";
     }
@@ -104,9 +107,8 @@ public class QuestionController {
     @PostMapping("eval_device_database")
     public String evalDeviceDatabase(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Evaluate the solution.
         MuroMuroResponse response =
-                new MuroMuroResponse(MuroMuroResponse.Status.UNKNOWN, "Not yet implemented.");
+                deviceDatabase.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
         return "questions/device_database";

@@ -19,6 +19,11 @@ public class EvaluationCodeTest {
             "List<Employee> employees = getAllEmployees(dbProxy);";
     private static final String PAGINATION_API_MAIN_DEFINITION =
             "static List<Employee> getAllEmployees(DatabaseProxy dbProxy) { return null; }";
+    private static final String DEVICE_DATABASE_CALLER_CODE =
+            "List<String> resultDevicesInDdb = findDevicesInDdb(inputDevices, ddb);";
+    private static final String DEVICE_DATABASE_MAIN_DEFINITION =
+            "static List<String> findDevicesInDdb(List<String> inputDevices, DeviceDatabase ddb) "
+                    + "{ return null; }";
     private static final String REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION =
             "static int doCalculation(String strInput, int intInput) { return 0; }";
     private static final String REPRESENT_ACCOUNT_STATES_MAIN_DEFINITION =
@@ -27,6 +32,10 @@ public class EvaluationCodeTest {
     @Autowired
     @Qualifier("designApiWithPagination")
     private EvaluationCode designApiWithPaginationEval;
+
+    @Autowired
+    @Qualifier("deviceDatabase")
+    private EvaluationCode deviceDatabaseEval;
 
     @Autowired
     @Qualifier("refactorTooManyIfs")
@@ -88,6 +97,50 @@ public class EvaluationCodeTest {
         assertTrue(content.contains(PAGINATION_API_MAIN_DEFINITION));
         assertTrue(content.contains("public static void main(String[] args)"));
         assertTrue(content.contains("DatabaseProxy dbProxy = new DatabaseProxyImpl();"));
+    }
+
+    @Test
+    public void testGetContent_deviceDatabaseEval() {
+        String content = deviceDatabaseEval.getFormattedContent();
+        assertTrue(content.contains("public class DeviceDatabaseEval"));
+        assertTrue(content.contains("interface DeviceDatabase"));
+        assertTrue(content.contains("static void callerFunction("));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testReplaceCallerCode_deviceDatabaseEval() {
+        String content = deviceDatabaseEval
+                .replaceCallerCode(DEVICE_DATABASE_CALLER_CODE)
+                .getFormattedContent();
+        assertTrue(content.contains("public class DeviceDatabaseEval"));
+        assertTrue(content.contains("interface DeviceDatabase"));
+        assertTrue(content.contains(DEVICE_DATABASE_CALLER_CODE));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testReplaceMainDefinition_deviceDatabaseEval() {
+        String content = deviceDatabaseEval
+                .replaceMainDefinition(DEVICE_DATABASE_MAIN_DEFINITION)
+                .getFormattedContent();
+        assertTrue(content.contains("public class DeviceDatabaseEval"));
+        assertTrue(content.contains("interface DeviceDatabase"));
+        assertTrue(content.contains(DEVICE_DATABASE_MAIN_DEFINITION));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testReplaceAll_deviceDatabaseEval() {
+        String content = deviceDatabaseEval
+                .replaceCallerCode(DEVICE_DATABASE_CALLER_CODE)
+                .replaceMainDefinition(DEVICE_DATABASE_MAIN_DEFINITION)
+                .getFormattedContent();
+        assertTrue(content.contains("public class DeviceDatabaseEval"));
+        assertTrue(content.contains("interface DeviceDatabase"));
+        assertTrue(content.contains(DEVICE_DATABASE_CALLER_CODE));
+        assertTrue(content.contains(DEVICE_DATABASE_MAIN_DEFINITION));
+        assertTrue(content.contains("public static void main(String[] args)"));
     }
 
     @Test
