@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
+/** The evaluator for the DeviceDatabase question. */
 @Service
 public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2500;
@@ -45,6 +46,7 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
 
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.UNKNOWN,
-                "The Device Database evaluator is not yet implemented.");
+                "The Device Database evaluator output so far:\n"
+                        + dockerEvalOutput);
     }
 }

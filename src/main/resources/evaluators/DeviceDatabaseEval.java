@@ -13,6 +13,28 @@ public class DeviceDatabaseEval {
         List<String> ListDevices(String clusterName);
     }
 
+    static class DeviceDatabaseImpl implements DeviceDatabase {
+
+        private static final Map<String, List<String>> DEVICE_DATABASE_MAP =
+                Map.ofEntries(
+                        Map.entry(
+                                "abc",
+                                List.of("abcxyzwu", "abcdefgh")),
+                        Map.entry(
+                                "xyz",
+                                List.of("xyza1b2c", "xyzabcdef")));
+
+        @Override
+        public List<String> ListDevices(String clusterName) {
+            return DEVICE_DATABASE_MAP.get(clusterName);
+        }
+    }
+
+    // For debugging purposes only.
+    static void printList(List<String> list) {
+        System.out.println(String.join(", ", list));
+    }
+
     static void callerFunction(
             List<String> inputDevices,
             DeviceDatabase ddb,
@@ -25,7 +47,20 @@ public class DeviceDatabaseEval {
     // Start main definition implementation.
     // End main definition implementation.
 
+    static void runTest1() {
+        List<String> inputDevices =
+                List.of("xyza1b2c", "abcdefgh", "zzwfoobr", "xyzhgfed");
+        DeviceDatabase ddb = new DeviceDatabaseImpl();
+        List<String> resultDevicesInDdb = new ArrayList<>();
+        List<String> resultDevicesNotInDdb = new ArrayList<>();
+        callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        System.out.println("Devices in DDB:");
+        printList(resultDevicesInDdb);
+        System.out.println("Devices not in DDB:");
+        printList(resultDevicesNotInDdb);
+    }
+
     public static void main(String[] args) {
-        System.out.println("Device Database Eval not yet implemented.");
+        runTest1();
     }
 }
