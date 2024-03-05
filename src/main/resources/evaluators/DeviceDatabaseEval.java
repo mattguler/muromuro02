@@ -11,6 +11,7 @@ import java.util.stream.*;
 public class DeviceDatabaseEval {
     interface DeviceDatabase {
         List<String> ListDevices(String clusterName);
+        int getCallCount();
     }
 
     static class DeviceDatabaseImpl implements DeviceDatabase {
@@ -19,14 +20,26 @@ public class DeviceDatabaseEval {
                 Map.ofEntries(
                         Map.entry(
                                 "abc",
-                                List.of("abcxyzwu", "abcdefgh")),
+                                List.of("abcxyzwu", "abcdefgh", "abca2b5c")),
                         Map.entry(
                                 "xyz",
-                                List.of("xyza1b2c", "xyzabcdef")));
+                                List.of("xyza1b2c", "xyzqwert", "xyzabcde", "xyzxyzwu")));
+
+        private int callCount = 0;
+
+        DeviceDatabaseImpl() {
+            callCount = 0;
+        }
 
         @Override
         public List<String> ListDevices(String clusterName) {
+            callCount++;
             return DEVICE_DATABASE_MAP.get(clusterName);
+        }
+
+        @Override
+        public int getCallCount() {
+            return callCount;
         }
     }
 
@@ -49,18 +62,83 @@ public class DeviceDatabaseEval {
 
     static void runTest1() {
         List<String> inputDevices =
-                List.of("xyza1b2c", "abcdefgh", "zzwfoobr", "xyzhgfed");
+                List.of(
+                        "xyzabcde",
+                        "xyzhgfds",
+                        "abcabcde",
+                        "xyza1b2c",
+                        "abcdefgh",
+                        "zzwabcde");
         DeviceDatabase ddb = new DeviceDatabaseImpl();
         List<String> resultDevicesInDdb = new ArrayList<>();
         List<String> resultDevicesNotInDdb = new ArrayList<>();
         callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
-        System.out.println("Devices in DDB:");
-        printList(resultDevicesInDdb);
-        System.out.println("Devices not in DDB:");
-        printList(resultDevicesNotInDdb);
+        if (!areEqual(
+                Set.of("xyza1b2c", "xyzabcde", "abcdefgh"),
+                resultDevicesInDdb)) {
+            System.out.println("Test 1 failed.");
+        }
+        else {
+            if (!areEqual(
+                    Set.of("xyzhgfds", "zzwabcde", "abcabcde"),
+                    resultDevicesNotInDdb)) {
+                System.out.println("Test 1 partially working.");
+            }
+            else {
+                System.out.println("Test 1 passed.");
+            }
+        }
+        System.out.println("Test 1 call count: " + ddb.getCallCount());
+    }
+
+    static void runTest2() {
+        List<String> inputDevices = List.of();
+        DeviceDatabase ddb = new DeviceDatabaseImpl();
+        List<String> resultDevicesInDdb = new ArrayList<>();
+        List<String> resultDevicesNotInDdb = new ArrayList<>();
+        callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        if (resultDevicesInDdb.isEmpty() && resultDevicesNotInDdb.isEmpty()) {
+            System.out.println("Test 2 passed.");
+        }
+        else {
+            System.out.println("Test 2 failed.");
+        }
+        System.out.println("Test 2 call count: " + ddb.getCallCount());
+    }
+
+    static void runTest3() {
+        List<String> inputDevices = List.of("xyza1b2c", "abcdefgh", "xy");
+        DeviceDatabase ddb = new DeviceDatabaseImpl();
+        List<String> resultDevicesInDdb = new ArrayList<>();
+        List<String> resultDevicesNotInDdb = new ArrayList<>();
+        callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        if (!areEqual(Set.of("xyza1b2c", "abcdefgh"), resultDevicesInDdb)) {
+            System.out.println("Test 3 failed.");
+        }
+        else {
+            if (!areEqual(Set.of("xy"), resultDevicesNotInDdb)) {
+                System.out.println("Test 3 partially working.");
+            }
+            else {
+                System.out.println("Test 3 passed.");
+            }
+        }
+        System.out.println("Test 3 call count: " + ddb.getCallCount());
+    }
+
+    /**
+     * Returns true if the given list contains the same devices as the given
+     * expected set of devices, regardless of the order in the list.
+     */
+    static boolean areEqual(
+            Set<String> expectedDevices, List<String> devices) {
+        Set<String> devicesSet = new HashSet<>(devices);
+        return expectedDevices.equals(devicesSet);
     }
 
     public static void main(String[] args) {
         runTest1();
+        runTest2();
+        runTest3();
     }
 }
