@@ -9,6 +9,15 @@ import java.util.stream.*;
  * remote Docker container to do an evaluation of the user solution.
  */
 public class DeviceDatabaseEval {
+    static final Map<String, List<String>> DEVICE_DATABASE_MAP =
+            Map.ofEntries(
+                    Map.entry(
+                            "abc",
+                            List.of("abcxyzwu", "abcdefgh", "abca2b5c")),
+                    Map.entry(
+                            "xyz",
+                            List.of("xyza1b2c", "xyzqwert", "xyzabcde", "xyzxyzwu")));
+
     interface DeviceDatabase {
         List<String> ListDevices(String clusterName);
         int getCallCount();
@@ -16,16 +25,7 @@ public class DeviceDatabaseEval {
 
     static class DeviceDatabaseImpl implements DeviceDatabase {
 
-        private static final Map<String, List<String>> DEVICE_DATABASE_MAP =
-                Map.ofEntries(
-                        Map.entry(
-                                "abc",
-                                List.of("abcxyzwu", "abcdefgh", "abca2b5c")),
-                        Map.entry(
-                                "xyz",
-                                List.of("xyza1b2c", "xyzqwert", "xyzabcde", "xyzxyzwu")));
-
-        private int callCount = 0;
+        protected int callCount = 0;
 
         DeviceDatabaseImpl() {
             callCount = 0;
@@ -34,12 +34,24 @@ public class DeviceDatabaseEval {
         @Override
         public List<String> ListDevices(String clusterName) {
             callCount++;
+            if (!DEVICE_DATABASE_MAP.containsKey(clusterName)) {
+                return List.of();
+            }
             return DEVICE_DATABASE_MAP.get(clusterName);
         }
 
         @Override
         public int getCallCount() {
             return callCount;
+        }
+    }
+
+    static class NullReturningDeviceDatabaseImpl extends DeviceDatabaseImpl {
+
+        @Override
+        public List<String> ListDevices(String clusterName) {
+            callCount++;
+            return DEVICE_DATABASE_MAP.get(clusterName);
         }
     }
 
@@ -60,6 +72,7 @@ public class DeviceDatabaseEval {
     // Start main definition implementation.
     // End main definition implementation.
 
+    // This is a generic functional test with one cluster that does not exist in db.
     static void runTest1() {
         List<String> inputDevices =
                 List.of(
@@ -91,6 +104,7 @@ public class DeviceDatabaseEval {
         System.out.println("Test 1 call count: " + ddb.getCallCount());
     }
 
+    // This is a test with empty input.
     static void runTest2() {
         List<String> inputDevices = List.of();
         DeviceDatabase ddb = new DeviceDatabaseImpl();
@@ -106,12 +120,19 @@ public class DeviceDatabaseEval {
         System.out.println("Test 2 call count: " + ddb.getCallCount());
     }
 
+    // This is a test with a badly formed input.
     static void runTest3() {
         List<String> inputDevices = List.of("xyza1b2c", "abcdefgh", "xy");
         DeviceDatabase ddb = new DeviceDatabaseImpl();
         List<String> resultDevicesInDdb = new ArrayList<>();
         List<String> resultDevicesNotInDdb = new ArrayList<>();
-        callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        try {
+            callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("Test 3 failed with StringIndexOutOfBoundsException.");
+            System.out.println("Test 3 call count: " + ddb.getCallCount());
+            return;
+        }
         if (!areEqual(Set.of("xyza1b2c", "abcdefgh"), resultDevicesInDdb)) {
             System.out.println("Test 3 failed.");
         }
@@ -124,6 +145,33 @@ public class DeviceDatabaseEval {
             }
         }
         System.out.println("Test 3 call count: " + ddb.getCallCount());
+    }
+
+    // This is a test with a device database that might return a null result.
+    static void runTest4() {
+        List<String> inputDevices = List.of("xyza1b2c", "abcdefgh", "zzwabcde");
+        DeviceDatabase ddb = new NullReturningDeviceDatabaseImpl();
+        List<String> resultDevicesInDdb = new ArrayList<>();
+        List<String> resultDevicesNotInDdb = new ArrayList<>();
+        try {
+            callerFunction(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+        } catch (NullPointerException e) {
+            System.out.println("Test 4 failed with NullPointerException.");
+            System.out.println("Test 4 call count: " + ddb.getCallCount());
+            return;
+        }
+        if (!areEqual(Set.of("xyza1b2c", "abcdefgh"), resultDevicesInDdb)) {
+            System.out.println("Test 4 failed.");
+        }
+        else {
+            if (!areEqual(Set.of("zzwabcde"), resultDevicesNotInDdb)) {
+                System.out.println("Test 4 partially working.");
+            }
+            else {
+                System.out.println("Test 4 passed.");
+            }
+        }
+        System.out.println("Test 4 call count: " + ddb.getCallCount());
     }
 
     /**
@@ -140,5 +188,6 @@ public class DeviceDatabaseEval {
         runTest1();
         runTest2();
         runTest3();
+        runTest4();
     }
 }
