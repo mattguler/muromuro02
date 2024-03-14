@@ -21,6 +21,136 @@ public class DeviceDatabaseIntegrationTest {
     private static final String GET_URL = "/muromuro_questions/device_database";
     private static final String EVAL_URL = "/muromuro_questions/eval_device_database";
 
+    private static final String CALLER_CODE =
+            "areDevicesInDdb(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);";
+
+    private static final String MAIN_DEFINITION_TEMPLATE =
+            """
+                    static void areDevicesInDdb(
+                            List<String> inputDevices,
+                            DeviceDatabase ddb,
+                            List<String> resultDevicesInDdb,
+                            List<String> resultDevicesNotInDdb) {
+                    
+                        Map<String, List<String>> devicesMap = new HashMap<>();
+                        %s
+                    
+                        for (String device : inputDevices) {
+                            String clusterId = getClusterId(device);
+                            List<String> devicesInDdb;
+                            if (devicesMap.containsKey(clusterId)) {
+                                devicesInDdb = devicesMap.get(clusterId);
+                            }
+                            else {
+                                devicesInDdb = ddb.ListDevices(clusterId);
+                                %s {
+                                    %s
+                                    continue;
+                                }
+                                devicesMap.put(clusterId, devicesInDdb);
+                            }
+                            if (devicesInDdb.contains(device)) {
+                                resultDevicesInDdb.add(device);
+                            }
+                            else {
+                                %s
+                            }
+                        }
+                    }
+                    
+                    static String getClusterId(String device) {
+                        %s
+                        return device.substring(0, 3);
+                    }
+            """;
+
+    private static final String ADD_WRONG_DEVICES_TO_DB =
+            "resultDevicesInDdb.addAll(inputDevices);";
+
+    private static final String WRONG_IF_EMPTY =
+            """
+                        if (inputDevices.isEmpty()) {
+                            // Because the quotes do not really work well here.
+                            resultDevicesInDdb.add(String.valueOf(15));
+                        }
+            """;
+
+    private static final String CHECK_FOR_NULL =
+            "if (devicesInDdb == null || devicesInDdb.isEmpty())";
+
+    private static final String NO_CHECK_FOR_NULL =
+            "if (devicesInDdb.isEmpty())";
+
+    private static final String ADD_DEVICES_NOT_IN_DB =
+            "resultDevicesNotInDdb.add(device);";
+
+    private static final String DEVICE_LENGTH_CHECK =
+            """
+                        if (device.length() < 3) {
+                            return device;
+                        }
+            """;
+
+    private static String getCorrectSolution() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                "",
+                CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                DEVICE_LENGTH_CHECK);
+    }
+
+    private static String getWrongSolution() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                ADD_WRONG_DEVICES_TO_DB,
+                CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                DEVICE_LENGTH_CHECK);
+    }
+
+    private static String getSolutionWithMissingOutputList() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                "",
+                CHECK_FOR_NULL,
+                "",
+                "",
+                DEVICE_LENGTH_CHECK);
+    }
+
+    private static String getSolutionWithWrongEmptyList() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                WRONG_IF_EMPTY,
+                CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                DEVICE_LENGTH_CHECK);
+    }
+
+    private static String getSolutionWithNoCheckForNull() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                "",
+                NO_CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                DEVICE_LENGTH_CHECK);
+    }
+
+    private static String getSolutionWithNoDeviceLengthCheck() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                "",
+                CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                "");
+    }
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -101,7 +231,112 @@ public class DeviceDatabaseIntegrationTest {
                                                         + "length exceeding the max allowable length.")));
     }
 
-    // TODO: Implement more tests as the evaluator itself is implemented.
+    @Test
+    public void testEval_withBadInput_1() throws Exception {
+        performEval("blahblah", "")
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid solution.")));
+    }
+
+    @Test
+    public void testEval_withBadInput_2() throws Exception {
+        performEval("", "blahblah")
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Invalid solution.")));
+    }
+
+    @Test
+    public void testEval_withTimeout() throws Exception {
+        String callerCode = "while (true) { }";
+        performEval(callerCode, "")
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: The solution took too long to execute.")));
+    }
+
+    @Test
+    public void testEval_withEmptyInput() throws Exception {
+        performEval("", "")
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer() throws Exception {
+        performEval(CALLER_CODE, getWrongSolution())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution.")));
+    }
+
+    @Test
+    public void testEval_withAnswerMissingOutputList() throws Exception {
+        performEval(CALLER_CODE, getSolutionWithMissingOutputList())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incomplete solution. "
+                                                        + "One of the output lists is not correctly populated.")));
+    }
+
+    @Test
+    public void testEval_withWrongEmptyList() throws Exception {
+        performEval(CALLER_CODE, getSolutionWithWrongEmptyList())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. Your solution is not "
+                                                        + "correctly handling the case of an empty input list.")));
+    }
+
+    @Test
+    public void testEval_withNoCheckForNull() throws Exception {
+        performEval(CALLER_CODE, getSolutionWithNoCheckForNull())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Incorrect solution. Please consider that "
+                                                        + "the device database method might return a null.")));
+    }
+
+    @Test
+    public void testEval_withNoDeviceLengthCheck() throws Exception {
+        performEval(CALLER_CODE, getSolutionWithNoDeviceLengthCheck())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Incorrect solution. Please consider that "
+                                                        + "the input might be badly formed.")));
+    }
+
+    @Test
+    public void testEval_withCorrectAnswer() throws Exception {
+        performEval(CALLER_CODE, getCorrectSolution())
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
+    }
 
     private ResultActions performGet() throws Exception {
         return this.mockMvc

@@ -42,11 +42,60 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     protected MuroMuroResponse analyzeEvaluation(
             String dockerEvalOutput, UserInput userInput) {
 
-        // TODO: Implement the rest of the Device Database evaluator.
+        // TODO: Do some refactoring to reduce the code duplication in the analyzeEvaluation methods.
+        if (dockerEvalOutput.contains("error: not a statement")
+                || dockerEvalOutput.contains("error: ';' expected")
+                || dockerEvalOutput.contains("error: <identifier> expected")
+                || dockerEvalOutput.contains("Error: Could not find or load main class")) {
+            return new MuroMuroResponse(MuroMuroResponse.Status.FAILURE, "Invalid solution.");
+        }
+        else if (dockerEvalOutput.contains("Killed")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.TIMEOUT,
+                    "The solution took too long to execute.");
+        }
+        else if (dockerEvalOutput.contains("Test 1 partially working.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "Incomplete solution. "
+                            + "One of the output lists is not correctly populated.");
+        }
+        else if (dockerEvalOutput.contains("Test 1 failed.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "Incorrect solution.");
+        }
+        else if (!dockerEvalOutput.contains("Test 1 passed.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.UNKNOWN,
+                    "Unknown server failure. "
+                            + "Please contact support with the following output:\n"
+                            + dockerEvalOutput);
+        }
+        else if (!dockerEvalOutput.contains("Test 2 passed.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "Incorrect solution. Your solution is not "
+                            + "correctly handling the case of an empty input list.");
+        }
+        else if (!dockerEvalOutput.contains("Test 4 passed.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "Incorrect solution. Please consider that "
+                            + "the device database method might return a null.");
+        }
+        else if (!dockerEvalOutput.contains("Test 3 passed.")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    "Incorrect solution. Please consider that "
+                            + "the input might be badly formed.");
+        }
+
+        // TODO: Analyze the call counts here as well.
 
         return new MuroMuroResponse(
-                MuroMuroResponse.Status.UNKNOWN,
-                "The Device Database evaluator output so far:\n"
-                        + dockerEvalOutput);
+                MuroMuroResponse.Status.SUCCESS,
+                "The solution looks correct, but your interviewer "
+                        + "will be the final judge.");
     }
 }
