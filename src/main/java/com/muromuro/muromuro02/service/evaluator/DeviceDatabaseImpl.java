@@ -47,7 +47,11 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")
                 || dockerEvalOutput.contains("Error: Could not find or load main class")) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.FAILURE, "Invalid solution.");
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Invalid solution."));
         }
         else if (dockerEvalOutput.contains("Killed")) {
             return new MuroMuroResponse(
@@ -57,13 +61,17 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
         else if (dockerEvalOutput.contains("Test 1 partially working.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incomplete solution. "
-                            + "One of the output lists is not correctly populated.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incomplete solution.\n"
+                                    + "One of the output lists is not correctly populated."));
         }
         else if (dockerEvalOutput.contains("Test 1 failed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution."));
         }
         else if (!dockerEvalOutput.contains("Test 1 passed.")) {
             return new MuroMuroResponse(
@@ -75,20 +83,26 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
         else if (!dockerEvalOutput.contains("Test 2 passed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution. Your solution is not "
-                            + "correctly handling the case of an empty input list.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. Your solution is not\n"
+                                    + "correctly handling the case of an empty input list."));
         }
         else if (!dockerEvalOutput.contains("Test 4 passed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution. Please consider that "
-                            + "the device database method might return a null.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. Please consider that\n"
+                                    + "the device database method might return a null."));
         }
         else if (!dockerEvalOutput.contains("Test 3 passed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution. Please consider that "
-                            + "the input might be badly formed.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. Please consider that\n"
+                                    + "the input might be badly formed."));
         }
 
         // TODO: Analyze the call counts here as well.
@@ -97,5 +111,13 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                 MuroMuroResponse.Status.SUCCESS,
                 "The solution looks correct, but your interviewer "
                         + "will be the final judge.");
+    }
+
+    private String buildFailureMessage(String dockerEvalOutput, String errorMessage) {
+        StringBuilder fullMessage = new StringBuilder();
+        fullMessage.append(errorMessage);
+        fullMessage.append("\n\nBuild and run output:\n");
+        fullMessage.append(dockerEvalOutput);
+        return fullMessage.toString();
     }
 }

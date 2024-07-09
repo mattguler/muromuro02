@@ -289,7 +289,7 @@ public class DeviceDatabaseIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incomplete solution. "
+                                                "Wrong answer: Incomplete solution.\n"
                                                         + "One of the output lists is not correctly populated.")));
     }
 
@@ -300,7 +300,7 @@ public class DeviceDatabaseIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incorrect solution. Your solution is not "
+                                                "Wrong answer: Incorrect solution. Your solution is not\n"
                                                         + "correctly handling the case of an empty input list.")));
     }
 
@@ -311,7 +311,7 @@ public class DeviceDatabaseIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Incorrect solution. Please consider that "
+                                                "Incorrect solution. Please consider that\n"
                                                         + "the device database method might return a null.")));
     }
 
@@ -322,7 +322,7 @@ public class DeviceDatabaseIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Incorrect solution. Please consider that "
+                                                "Incorrect solution. Please consider that\n"
                                                         + "the input might be badly formed.")));
     }
 
