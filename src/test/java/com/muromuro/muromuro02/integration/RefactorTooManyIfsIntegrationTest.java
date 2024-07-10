@@ -229,8 +229,8 @@ public class RefactorTooManyIfsIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. "
-                                                        + "The calculation output is wrong "
-                                                        + "for some inputs.")));
+                                                        + "The calculation output is\n"
+                                                        + "wrong for some inputs.")));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class RefactorTooManyIfsIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: While the solution "
-                                                        + "technically works, it still "
+                                                        + "technically works,\nit still "
                                                         + "contains too many if statements.")));
     }
 

@@ -153,4 +153,14 @@ public class Utils {
         }
         return count;
     }
+
+    /**
+     * Builds a failure message string by appending the given dockerEvalOutput to the
+     * given error message. This is meant to ease debugging by the user.
+     */
+    public static String buildFailureMessage(String dockerEvalOutput, String errorMessage) {
+        return errorMessage
+                + "\n\nBuild and run output:\n"
+                + dockerEvalOutput;
+    }
 }

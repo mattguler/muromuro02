@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
 /** The evaluator for the DeviceDatabase question. */
@@ -111,13 +112,5 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                 MuroMuroResponse.Status.SUCCESS,
                 "The solution looks correct, but your interviewer "
                         + "will be the final judge.");
-    }
-
-    private String buildFailureMessage(String dockerEvalOutput, String errorMessage) {
-        StringBuilder fullMessage = new StringBuilder();
-        fullMessage.append(errorMessage);
-        fullMessage.append("\n\nBuild and run output:\n");
-        fullMessage.append(dockerEvalOutput);
-        return fullMessage.toString();
     }
 }
