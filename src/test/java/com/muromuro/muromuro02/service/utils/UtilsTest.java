@@ -338,4 +338,14 @@ public class UtilsTest {
         int count = Utils.countKeywordOccurrences(code, "static");
         assertEquals(2, count);
     }
+
+    @Test
+    public void testBuildFailureMessage() {
+        String errorMessage = "Error happened.";
+        String dockerEvalOutput = "Various build errors.";
+        String fullMessage = Utils.buildFailureMessage(dockerEvalOutput, errorMessage);
+        assertEquals(
+                "Error happened.\n\nBuild and run output:\nVarious build errors.",
+                fullMessage);
+    }
 }

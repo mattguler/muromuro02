@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Utils.countKeywordOccurrences;
-import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
@@ -53,7 +52,10 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")
                 || dockerEvalOutput.contains("Error: Could not find or load main class")) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.FAILURE, "Invalid solution.");
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(dockerEvalOutput,
+                            "Invalid solution."));
         }
         else if (dockerEvalOutput.contains("Killed")) {
             return new MuroMuroResponse(
@@ -64,19 +66,24 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
                 || dockerEvalOutput.contains("Validation 2 failed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution. The calculation output is wrong for some inputs.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. The calculation output is\n"
+                                    + "wrong for some inputs."));
         }
         else if (!dockerEvalOutput.contains("Validation 1 passed.")
                 || !dockerEvalOutput.contains("Validation 2 passed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution.");
+                    buildFailureMessage(dockerEvalOutput, "Incorrect solution."));
         }
         else if (getIfCountInCode(userInput) > 2) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "While the solution technically works, "
-                            + "it still contains too many if statements.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "While the solution technically works,\n"
+                                    + "it still contains too many if statements."));
         }
 
         return new MuroMuroResponse(
