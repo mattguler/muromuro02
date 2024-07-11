@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
 /** The evaluator for the DesignApiWithPagination question. */
@@ -44,7 +45,9 @@ public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")
                 || dockerEvalOutput.contains("Error: Could not find or load main class")) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.FAILURE, "Invalid solution.");
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(dockerEvalOutput, "Invalid solution."));
         }
         else if (dockerEvalOutput.contains("Killed")) {
             return new MuroMuroResponse(
@@ -54,7 +57,10 @@ public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
         else if (dockerEvalOutput.contains("is incorrectly formed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
-                    "Incorrect solution. One or more of the lists are not correctly populated.");
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. One or more of the lists are not\n"
+                                    + "correctly populated."));
         }
         else if (areAllListsCorrectlyFormed(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
