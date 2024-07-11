@@ -21,7 +21,8 @@ public class DesignApiWithPaginationIntegrationTest {
     private static final String EVAL_URL = "/muromuro_questions/eval_design_api_with_pagination";
 
     private static final String CALLER_CODE_TEMPLATE =
-            "List<Employee> results =\n" +
+            "System.out.println();\n" +
+                    "List<Employee> results =\n" +
                     "        retrieveEmployees(\n" +
                     "                dbProxy, companyId, /* offset= */ %s, %s);\n" +
                     "list1.addAll(results);\n" +

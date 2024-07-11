@@ -61,7 +61,20 @@ public class SecurityTest {
     @Test
     public void testCheckIfCodeSecure() {
         validateCallerCodeSecure("System.exit(0);", false);
-        validateMainDefinitionSecure("System.out.println(\"Hello World!\");", false);
+        validateMainDefinitionSecure("System.out.println(\"Hello World!\");", true);
+        validateCallerCodeSecure("//Some comment first\n System.exit(0);", false);
+        validateMainDefinitionSecure(
+                "//Some comment first\n System.out.println(\"Hello World!\");", true);
+        validateCallerCodeSecure(
+                "//Some comment first\n"
+                        + "System.err.println(\"Hello World!\");\n"
+                        + "System.exit(0);",
+                false);
+        validateMainDefinitionSecure(
+                "//Some comment first\n"
+                        + "System.out.println(\"Hello there!\");\n"
+                        + "System.err.println(\"General Kenobi!\");\n",
+                true);
         validateCallerCodeSecure("Runtime.getRuntime().exec(\"rm -rf /\")", false);
         validateMainDefinitionSecure(
                 "ProcessBuilder().command(\"rm\", \"-rf\", \"/\").start()", false);
