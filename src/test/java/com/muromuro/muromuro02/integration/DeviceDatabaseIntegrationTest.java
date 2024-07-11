@@ -32,6 +32,7 @@ public class DeviceDatabaseIntegrationTest {
                             List<String> resultDevicesInDdb,
                             List<String> resultDevicesNotInDdb) {
                     
+                        System.out.println(inputDevices);
                         Map<String, List<String>> devicesMap = new HashMap<>();
                         %s
                     

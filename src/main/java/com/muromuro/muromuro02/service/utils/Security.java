@@ -8,6 +8,8 @@ import com.muromuro.muromuro02.model.UserInput;
  */
 public class Security {
 
+    private static final String SYSTEM_KEYWORD = "System";
+
     /**
      * Validates if the given user input code is below a certain given length.
      * Returns a MuroMuroResponse object containing the status and the error message if applicable.
@@ -30,7 +32,6 @@ public class Security {
      */
     public static MuroMuroResponse checkIfCodeSecure(UserInput userInput) {
         String[] targetWords = {
-                "System",
                 "Runtime",
                 "Process",
                 "Thread",
@@ -48,6 +49,31 @@ public class Security {
                                 target));
             }
         }
+        if (containsSystemCalls(userInput.getCallerCode())
+                || containsSystemCalls(userInput.getMainDefinition())) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    String.format(
+                            "The solution seems insecure, with forbidden keyword: %s",
+                            SYSTEM_KEYWORD));
+        }
         return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+    }
+
+    /**
+     * Returns true if the System keyword exists in the input string,
+     * false otherwise. However, also returns false if it is a System.out.print or
+     * a System.err.print call.
+     */
+    private static boolean containsSystemCalls(String input) {
+        int index = input.indexOf(SYSTEM_KEYWORD);
+        while (index >= 0) {
+            if (!input.startsWith("System.out.print", index)
+                    && !input.startsWith("System.err.print", index)) {
+                return true;
+            }
+            index = input.indexOf(SYSTEM_KEYWORD, index + 1);
+        }
+        return false;
     }
 }
