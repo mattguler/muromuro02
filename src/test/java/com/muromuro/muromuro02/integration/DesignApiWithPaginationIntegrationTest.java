@@ -144,7 +144,7 @@ public class DesignApiWithPaginationIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not correctly populated.")));
+                                                        + "the lists are not\ncorrectly populated.")));
     }
 
     @Test
@@ -187,7 +187,7 @@ public class DesignApiWithPaginationIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not correctly populated.")));
+                                                        + "the lists are not\ncorrectly populated.")));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class DesignApiWithPaginationIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not correctly populated.")));
+                                                        + "the lists are not\ncorrectly populated.")));
     }
 
     @Test
@@ -211,7 +211,7 @@ public class DesignApiWithPaginationIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not correctly populated.")));
+                                                        + "the lists are not\ncorrectly populated.")));
     }
 
     @Test
@@ -222,7 +222,7 @@ public class DesignApiWithPaginationIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not correctly populated.")));
+                                                        + "the lists are not\ncorrectly populated.")));
     }
 
     @Test
