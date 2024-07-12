@@ -56,11 +56,11 @@ public class DeviceDatabaseEval {
     }
 
     // For debugging purposes only.
-    static void printList(List<String> list) {
+    void printList(List<String> list) {
         System.out.println(String.join(", ", list));
     }
 
-    static void callerFunction(
+    public void callerFunction(
             List<String> inputDevices,
             DeviceDatabase ddb,
             List<String> resultDevicesInDdb,
@@ -73,7 +73,7 @@ public class DeviceDatabaseEval {
     // End main definition implementation.
 
     // This is a generic functional test with one cluster that does not exist in db.
-    static void runTest1() {
+    public void runTest1() {
         List<String> inputDevices =
                 List.of(
                         "xyzabcde",
@@ -105,7 +105,7 @@ public class DeviceDatabaseEval {
     }
 
     // This is a test with empty input.
-    static void runTest2() {
+    public void runTest2() {
         List<String> inputDevices = List.of();
         DeviceDatabase ddb = new DeviceDatabaseImpl();
         List<String> resultDevicesInDdb = new ArrayList<>();
@@ -121,7 +121,7 @@ public class DeviceDatabaseEval {
     }
 
     // This is a test with a badly formed input.
-    static void runTest3() {
+    public void runTest3() {
         List<String> inputDevices = List.of("xyza1b2c", "abcdefgh", "xy");
         DeviceDatabase ddb = new DeviceDatabaseImpl();
         List<String> resultDevicesInDdb = new ArrayList<>();
@@ -148,7 +148,7 @@ public class DeviceDatabaseEval {
     }
 
     // This is a test with a device database that might return a null result.
-    static void runTest4() {
+    public void runTest4() {
         List<String> inputDevices = List.of("xyza1b2c", "abcdefgh", "zzwabcde");
         DeviceDatabase ddb = new NullReturningDeviceDatabaseImpl();
         List<String> resultDevicesInDdb = new ArrayList<>();
@@ -178,16 +178,17 @@ public class DeviceDatabaseEval {
      * Returns true if the given list contains the same devices as the given
      * expected set of devices, regardless of the order in the list.
      */
-    static boolean areEqual(
+    boolean areEqual(
             Set<String> expectedDevices, List<String> devices) {
         Set<String> devicesSet = new HashSet<>(devices);
         return expectedDevices.equals(devicesSet);
     }
 
     public static void main(String[] args) {
-        runTest1();
-        runTest2();
-        runTest3();
-        runTest4();
+        DeviceDatabaseEval eval = new DeviceDatabaseEval();
+        eval.runTest1();
+        eval.runTest2();
+        eval.runTest3();
+        eval.runTest4();
     }
 }

@@ -26,16 +26,16 @@ public class DeviceDatabaseIntegrationTest {
 
     private static final String MAIN_DEFINITION_TEMPLATE =
             """
-                    static void areDevicesInDdb(
+                    public void areDevicesInDdb(
                             List<String> inputDevices,
                             DeviceDatabase ddb,
                             List<String> resultDevicesInDdb,
                             List<String> resultDevicesNotInDdb) {
-                    
+            
                         System.out.println(inputDevices);
                         Map<String, List<String>> devicesMap = new HashMap<>();
                         %s
-                    
+            
                         for (String device : inputDevices) {
                             String clusterId = getClusterId(device);
                             List<String> devicesInDdb;
@@ -58,8 +58,8 @@ public class DeviceDatabaseIntegrationTest {
                             }
                         }
                     }
-                    
-                    static String getClusterId(String device) {
+            
+                    private String getClusterId(String device) {
                         %s
                         return device.substring(0, 3);
                     }

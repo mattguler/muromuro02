@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
-import static com.muromuro.muromuro02.service.utils.Utils.prependStaticIfMissing;
 
 /** The evaluator for the DeviceDatabase question. */
 @Service
@@ -29,13 +28,9 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
 
     @Override
     protected String buildEvaluationCode(UserInput userInput) {
-        String callerCode = userInput.getCallerCode();
-        String mainDefinition = userInput.getMainDefinition();
-        // TODO: Get rid of this prepend-static feature.
-        mainDefinition = prependStaticIfMissing(mainDefinition);
         return evaluationCode
-                .replaceCallerCode(callerCode)
-                .replaceMainDefinition(mainDefinition)
+                .replaceCallerCode(userInput.getCallerCode())
+                .replaceMainDefinition(userInput.getMainDefinition())
                 .getFormattedContent();
     }
 
