@@ -22,7 +22,7 @@ public class EvaluationCodeTest {
     private static final String DEVICE_DATABASE_CALLER_CODE =
             "List<String> resultDevicesInDdb = findDevicesInDdb(inputDevices, ddb);";
     private static final String DEVICE_DATABASE_MAIN_DEFINITION =
-            "static List<String> findDevicesInDdb(List<String> inputDevices, DeviceDatabase ddb) "
+            "public List<String> findDevicesInDdb(List<String> inputDevices, DeviceDatabase ddb) "
                     + "{ return null; }";
     private static final String REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION =
             "static int doCalculation(String strInput, int intInput) { return 0; }";
@@ -104,7 +104,7 @@ public class EvaluationCodeTest {
         String content = deviceDatabaseEval.getFormattedContent();
         assertTrue(content.contains("public class DeviceDatabaseEval"));
         assertTrue(content.contains("interface DeviceDatabase"));
-        assertTrue(content.contains("static void callerFunction("));
+        assertTrue(content.contains("public void callerFunction("));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
