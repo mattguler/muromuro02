@@ -25,7 +25,7 @@ public class EvaluationCodeTest {
             "public List<String> findDevicesInDdb(List<String> inputDevices, DeviceDatabase ddb) "
                     + "{ return null; }";
     private static final String REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION =
-            "static int doCalculation(String strInput, int intInput) { return 0; }";
+            "public int doCalculation(String strInput, int intInput) { return 0; }";
     private static final String REPRESENT_ACCOUNT_STATES_MAIN_DEFINITION =
             "public enum SomeAccountState {}";
 
@@ -147,12 +147,12 @@ public class EvaluationCodeTest {
     public void testGetContent_refactorTooManyIfsEval() {
         String content = refactorTooManyIfsEval.getFormattedContent();
         assertTrue(content.contains("public class RefactorTooManyIfsEval"));
-        assertTrue(content.contains("static int doCalculation(String strInput, int intInput)"));
+        assertTrue(content.contains("public int doCalculation(String strInput, int intInput)"));
         assertTrue(content.contains("validateCalculation(\\\"a\\\", intInput, 16)"));
         assertTrue(content.contains("validateCalculation(\\\"b\\\", intInput, 10)"));
-        assertTrue(content.contains("static void doValidation1()"));
-        assertTrue(content.contains("static void doValidation2()"));
-        assertTrue(content.contains("static boolean validateCalculation("));
+        assertTrue(content.contains("public void doValidation1()"));
+        assertTrue(content.contains("public void doValidation2()"));
+        assertTrue(content.contains("private boolean validateCalculation("));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
@@ -165,7 +165,7 @@ public class EvaluationCodeTest {
         assertTrue(content.contains(REFACTOR_TOO_MANY_IFS_MAIN_DEFINITION));
         assertTrue(content.contains("validateCalculation(\\\"a\\\", intInput, 16)"));
         assertTrue(content.contains("validateCalculation(\\\"b\\\", intInput, 10)"));
-        assertTrue(content.contains("static void doValidation1()"));
+        assertTrue(content.contains("public void doValidation1()"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 

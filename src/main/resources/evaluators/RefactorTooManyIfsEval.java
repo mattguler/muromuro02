@@ -13,7 +13,7 @@ public class RefactorTooManyIfsEval {
 
     // Start main definition implementation.
 
-    static int doCalculation(String strInput, int intInput) {
+    public int doCalculation(String strInput, int intInput) {
         int result = intInput;
         if (strInput.equals("a")) {
             result += 1;
@@ -40,7 +40,7 @@ public class RefactorTooManyIfsEval {
     }
     // End main definition implementation.
 
-    static void doValidation1() {
+    public void doValidation1() {
         int intInput = 15;
         if (validateCalculation("a", intInput, 16) &&
                 validateCalculation("b", intInput, 10) &&
@@ -57,7 +57,7 @@ public class RefactorTooManyIfsEval {
         }
     }
 
-    static void doValidation2() {
+    public void doValidation2() {
         int intInput = -22;
         if (validateCalculation("a", intInput, -21) &&
                 validateCalculation("b", intInput, -27) &&
@@ -74,19 +74,20 @@ public class RefactorTooManyIfsEval {
         }
     }
 
-    static boolean validateCalculation(String strInput, int intInput, int expectedOutput) {
+    private boolean validateCalculation(String strInput, int intInput, int expectedOutput) {
         int result = doCalculation(strInput, intInput);
         return result == expectedOutput;
     }
 
-    static boolean validateCalculation(
+    private boolean validateCalculation(
             String strInput, int intInput, int expectedOutput1, int expectedOutput2) {
         int result = doCalculation(strInput, intInput);
         return result == expectedOutput1 || result == expectedOutput2;
     }
 
     public static void main(String[] args) {
-        doValidation1();
-        doValidation2();
+        RefactorTooManyIfsEval eval = new RefactorTooManyIfsEval();
+        eval.doValidation1();
+        eval.doValidation2();
     }
 }

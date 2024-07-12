@@ -88,33 +88,10 @@ public class Utils {
     }
 
     /**
-     * If any of the first 3 words in the given code string is not the word "static",
-     * then prepends "static" to the string.
-     * TODO: Make this skip over the code comments at the beginning of the code, if possible.
-     * TODO: Maybe we should use a proper Java code parser in this codebase.
-     */
-    public static String prependStaticIfMissing(String code) {
-        if (code == null || code.isEmpty()) {
-            return code;
-        }
-        String[] words = code.split("\\s+");
-        boolean containsStatic = false;
-        for (int i = 0; i < 3 && i < words.length; i++) {
-            if (words[i].equals("static")) {
-                containsStatic = true;
-                break;
-            }
-        }
-        if (!containsStatic) {
-            return "static " + code;
-        }
-        return code;
-    }
-
-    /**
      * Validates and makes sure that the given main definition does not start
      * with a comment. This is to help with the successful operation of the
      * prependStaticIfMissing() method. Returns a MuroMuroResponse object containing the status.
+     * TODO: Remove this and all its references, since prependStaticIfMissing() no longer exists.
      */
     public static MuroMuroResponse validateNotStartsWithComments(String code) {
         if (code.trim().startsWith("//") || code.trim().startsWith("/*")) {

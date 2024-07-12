@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
+import static com.muromuro.muromuro02.service.utils.Utils.countKeywordOccurrences;
 
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
@@ -38,10 +39,8 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
 
     @Override
     protected String buildEvaluationCode(UserInput userInput) {
-        String mainDefinition = userInput.getMainDefinition();
-        mainDefinition = prependStaticIfMissing(mainDefinition);
         return evaluationCode
-                .replaceMainDefinition(mainDefinition)
+                .replaceMainDefinition(userInput.getMainDefinition())
                 .getFormattedContent();
     }
 
