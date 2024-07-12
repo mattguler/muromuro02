@@ -40,7 +40,7 @@ public class DesignApiWithPaginationIntegrationTest {
                     "list4.addAll(results);";
 
     private static final String MAIN_DEFINITION =
-            "List<Employee> retrieveEmployees(\n" +
+            "public List<Employee> retrieveEmployees(\n" +
                     "        DatabaseProxy dbProxy,\n" +
                     "        long companyId,\n" +
                     "        int offset,\n" +

@@ -62,7 +62,7 @@ public class DesignApiWithPaginationEval {
         }
     }
 
-    static void printEmployees(String listTitle, List<Employee> employees) {
+    public void printEmployees(String listTitle, List<Employee> employees) {
         System.out.println(listTitle);
         for (Employee employee : employees) {
             System.out.println(employee);
@@ -70,7 +70,7 @@ public class DesignApiWithPaginationEval {
         System.out.println();
     }
 
-    static void verifyEmployees(
+    public void verifyEmployees(
             String listTitle, List<Employee> employees, int startId, int endId) {
         if (employees.size() != endId - startId + 1) {
             System.out.printf("%s is incorrectly formed.\n", listTitle);
@@ -89,7 +89,7 @@ public class DesignApiWithPaginationEval {
         System.out.printf("%s is correctly formed.\n", listTitle);
     }
 
-    static void callerFunction(
+    public void callerFunction(
             List<Employee> list1,
             List<Employee> list2,
             List<Employee> list3,
@@ -118,7 +118,7 @@ public class DesignApiWithPaginationEval {
     }
 
     // Start main definition implementation.
-    static List<Employee> retrieveEmployees(
+    public List<Employee> retrieveEmployees(
             DatabaseProxy dbProxy,
             long companyId,
             int offset,
@@ -143,19 +143,21 @@ public class DesignApiWithPaginationEval {
         List<Employee> list3 = new ArrayList<>();
         List<Employee> list4 = new ArrayList<>();
 
-        callerFunction(
+        DesignApiWithPaginationEval eval = new DesignApiWithPaginationEval();
+
+        eval.callerFunction(
                 list1, list2, list3, list4, MAX_SIZE, COMPANY_ID, dbProxy);
 
-        printEmployees("List 1", list1);
-        printEmployees("List 2", list2);
-        printEmployees("List 3", list3);
-        printEmployees("List 4", list4);
+        eval.printEmployees("List 1", list1);
+        eval.printEmployees("List 2", list2);
+        eval.printEmployees("List 3", list3);
+        eval.printEmployees("List 4", list4);
 
         System.out.println();
 
-        verifyEmployees("List 1", list1, 1, MAX_SIZE);
-        verifyEmployees("List 2", list2, MAX_SIZE + 1, 2 * MAX_SIZE);
-        verifyEmployees("List 3", list3, 2 * MAX_SIZE + 1, 3 * MAX_SIZE);
-        verifyEmployees("List 4", list4, 3 * MAX_SIZE + 1, 4 * MAX_SIZE);
+        eval.verifyEmployees("List 1", list1, 1, MAX_SIZE);
+        eval.verifyEmployees("List 2", list2, MAX_SIZE + 1, 2 * MAX_SIZE);
+        eval.verifyEmployees("List 3", list3, 2 * MAX_SIZE + 1, 3 * MAX_SIZE);
+        eval.verifyEmployees("List 4", list4, 3 * MAX_SIZE + 1, 4 * MAX_SIZE);
     }
 }

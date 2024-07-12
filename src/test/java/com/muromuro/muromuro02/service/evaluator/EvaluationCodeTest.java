@@ -18,7 +18,7 @@ public class EvaluationCodeTest {
     private static final String PAGINATION_API_CALLER_CODE =
             "List<Employee> employees = getAllEmployees(dbProxy);";
     private static final String PAGINATION_API_MAIN_DEFINITION =
-            "static List<Employee> getAllEmployees(DatabaseProxy dbProxy) { return null; }";
+            "public List<Employee> getAllEmployees(DatabaseProxy dbProxy) { return null; }";
     private static final String DEVICE_DATABASE_CALLER_CODE =
             "List<String> resultDevicesInDdb = findDevicesInDdb(inputDevices, ddb);";
     private static final String DEVICE_DATABASE_MAIN_DEFINITION =
