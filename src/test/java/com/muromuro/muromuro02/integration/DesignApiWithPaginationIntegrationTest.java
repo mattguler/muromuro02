@@ -94,17 +94,6 @@ public class DesignApiWithPaginationIntegrationTest {
     }
 
     @Test
-    public void testEval_inputWithComment() throws Exception {
-        performEval("", "// This is a comment")
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: The main definition should not "
-                                                        + "start with a comment.")));
-    }
-
-    @Test
     public void testEval_inputWithImport() throws Exception {
         performEval("", "import java.util.*;")
                 .andExpect(

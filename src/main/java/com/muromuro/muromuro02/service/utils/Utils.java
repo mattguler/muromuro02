@@ -88,21 +88,6 @@ public class Utils {
     }
 
     /**
-     * Validates and makes sure that the given main definition does not start
-     * with a comment. This is to help with the successful operation of the
-     * prependStaticIfMissing() method. Returns a MuroMuroResponse object containing the status.
-     * TODO: Remove this and all its references, since prependStaticIfMissing() no longer exists.
-     */
-    public static MuroMuroResponse validateNotStartsWithComments(String code) {
-        if (code.trim().startsWith("//") || code.trim().startsWith("/*")) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    "The main definition should not start with a comment.");
-        }
-        return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS, "");
-    }
-
-    /**
      * Validates that the given code string does not start with any import statements.
      */
     public static MuroMuroResponse validateNotStartsWithImports(String code) {
