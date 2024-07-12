@@ -20,7 +20,7 @@ public class RepresentAccountStatesEval {
     }
     // End main definition implementation.
 
-    static void evalAccountState(AccountState accountState) {
+    public void evalAccountState(AccountState accountState) {
         switch(accountState) {
             case INACTIVE:
                 System.out.println("Account state INACTIVE.");
@@ -41,9 +41,10 @@ public class RepresentAccountStatesEval {
     }
 
     public static void main(String[] args) {
-            evalAccountState(AccountState.INACTIVE);
-            evalAccountState(AccountState.ACTIVE);
-            evalAccountState(AccountState.SUSPENDED);
-            evalAccountState(AccountState.DELETED);
+        RepresentAccountStatesEval eval = new RepresentAccountStatesEval();
+        eval.evalAccountState(AccountState.INACTIVE);
+        eval.evalAccountState(AccountState.ACTIVE);
+        eval.evalAccountState(AccountState.SUSPENDED);
+        eval.evalAccountState(AccountState.DELETED);
     }
 }

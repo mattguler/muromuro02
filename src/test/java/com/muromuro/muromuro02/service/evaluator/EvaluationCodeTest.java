@@ -183,7 +183,7 @@ public class EvaluationCodeTest {
     public void testGetContent_representAccountStatesEval() {
         String content = representAccountStatesEval.getFormattedContent();
         assertTrue(content.contains("System.out.println(\\\"Account state ACTIVE.\\\");"));
-        assertTrue(content.contains("static void evalAccountState(AccountState accountState)"));
+        assertTrue(content.contains("public void evalAccountState(AccountState accountState)"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
@@ -193,7 +193,7 @@ public class EvaluationCodeTest {
                 .replaceMainDefinition(REPRESENT_ACCOUNT_STATES_MAIN_DEFINITION)
                 .getFormattedContent();
         assertTrue(content.contains(REPRESENT_ACCOUNT_STATES_MAIN_DEFINITION));
-        assertTrue(content.contains("static void evalAccountState(AccountState accountState)"));
+        assertTrue(content.contains("public void evalAccountState(AccountState accountState)"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
