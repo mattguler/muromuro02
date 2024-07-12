@@ -6,7 +6,6 @@ import com.muromuro.muromuro02.service.docker.DockerProxy;
 
 import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
 import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
-import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithComments;
 import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
 
 /**
@@ -62,7 +61,6 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
         return MuroMuroResponse.combineResponses(
                 validateCodeLength(userInput, getUserCodeMaxLength()),
                 checkIfCodeSecure(userInput),
-                validateNotStartsWithComments(userInput.getMainDefinition()),
                 validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 

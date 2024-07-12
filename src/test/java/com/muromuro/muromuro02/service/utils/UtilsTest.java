@@ -206,56 +206,6 @@ public class UtilsTest {
     }
 
     @Test
-    public void testValidateNotStartsWithComments_noComment() {
-        String code = "public class SomeClass {}";
-        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
-        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getMessage().isEmpty());
-    }
-
-    @Test
-    public void testValidateNotStartsWithComments_withComment_1() {
-        String code =
-                "// This code has some comments.\n"
-                        + "public class SomeClass {}";
-        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
-        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
-        assertEquals(
-                "The main definition should not start with a comment.",
-                response.getMessage());
-    }
-
-    @Test
-    public void testValidateNotStartsWithComments_withComment_2() {
-        String code =
-                "    \n/* This code has some comments. */\n"
-                        + "public class SomeClass {}";
-        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
-        assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
-        assertEquals(
-                "The main definition should not start with a comment.",
-                response.getMessage());
-    }
-
-    @Test
-    public void testValidateNotStartsWithComments_withLaterComment() {
-        String code =
-                "public class SomeClass {}\n"
-                        + "// The comment is here instead.";
-        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
-        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getMessage().isEmpty());
-    }
-
-    @Test
-    public void testValidateNotStartsWithComments_empty() {
-        String code = "";
-        MuroMuroResponse response = Utils.validateNotStartsWithComments(code);
-        assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
-        assertTrue(response.getMessage().isEmpty());
-    }
-
-    @Test
     public void testValidateNotStartsWithImports_noImport() {
         String code = "public class SomeClass {}";
         MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
