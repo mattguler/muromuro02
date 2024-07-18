@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 
 /** The evaluator for the DeviceDatabase question. */
@@ -14,11 +19,18 @@ import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2500;
 
+    // This is necessary for retrieving the call counts from the evaluation outputs.
+    private static final int NUMBER_OF_TESTS = 4;
+
+    // Call count matching patterns indexed according to the test IDs.
+    private final List<Pattern> callCountPatterns = new ArrayList<>();
+
     @Autowired
     public DeviceDatabaseImpl(
             DockerProxy dockerProxy,
             @Qualifier("deviceDatabase") EvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
+        initializeCallCountPatterns();
     }
 
     @Override
@@ -101,11 +113,51 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                                     + "the input might be badly formed."));
         }
 
-        // TODO: Analyze the call counts here as well.
+        // Analyzing the call counts.
+        List<Integer> callCounts = retrieveCallCounts(dockerEvalOutput);
+        if (callCounts.get(1) > 3 || callCounts.get(3) > 3 || callCounts.get(4) > 3) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Inefficient solution. While the solution output looks\n"
+                                    + "correct, it can still be improved to run faster."));
+        }
 
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.SUCCESS,
                 "The solution looks correct, but your interviewer "
                         + "will be the final judge.");
+    }
+
+    /**
+     * Initializes the call count pattern matchers that are used in the validation process.
+     */
+    private void initializeCallCountPatterns() {
+        for (int testId = 0; testId <= NUMBER_OF_TESTS; testId++) {
+            String regex = String.format("Test %d call count: (\\d+)", testId);
+            Pattern pattern = Pattern.compile(regex);
+            callCountPatterns.add(pattern);
+        }
+    }
+
+    /**
+     * Retrieves a list of call counts determined from the given dockerEvalOutput string.
+     * Each call count in the list is indexed by its testId.
+     * If no call count is detected for a particular testId, then 0 is returned for
+     * that item in the list.
+     */
+    private List<Integer> retrieveCallCounts(String dockerEvalOutput) {
+        List<Integer> results = new ArrayList<>();
+        for (int testId = 0; testId <= NUMBER_OF_TESTS; testId++) {
+            Matcher matcher = callCountPatterns.get(testId).matcher(dockerEvalOutput);
+            if (!matcher.find()) {
+                results.add(0);
+                continue;
+            }
+            String callCountStr = matcher.group(1);
+            results.add(Integer.parseInt(callCountStr));
+        }
+        return results;
     }
 }

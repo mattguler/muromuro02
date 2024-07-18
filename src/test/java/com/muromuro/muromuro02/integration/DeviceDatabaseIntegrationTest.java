@@ -152,6 +152,38 @@ public class DeviceDatabaseIntegrationTest {
                 "");
     }
 
+    private static final String INEFFICIENT_SOLUTION =
+            """
+                    public void areDevicesInDdb(
+                            List<String> inputDevices,
+                            DeviceDatabase ddb,
+                            List<String> resultDevicesInDdb,
+                            List<String> resultDevicesNotInDdb) {
+            
+                        for (String device : inputDevices) {
+                            String clusterId = getClusterId(device);
+                            List<String> devicesInDdb = ddb.ListDevices(clusterId);
+                            if (devicesInDdb == null || devicesInDdb.isEmpty()) {
+                                resultDevicesNotInDdb.add(device);
+                                continue;
+                            }
+                            if (devicesInDdb.contains(device)) {
+                                resultDevicesInDdb.add(device);
+                            }
+                            else {
+                                resultDevicesNotInDdb.add(device);
+                            }
+                        }
+                    }
+            
+                    static String getClusterId(String device) {
+                        if (device.length() < 3) {
+                            return device;
+                        }
+                        return device.substring(0, 3);
+                    }
+            """;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -314,6 +346,18 @@ public class DeviceDatabaseIntegrationTest {
                                         containsString(
                                                 "Incorrect solution. Please consider that\n"
                                                         + "the input might be badly formed.")));
+    }
+
+    @Test
+    public void testEval_withInefficientSolution() throws Exception {
+        performEval(CALLER_CODE, INEFFICIENT_SOLUTION)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Inefficient solution. While the solution "
+                                                        + "output looks\ncorrect, it can still "
+                                                        + "be improved to run faster.")));
     }
 
     @Test
