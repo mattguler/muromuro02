@@ -113,4 +113,25 @@ public class QuestionController {
 
         return "questions/device_database";
     }
+
+    // TODO: Also implement the integration tests for this new question.
+    @GetMapping("detect_substrings")
+    public String detectSubstrings(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Set the proper initial user input here.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/detect_substrings";
+    }
+
+    @PostMapping("eval_detect_substrings")
+    public String evalDetectSubstrings(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement the Detect Substrings Evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return "questions/detect_substrings";
+    }
 }
