@@ -446,4 +446,36 @@ public class QuestionControllerUnitTest {
                                                 "Unknown response: "
                                                         + UNKNOWN_MESSAGE)));
     }
+
+    @Test
+    public void testGetDetectSubstrings() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        this.mockMvc
+                .perform(get("/muromuro_questions/detect_substrings"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "implement a function that takes "
+                                                        + "a String object as an input")));
+    }
+
+    @Test
+    public void testEvalDetectSubstrings_unknownResponse() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_detect_substrings")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Evaluator not yet implemented.")));
+    }
 }
