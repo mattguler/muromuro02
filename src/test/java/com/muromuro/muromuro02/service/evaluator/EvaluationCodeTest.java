@@ -34,6 +34,10 @@ public class EvaluationCodeTest {
     private EvaluationCode designApiWithPaginationEval;
 
     @Autowired
+    @Qualifier("detectSubstrings")
+    private EvaluationCode detectSubstringsEval;
+
+    @Autowired
     @Qualifier("deviceDatabase")
     private EvaluationCode deviceDatabaseEval;
 
@@ -97,6 +101,13 @@ public class EvaluationCodeTest {
         assertTrue(content.contains(PAGINATION_API_MAIN_DEFINITION));
         assertTrue(content.contains("public static void main(String[] args)"));
         assertTrue(content.contains("DatabaseProxy dbProxy = new DatabaseProxyImpl();"));
+    }
+
+    // TODO: Fully implement the tests for the DetectSubstringsEval here.
+    @Test
+    public void testGetContent_detectSubstringsEval() {
+        String content = detectSubstringsEval.getFormattedContent();
+        assertTrue(content.contains("Detect Substrings evaluator not yet implemented."));
     }
 
     @Test

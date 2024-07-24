@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+// TODO: See if we can reduce some of the code duplication here.
 /** Runs unit tests for the QuestionController. */
 @WebMvcTest(QuestionController.class)
 public class QuestionControllerUnitTest {
@@ -48,6 +49,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("deviceDatabaseImpl")
     private Evaluator deviceDatabase;
 
+    @MockBean
+    @Qualifier("detectSubstringsImpl")
+    private Evaluator detectSubstrings;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -63,7 +68,8 @@ public class QuestionControllerUnitTest {
                 .andExpect(content().string(containsString("Representing Account States")))
                 .andExpect(content().string(containsString("Design API with Pagination")))
                 .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(content().string(containsString("Device Database")));
+                .andExpect(content().string(containsString("Device Database")))
+                .andExpect(content().string(containsString("Detect Substrings")));
     }
 
     @Test
@@ -449,11 +455,13 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetDetectSubstrings() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+        when(detectSubstrings.getInitialSolution())
+                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
         this.mockMvc
                 .perform(get("/muromuro_questions/detect_substrings"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
                 .andExpect(
                         content()
                                 .string(
@@ -463,8 +471,67 @@ public class QuestionControllerUnitTest {
     }
 
     @Test
+    public void testEvalDetectSubstrings_correctAnswer() throws Exception {
+        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_detect_substrings")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(content().string(containsString("Correct answer")));
+    }
+
+    @Test
+    public void testEvalDetectSubstrings_wrongAnswer() throws Exception {
+        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                ERROR_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_detect_substrings")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + ERROR_MESSAGE)));
+    }
+
+    @Test
+    public void testEvalDetectSubstrings_timeout() throws Exception {
+        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.TIMEOUT,
+                                TIMEOUT_MESSAGE));
+        this.mockMvc
+                .perform(
+                        post("/muromuro_questions/eval_detect_substrings")
+                                .param("userInput.mainDefinition", USER_INPUT))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: "
+                                                        + TIMEOUT_MESSAGE)));
+    }
+
+    @Test
     public void testEvalDetectSubstrings_unknownResponse() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
         this.mockMvc
                 .perform(
                         post("/muromuro_questions/eval_detect_substrings")
@@ -476,6 +543,6 @@ public class QuestionControllerUnitTest {
                                 .string(
                                         containsString(
                                                 "Unknown response: "
-                                                        + "Evaluator not yet implemented.")));
+                                                        + UNKNOWN_MESSAGE)));
     }
 }
