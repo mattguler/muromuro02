@@ -19,6 +19,13 @@ public class EvaluationCodeConfig {
         return buildEvaluationCode(evaluatorResource);
     }
 
+    @Bean(name = "detectSubstrings")
+    public EvaluationCode getEvaluationCodeForDetectSubstrings(
+            @Value("classpath:evaluators/DetectSubstringsEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "deviceDatabase")
     public EvaluationCode getEvaluationCodeForDeviceDatabase(
             @Value("classpath:evaluators/DeviceDatabaseEval.java") Resource evaluatorResource)

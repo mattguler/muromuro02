@@ -23,17 +23,20 @@ public class QuestionController {
     private final Evaluator designApiWithPagination;
     private final Evaluator refactorTooManyIfs;
     private final Evaluator deviceDatabase;
+    private final Evaluator detectSubstrings;
 
     @Autowired
     public QuestionController(
             @Qualifier("representAccountStatesImpl") Evaluator representAccountStates,
             @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination,
             @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs,
-            @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase){
+            @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase,
+            @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
         this.deviceDatabase = deviceDatabase;
+        this.detectSubstrings = detectSubstrings;
     }
 
     @GetMapping("list")
@@ -114,11 +117,10 @@ public class QuestionController {
         return "questions/device_database";
     }
 
-    // TODO: Also implement the integration tests for this new question.
     @GetMapping("detect_substrings")
     public String detectSubstrings(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Set the proper initial user input here.
+        muroMuroSolution.setUserInput(detectSubstrings.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/detect_substrings";
     }
@@ -126,11 +128,8 @@ public class QuestionController {
     @PostMapping("eval_detect_substrings")
     public String evalDetectSubstrings(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Implement the Detect Substrings Evaluator and use it here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator not yet implemented.");
+                detectSubstrings.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
         return "questions/detect_substrings";
     }
