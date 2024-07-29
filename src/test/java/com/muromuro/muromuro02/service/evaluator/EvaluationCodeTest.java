@@ -103,11 +103,11 @@ public class EvaluationCodeTest {
         assertTrue(content.contains("DatabaseProxy dbProxy = new DatabaseProxyImpl();"));
     }
 
-    // TODO: Fully implement the tests for the DetectSubstringsEval here.
     @Test
     public void testGetContent_detectSubstringsEval() {
         String content = detectSubstringsEval.getFormattedContent();
-        assertTrue(content.contains("Detect Substrings evaluator not yet implemented."));
+        assertTrue(content.contains("public class DetectSubstringsEval"));
+        assertTrue(content.contains("public static void main(String[] args)"));
     }
 
     @Test

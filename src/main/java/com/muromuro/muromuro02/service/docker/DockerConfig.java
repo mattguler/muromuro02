@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * installed and running. Follow the instructions on the Docker website to install Docker.
  * Once Docker is installed, run the following command to install the openjdk:11 Docker image
  * on your server, for the Docker daemon to use:
- * $ docker pull openjdk:11
+ * $ docker pull openjdk:17
  */
 @Configuration
 public class DockerConfig {
