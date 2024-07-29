@@ -33,7 +33,7 @@ public class DockerProxyImpl implements DockerProxy {
      */
     @Override
     public String startContainer(String evaluatorCode) {
-        String imageId = "openjdk:11";
+        String imageId = "openjdk:17";
         String containerName = UUID.randomUUID().toString();
         String className = Utils.getClassName(evaluatorCode);
         if (className == null) {
