@@ -20,7 +20,7 @@ public class DetectSubstringsEval {
         if (!result) {
             System.out.println("Test 0 passed.");
         } else {
-            System.out.println("Test 0 failed.");
+            System.out.println("Test 0 failed. Cannot handle empty input string.");
         }
     }
 
@@ -35,7 +35,7 @@ public class DetectSubstringsEval {
         if (result) {
             System.out.println("Test 1 passed.");
         } else {
-            System.out.println("Test 1 failed.");
+            System.out.println("Test 1 failed. Should detect the word foobar.");
         }
     }
 
@@ -52,7 +52,9 @@ public class DetectSubstringsEval {
         if (!result) {
             System.out.println("Test 2 passed.");
         } else {
-            System.out.println("Test 2 failed.");
+            System.out.println(
+                    "Test 2 failed. Should ignore the words: "
+                            + "foobarbazbat, foobarabcde, and foobarxyzwt.");
         }
     }
 
@@ -70,7 +72,9 @@ public class DetectSubstringsEval {
         if (result) {
             System.out.println("Test 3 passed.");
         } else {
-            System.out.println("Test 3 failed.");
+            System.out.println(
+                    "Test 3 failed. "
+                            + "Cannot detect foobar when all other keywords are present as well.");
         }
     }
 
@@ -85,7 +89,7 @@ public class DetectSubstringsEval {
         if (!result) {
             System.out.println("Test 4 passed.");
         } else {
-            System.out.println("Test 4 failed.");
+            System.out.println("Test 4 failed. Detected a foobar that does not exist.");
         }
     }
 
