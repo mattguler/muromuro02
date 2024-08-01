@@ -79,19 +79,142 @@ public class DetectSubstringsIntegrationTest {
                                                         + "length exceeding the max allowable length.")));
     }
 
-    // TODO: Remove this test once the evaluator is fully implemented.
     @Test
-    public void testEval_withUnknownResponse() throws Exception {
+    public void testEval_withBadInput() throws Exception {
         performEval("blahblah")
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
-                                                "Unknown response: Detect Substrings "
-                                                        + "evaluator not yet implemented.")));
+                                                "Wrong answer: Invalid solution.")));
     }
 
-    // TODO: Implement the rest of the integration tests here for this question.
+    @Test
+    public void testEval_withTimeout() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            while (true) { }
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: The solution took too long to execute.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_1() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            return false;
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "Fails validation.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_2() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            return true;
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "Fails validation.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_3() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            if (input.contains("foobarbazbat")
+                                    || input.contains("foobarabcde")
+                                    || input.contains("foobarxyzwt")) {
+                                return false;
+                            }
+                            if (input.contains("foobar")) {
+                                return true;
+                            }
+                            return false;
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "Fails validation.")));
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_4() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            if (input.contains("foobar")) {
+                                return true;
+                            }
+                            if (input.contains("foobarbazbat")
+                                    || input.contains("foobarabcde")
+                                    || input.contains("foobarxyzwt")) {
+                                return false;
+                            }
+                            return false;
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "Fails validation.")));
+    }
+
+    @Test
+    public void testEval_withCorrectAnswer() throws Exception {
+        String input =
+                """
+                        public boolean containsFoobar(String input) {
+                            int index = input.indexOf("foobar");
+                                while (index >= 0) {
+                                    if (!input.startsWith("foobarbazbat", index)
+                                            && !input.startsWith("foobarabcde", index)
+                                            && !input.startsWith("foobarxyzwt", index)) {
+                                        return true;
+                                    }
+                                    index = input.indexOf("foobar", index + 1);
+                                }
+                                return false;
+                        }
+                        """;
+        performEval(input)
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
+    }
 
     private ResultActions performGet() throws Exception {
         return mockMvc
