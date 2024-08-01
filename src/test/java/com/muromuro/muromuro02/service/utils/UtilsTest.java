@@ -3,6 +3,9 @@ package com.muromuro.muromuro02.service.utils;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Unit tests the methods in the Utils class. */
@@ -269,5 +272,84 @@ public class UtilsTest {
         assertEquals(
                 "Error happened.\n\nBuild and run output:\nVarious build errors.",
                 fullMessage);
+    }
+
+    @Test
+    public void testCreateTestMatcherPatterns() {
+        List<Pattern> patterns =
+                Utils.createTestMatcherPatterns(
+                        "Test %d passed.", 0, 5);
+        assertEquals(5, patterns.size());
+        assertTrue(patterns.get(0).matcher("Test 0 passed.").find());
+        assertTrue(patterns.get(1).matcher("Test 1 passed.").find());
+        assertTrue(patterns.get(2).matcher("Test 2 passed.").find());
+        assertTrue(patterns.get(3).matcher("Test 3 passed.").find());
+        assertTrue(patterns.get(4).matcher("Test 4 passed.").find());
+    }
+
+    @Test
+    public void testMatchesTestPattern() {
+        List<Pattern> patterns =
+                Utils.createTestMatcherPatterns(
+                        "Test %d failed.", 0, 5);
+        assertEquals(5, patterns.size());
+        assertTrue(
+                Utils.matchesTestPattern(
+                        "Test 4 failed.", patterns, 4));
+        assertFalse(
+                Utils.matchesTestPattern(
+                        "Test 2 passed.", patterns, 2));
+    }
+
+    @Test
+    public void testMatchesAllTestPatterns() {
+        List<Pattern> patterns =
+                Utils.createTestMatcherPatterns(
+                        "Test %d passed.", 0, 5);
+        assertEquals(5, patterns.size());
+        String matchingInput =
+                """
+                        Test 0 passed.
+                        Test 1 passed.
+                        Test 2 passed.
+                        Test 3 passed.
+                        Test 4 passed.
+                        """;
+        assertTrue(Utils.matchesAllTestPatterns(matchingInput, patterns));
+        String nonMatchingInput =
+                """
+                        Test 0 passed.
+                        Test 1 passed.
+                        Test 2 failed.
+                        Test 3 passed.
+                        Test 4 passed.
+                        """;
+        assertFalse(Utils.matchesAllTestPatterns(nonMatchingInput, patterns));
+    }
+
+    @Test
+    public void testMatchesAnyTestPattern() {
+        List<Pattern> patterns =
+                Utils.createTestMatcherPatterns(
+                        "Test %d failed.", 0, 5);
+        assertEquals(5, patterns.size());
+        String matchingInput =
+                """
+                        Test 0 passed.
+                        Test 1 passed.
+                        Test 2 failed.
+                        Test 3 passed.
+                        Test 4 passed.
+                        """;
+        assertTrue(Utils.matchesAnyTestPattern(matchingInput, patterns));
+        String nonMatchingInput =
+                """
+                        Test 0 passed.
+                        Test 1 passed.
+                        Test 2 passed.
+                        Test 3 passed.
+                        Test 4 passed.
+                        """;
+        assertFalse(Utils.matchesAnyTestPattern(nonMatchingInput, patterns));
     }
 }

@@ -2,6 +2,11 @@ package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /** The Utils class which is used to provide various utility methods. */
 public class Utils {
 
@@ -124,5 +129,61 @@ public class Utils {
         return errorMessage
                 + "\n\nBuild and run output:\n"
                 + dockerEvalOutput;
+    }
+
+    /**
+     * Creates a test matcher pattern to validate certain strings in the eval output.
+     * Creates a list of these matcher patterns for the given format string starting from
+     * the given startTestId and ending at the given endTestId (not inclusive).
+     */
+    public static List<Pattern> createTestMatcherPatterns(
+            String formatStr, int startTestId, int endTestId) {
+        List<Pattern> result = new ArrayList<>();
+        for (int testId = startTestId; testId < endTestId; testId++) {
+            String regex = String.format(formatStr, testId);
+            Pattern pattern = Pattern.compile(regex);
+            result.add(pattern);
+        }
+        return result;
+    }
+
+    /**
+     * Returns true if the given input matches the test pattern for the given test id.
+     * Returns false otherwise.
+     */
+    public static boolean matchesTestPattern(
+            String input, List<Pattern> patterns, int testId) {
+        Matcher matcher = patterns.get(testId).matcher(input);
+        return matcher.find();
+    }
+
+    /**
+     * Returns true if the given input matches all the test patterns in the given list.
+     * Returns false otherwise.
+     */
+    public static boolean matchesAllTestPatterns(
+            String input, List<Pattern> patterns) {
+        for (Pattern pattern : patterns) {
+            Matcher matcher = pattern.matcher(input);
+            if (!matcher.find()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if the given input matches any of the test patterns in the given list.
+     * Returns false otherwise.
+     */
+    public static boolean matchesAnyTestPattern(
+            String input, List<Pattern> patterns) {
+        for (Pattern pattern : patterns) {
+            Matcher matcher = pattern.matcher(input);
+            if (matcher.find()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
