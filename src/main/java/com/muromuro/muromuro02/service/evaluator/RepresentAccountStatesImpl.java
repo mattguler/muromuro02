@@ -77,7 +77,8 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }
-        else if (dockerEvalOutput.contains("Killed")) {
+        else if (dockerEvalOutput.contains("Killed")
+                && dockerEvalOutput.contains("timeout -s SIGKILL")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.TIMEOUT,
                     "The solution took too long to execute.");

@@ -47,21 +47,11 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
     @Override
     protected MuroMuroResponse analyzeEvaluation(
             String dockerEvalOutput, UserInput userInput) {
-        if (dockerEvalOutput.contains("error: not a statement")
-                || dockerEvalOutput.contains("error: ';' expected")
-                || dockerEvalOutput.contains("error: <identifier> expected")
-                || dockerEvalOutput.contains("Error: Could not find or load main class")) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.FAILURE,
-                    buildFailureMessage(dockerEvalOutput,
-                            "Invalid solution."));
+        MuroMuroResponse initialAnalysis = analyzeForBasicErrors(dockerEvalOutput);
+        if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
+            return initialAnalysis;
         }
-        else if (dockerEvalOutput.contains("Killed")) {
-            return new MuroMuroResponse(
-                    MuroMuroResponse.Status.TIMEOUT,
-                    "The solution took too long to execute.");
-        }
-        else if (dockerEvalOutput.contains("Validation 1 failed.")
+        if (dockerEvalOutput.contains("Validation 1 failed.")
                 || dockerEvalOutput.contains("Validation 2 failed.")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
