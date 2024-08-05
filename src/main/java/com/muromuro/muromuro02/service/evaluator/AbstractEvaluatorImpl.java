@@ -6,6 +6,7 @@ import com.muromuro.muromuro02.service.docker.DockerProxy;
 
 import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
 import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
+import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
 
 /**
@@ -78,4 +79,31 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
      */
     abstract protected MuroMuroResponse analyzeEvaluation(
             String dockerEvalOutput, UserInput userInput);
+
+    /**
+     * Analyzes the evaluation output for basic errors like syntax errors or timeouts.
+     * Returns an error response with a status message if an error is detected.
+     * Returns a success response if no error is detected.
+     */
+    protected MuroMuroResponse analyzeForBasicErrors(String dockerEvalOutput) {
+        if (dockerEvalOutput.contains("error: not a statement")
+                || dockerEvalOutput.contains("error: ';' expected")
+                || dockerEvalOutput.contains("error: <identifier> expected")
+                || dockerEvalOutput.contains("Error: Could not find or load main class")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Invalid solution."));
+        }
+        else if (dockerEvalOutput.contains("Killed")
+                && dockerEvalOutput.contains("timeout -s SIGKILL")) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.TIMEOUT,
+                    "The solution took too long to execute.");
+        }
+        else {
+            return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+        }
+    }
 }
