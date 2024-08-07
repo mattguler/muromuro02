@@ -17,6 +17,7 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 2000;
+    private static final int NUMBER_OF_TESTS = 5;
 
     private static final String INITIAL_SOLUTION =
             """
@@ -27,15 +28,15 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
 
     private final List<Pattern> passingTestPatterns =
             createTestMatcherPatterns(
-                    "Test %d passed.",
+                    "Test %d passed",
                     /* startTestId= */ 0,
-                    /* endTestId= */ 5);
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     private final List<Pattern> failingTestPatterns =
             createTestMatcherPatterns(
-                    "Test %d failed.",
+                    "Test %d failed",
                     /* startTestId= */ 0,
-                    /* endTestId= */ 5);
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     @Autowired
     public DetectSubstringsImpl(
