@@ -12,25 +12,47 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the DeviceDatabase question. */
 @Service
 public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2500;
 
-    // This is necessary for retrieving the call counts from the evaluation outputs.
-    private static final int NUMBER_OF_TESTS = 4;
+    // While we don't really have test index 0, we still include it in the count
+    // to make the code simpler and easier to understand.
+    private static final int NUMBER_OF_TESTS = 5;
+
+    private final List<Pattern> passingTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d passed",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS);
+
+    private final List<Pattern> failingTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d failed",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS);
+
+    private final List<Pattern> partiallyWorkingTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d partially working",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     // Call count matching patterns indexed according to the test IDs.
-    private final List<Pattern> callCountPatterns = new ArrayList<>();
+    private final List<Pattern> callCountPatterns =
+            createTestMatcherPatterns(
+                    "Test %d call count: (\\d+)",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     @Autowired
     public DeviceDatabaseImpl(
             DockerProxy dockerProxy,
             @Qualifier("deviceDatabase") EvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
-        initializeCallCountPatterns();
     }
 
     @Override
@@ -61,21 +83,27 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                             "Incomplete solution.\n"
                                     + "One of the output lists is not correctly populated."));
         }
-        else if (dockerEvalOutput.contains("Test 1 failed.")) {
+        else if (
+                matchesTestPattern(
+                        dockerEvalOutput, failingTestPatterns, /* testId= */ 1)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
                             dockerEvalOutput,
                             "Incorrect solution."));
         }
-        else if (!dockerEvalOutput.contains("Test 1 passed.")) {
+        else if (
+                !matchesTestPattern(
+                        dockerEvalOutput, passingTestPatterns, /* testId= */ 1)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.UNKNOWN,
                     "Unknown server failure. "
                             + "Please contact support with the following output:\n"
                             + dockerEvalOutput);
         }
-        else if (!dockerEvalOutput.contains("Test 2 passed.")) {
+        else if (
+                !matchesTestPattern(
+                        dockerEvalOutput, passingTestPatterns, /* testId= */ 2)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -83,7 +111,9 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                             "Incorrect solution. Your solution is not\n"
                                     + "correctly handling the case of an empty input list."));
         }
-        else if (!dockerEvalOutput.contains("Test 4 passed.")) {
+        else if (
+                !matchesTestPattern(
+                        dockerEvalOutput, passingTestPatterns, /* testId= */ 4)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -91,7 +121,9 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
                             "Incorrect solution. Please consider that\n"
                                     + "the device database method might return a null."));
         }
-        else if (!dockerEvalOutput.contains("Test 3 passed.")) {
+        else if (
+                !matchesTestPattern(
+                        dockerEvalOutput, passingTestPatterns, /* testId= */ 3)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -118,17 +150,6 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     }
 
     /**
-     * Initializes the call count pattern matchers that are used in the validation process.
-     */
-    private void initializeCallCountPatterns() {
-        for (int testId = 0; testId <= NUMBER_OF_TESTS; testId++) {
-            String regex = String.format("Test %d call count: (\\d+)", testId);
-            Pattern pattern = Pattern.compile(regex);
-            callCountPatterns.add(pattern);
-        }
-    }
-
-    /**
      * Retrieves a list of call counts determined from the given dockerEvalOutput string.
      * Each call count in the list is indexed by its testId.
      * If no call count is detected for a particular testId, then 0 is returned for
@@ -136,7 +157,7 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
      */
     private List<Integer> retrieveCallCounts(String dockerEvalOutput) {
         List<Integer> results = new ArrayList<>();
-        for (int testId = 0; testId <= NUMBER_OF_TESTS; testId++) {
+        for (int testId = 0; testId < NUMBER_OF_TESTS; testId++) {
             Matcher matcher = callCountPatterns.get(testId).matcher(dockerEvalOutput);
             if (!matcher.find()) {
                 results.add(0);
