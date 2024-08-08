@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Utils.*;
@@ -26,17 +26,17 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
                     }
                     """;
 
-    private final List<Pattern> passingTestPatterns =
+    private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d passed",
                     /* startTestId= */ 0,
-                    /* endTestId= */ NUMBER_OF_TESTS);
+                    /* endTestId= */ NUMBER_OF_TESTS - 1);
 
-    private final List<Pattern> failingTestPatterns =
+    private final Map<Integer, Pattern> failingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d failed",
                     /* startTestId= */ 0,
-                    /* endTestId= */ NUMBER_OF_TESTS);
+                    /* endTestId= */ NUMBER_OF_TESTS - 1);
 
     @Autowired
     public DetectSubstringsImpl(

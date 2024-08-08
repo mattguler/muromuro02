@@ -3,7 +3,7 @@ package com.muromuro.muromuro02.service.utils;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -276,7 +276,7 @@ public class UtilsTest {
 
     @Test
     public void testCreateTestMatcherPatterns() {
-        List<Pattern> patterns =
+        Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
                         "Test %d passed.", 0, 5);
         assertEquals(5, patterns.size());
@@ -289,7 +289,7 @@ public class UtilsTest {
 
     @Test
     public void testMatchesTestPattern() {
-        List<Pattern> patterns =
+        Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
                         "Test %d failed.", 0, 5);
         assertEquals(5, patterns.size());
@@ -303,7 +303,7 @@ public class UtilsTest {
 
     @Test
     public void testMatchesAllTestPatterns() {
-        List<Pattern> patterns =
+        Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
                         "Test %d passed.", 0, 5);
         assertEquals(5, patterns.size());
@@ -329,7 +329,7 @@ public class UtilsTest {
 
     @Test
     public void testMatchesAnyTestPattern() {
-        List<Pattern> patterns =
+        Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
                         "Test %d failed.", 0, 5);
         assertEquals(5, patterns.size());
