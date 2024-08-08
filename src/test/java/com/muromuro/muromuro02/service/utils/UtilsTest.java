@@ -278,7 +278,7 @@ public class UtilsTest {
     public void testCreateTestMatcherPatterns() {
         Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
-                        "Test %d passed.", 0, 5);
+                        "Test %d passed.", 0, 4);
         assertEquals(5, patterns.size());
         assertTrue(patterns.get(0).matcher("Test 0 passed.").find());
         assertTrue(patterns.get(1).matcher("Test 1 passed.").find());
@@ -291,7 +291,7 @@ public class UtilsTest {
     public void testMatchesTestPattern() {
         Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
-                        "Test %d failed.", 0, 5);
+                        "Test %d failed.", 0, 4);
         assertEquals(5, patterns.size());
         assertTrue(
                 Utils.matchesTestPattern(
@@ -305,7 +305,7 @@ public class UtilsTest {
     public void testMatchesAllTestPatterns() {
         Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
-                        "Test %d passed.", 0, 5);
+                        "Test %d passed.", 0, 4);
         assertEquals(5, patterns.size());
         String matchingInput =
                 """
@@ -331,7 +331,7 @@ public class UtilsTest {
     public void testMatchesAnyTestPattern() {
         Map<Integer, Pattern> patterns =
                 Utils.createTestMatcherPatterns(
-                        "Test %d failed.", 0, 5);
+                        "Test %d failed.", 0, 4);
         assertEquals(5, patterns.size());
         String matchingInput =
                 """

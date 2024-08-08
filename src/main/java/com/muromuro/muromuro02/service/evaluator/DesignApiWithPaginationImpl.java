@@ -7,12 +7,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the DesignApiWithPagination question. */
 @Service
 public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
+
     private static final int USER_CODE_MAX_LENGTH = 2500;
+    private static final int NUMBER_OF_TESTS = 4;
+
+    private final Map<Integer, Pattern> passingTestPatterns =
+            createTestMatcherPatterns(
+                    "List %d is correctly formed",
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
+
+    private final Map<Integer, Pattern> failingTestPatterns =
+            createTestMatcherPatterns(
+                    "List %d is incorrectly formed",
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     @Autowired
     public DesignApiWithPaginationImpl(
@@ -41,7 +58,7 @@ public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;
         }
-        if (dockerEvalOutput.contains("is incorrectly formed.")) {
+        if (matchesAnyTestPattern(dockerEvalOutput, failingTestPatterns)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -49,7 +66,7 @@ public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
                             "Incorrect solution. One or more of the lists are not\n"
                                     + "correctly populated."));
         }
-        else if (areAllListsCorrectlyFormed(dockerEvalOutput)) {
+        else if (matchesAllTestPatterns(dockerEvalOutput, passingTestPatterns)) {
             return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
         }
 
@@ -57,15 +74,5 @@ public class DesignApiWithPaginationImpl extends AbstractEvaluatorImpl {
                 MuroMuroResponse.Status.UNKNOWN,
                 "Internal server failure. Please contact support with the following output:\n"
                         + dockerEvalOutput);
-    }
-
-    private static boolean areAllListsCorrectlyFormed(String dockerEvalOutput) {
-        for (int i = 1; i <= 4; i++) {
-            String neededPhrase = String.format("List %d is correctly formed.", i);
-            if (!dockerEvalOutput.contains(neededPhrase)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
