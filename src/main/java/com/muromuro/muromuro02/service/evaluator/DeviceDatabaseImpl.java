@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,35 +17,33 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 /** The evaluator for the DeviceDatabase question. */
 @Service
 public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
+
     private static final int USER_CODE_MAX_LENGTH = 2500;
+    private static final int NUMBER_OF_TESTS = 4;
 
-    // While we don't really have test index 0, we still include it in the count
-    // to make the code simpler and easier to understand.
-    private static final int NUMBER_OF_TESTS = 5;
-
-    private final List<Pattern> passingTestPatterns =
+    private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d passed",
-                    /* startTestId= */ 0,
+                    /* startTestId= */ 1,
                     /* endTestId= */ NUMBER_OF_TESTS);
 
-    private final List<Pattern> failingTestPatterns =
+    private final Map<Integer, Pattern> failingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d failed",
-                    /* startTestId= */ 0,
+                    /* startTestId= */ 1,
                     /* endTestId= */ NUMBER_OF_TESTS);
 
-    private final List<Pattern> partiallyWorkingTestPatterns =
+    private final Map<Integer, Pattern> partiallyWorkingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d partially working",
-                    /* startTestId= */ 0,
+                    /* startTestId= */ 1,
                     /* endTestId= */ NUMBER_OF_TESTS);
 
     // Call count matching patterns indexed according to the test IDs.
-    private final List<Pattern> callCountPatterns =
+    private final Map<Integer, Pattern> callCountPatterns =
             createTestMatcherPatterns(
                     "Test %d call count: (\\d+)",
-                    /* startTestId= */ 0,
+                    /* startTestId= */ 1,
                     /* endTestId= */ NUMBER_OF_TESTS);
 
     @Autowired
@@ -75,7 +73,9 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;
         }
-        if (dockerEvalOutput.contains("Test 1 partially working.")) {
+        if (
+                matchesTestPattern(
+                        dockerEvalOutput, partiallyWorkingTestPatterns, /* testId= */ 1)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -133,8 +133,10 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
         }
 
         // Analyzing the call counts.
-        List<Integer> callCounts = retrieveCallCounts(dockerEvalOutput);
-        if (callCounts.get(1) > 3 || callCounts.get(3) > 3 || callCounts.get(4) > 3) {
+        Map<Integer, Integer> callCounts = retrieveCallCounts(dockerEvalOutput);
+        if (callCounts.get(/* testId= */ 1) > 3
+                || callCounts.get(/* testId= */ 3) > 3
+                || callCounts.get(/* testId= */ 4) > 3) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -150,21 +152,21 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     }
 
     /**
-     * Retrieves a list of call counts determined from the given dockerEvalOutput string.
-     * Each call count in the list is indexed by its testId.
+     * Retrieves call counts determined from the given dockerEvalOutput string.
+     * Each call count in the returned map is indexed by its testId.
      * If no call count is detected for a particular testId, then 0 is returned for
-     * that item in the list.
+     * that item in the map.
      */
-    private List<Integer> retrieveCallCounts(String dockerEvalOutput) {
-        List<Integer> results = new ArrayList<>();
-        for (int testId = 0; testId < NUMBER_OF_TESTS; testId++) {
+    private Map<Integer, Integer> retrieveCallCounts(String dockerEvalOutput) {
+        Map<Integer, Integer> results = new TreeMap<>();
+        for (int testId = 1; testId <= NUMBER_OF_TESTS; testId++) {
             Matcher matcher = callCountPatterns.get(testId).matcher(dockerEvalOutput);
             if (!matcher.find()) {
-                results.add(0);
+                results.put(testId, 0);
                 continue;
             }
             String callCountStr = matcher.group(1);
-            results.add(Integer.parseInt(callCountStr));
+            results.put(testId, Integer.parseInt(callCountStr));
         }
         return results;
     }
