@@ -7,14 +7,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
-import static com.muromuro.muromuro02.service.utils.Utils.countKeywordOccurrences;
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
 public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 2500;
+    private static final int NUMBER_OF_TESTS = 2;
+
+    private final Map<Integer, Pattern> passingTestPatterns =
+            createTestMatcherPatterns(
+                    "Validation %d passed",
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
+
+    private final Map<Integer, Pattern> failingTestPatterns =
+            createTestMatcherPatterns(
+                    "Validation %d failed",
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     private final InitialSolution initialSolution;
 
@@ -51,8 +66,7 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;
         }
-        if (dockerEvalOutput.contains("Validation 1 failed.")
-                || dockerEvalOutput.contains("Validation 2 failed.")) {
+        if (matchesAnyTestPattern(dockerEvalOutput, failingTestPatterns)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -60,8 +74,7 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
                             "Incorrect solution. The calculation output is\n"
                                     + "wrong for some inputs."));
         }
-        else if (!dockerEvalOutput.contains("Validation 1 passed.")
-                || !dockerEvalOutput.contains("Validation 2 passed.")) {
+        else if (!matchesAllTestPatterns(dockerEvalOutput, passingTestPatterns)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(dockerEvalOutput, "Incorrect solution."));
