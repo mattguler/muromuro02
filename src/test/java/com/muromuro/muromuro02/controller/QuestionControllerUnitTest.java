@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -74,428 +75,467 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetRepresentAccountStates() throws Exception {
-        when(representAccountStates.getInitialSolution())
-                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
-        this.mockMvc
-                .perform(get("/muromuro_questions/represent_account_states"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "How would you alter your code to represent "
-                                                        + "these new account states?")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/represent_account_states")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
+                        .setExpectedTitle("Representing Account States")
+                        .setExpectedContent(
+                                "How would you alter your code to represent "
+                                        + "these new account states?")
+                        .build();
+        runGetTest(representAccountStates, testValues);
     }
 
     @Test
     public void testEvalRepresentAccountStates_correctAnswer() throws Exception {
-        when(representAccountStates.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(content().string(containsString("Correct answer.")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_represent_account_states")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Representing Account States")
+                        .setExpectedContent(
+                                "How would you alter your code to represent "
+                                        + "these new account states?")
+                        .build();
+        runEvalTest_correctAnswer(representAccountStates, testValues);
     }
 
     @Test
     public void testEvalRepresentAccountStates_wrongAnswer() throws Exception {
-        when(representAccountStates.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_represent_account_states")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Representing Account States")
+                        .setExpectedContent(
+                                "How would you alter your code to represent "
+                                        + "these new account states?")
+                        .build();
+        runEvalTest_wrongAnswer(representAccountStates, testValues);
     }
 
     @Test
     public void testEvalRepresentAccountStates_timeout() throws Exception {
-        when(representAccountStates.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Server timed out: "
-                                                        + TIMEOUT_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_represent_account_states")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Representing Account States")
+                        .setExpectedContent(
+                                "How would you alter your code to represent "
+                                        + "these new account states?")
+                        .build();
+        runEvalTest_timeout(representAccountStates, testValues);
     }
 
     @Test
     public void testEvalRepresentAccountStates_unknownResponse() throws Exception {
-        when(representAccountStates.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.UNKNOWN,
-                                UNKNOWN_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_represent_account_states")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + UNKNOWN_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_represent_account_states")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Representing Account States")
+                        .setExpectedContent(
+                                "How would you alter your code to represent "
+                                        + "these new account states?")
+                        .build();
+        runEvalTest_unknownResponse(representAccountStates, testValues);
     }
 
     @Test
     public void testGetDesignApiWithPagination() throws Exception {
-        when(designApiWithPagination.getInitialSolution())
-                .thenReturn(new UserInput(INITIAL_CALLER_CODE, INITIAL_MAIN_DEFINITION));
-        this.mockMvc
-                .perform(get("/muromuro_questions/design_api_with_pagination"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(content().string(containsString(INITIAL_CALLER_CODE)))
-                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Please implement the call to your API function "
-                                                        + "and your actual API function definition")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/design_api_with_pagination")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
+                        .setExpectedTitle("Design API with Pagination")
+                        .setExpectedContent(
+                                "Please implement the call to your API function "
+                                        + "and your actual API function definition")
+                        .build();
+        runGetTest(designApiWithPagination, testValues);
     }
 
     @Test
     public void testEvalDesignApiWithPagination_correctAnswer() throws Exception {
-        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_design_api_with_pagination")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(content().string(containsString("Correct answer.")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_design_api_with_pagination")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Design API with Pagination")
+                        .setExpectedContent(
+                                "Please implement the call to your API function "
+                                        + "and your actual API function definition")
+                        .build();
+        runEvalTest_correctAnswer(designApiWithPagination, testValues);
     }
 
     @Test
     public void testEvalDesignApiWithPagination_wrongAnswer() throws Exception {
-        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_design_api_with_pagination")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_design_api_with_pagination")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Design API with Pagination")
+                        .setExpectedContent(
+                                "Please implement the call to your API function "
+                                        + "and your actual API function definition")
+                        .build();
+        runEvalTest_wrongAnswer(designApiWithPagination, testValues);
     }
 
     @Test
     public void testEvalDesignApiWithPagination_timeout() throws Exception {
-        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_design_api_with_pagination")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Server timed out: "
-                                                        + TIMEOUT_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_design_api_with_pagination")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Design API with Pagination")
+                        .setExpectedContent(
+                                "Please implement the call to your API function "
+                                        + "and your actual API function definition")
+                        .build();
+        runEvalTest_timeout(designApiWithPagination, testValues);
     }
 
     @Test
     public void testEvalDesignApiWithPagination_unknownResponse() throws Exception {
-        when(designApiWithPagination.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.UNKNOWN,
-                                UNKNOWN_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_design_api_with_pagination")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + UNKNOWN_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_design_api_with_pagination")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Design API with Pagination")
+                        .setExpectedContent(
+                                "Please implement the call to your API function "
+                                        + "and your actual API function definition")
+                        .build();
+        runEvalTest_unknownResponse(designApiWithPagination, testValues);
     }
 
     @Test
     public void testGetRefactorTooManyIfs() throws Exception {
-        when(refactorTooManyIfs.getInitialSolution())
-                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
-        this.mockMvc
-                .perform(get("/muromuro_questions/refactor_too_many_ifs"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Could you please refactor this code in a "
-                                                        + "way that reduces the if statements")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/refactor_too_many_ifs")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
+                        .setExpectedTitle("Refactoring Too Many Ifs")
+                        .setExpectedContent(
+                                "Could you please refactor this code in a "
+                                        + "way that reduces the if statements")
+                        .build();
+        runGetTest(refactorTooManyIfs, testValues);
     }
 
     @Test
     public void testEvalRefactorTooManyIfs_correctAnswer() throws Exception {
-        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_refactor_too_many_ifs")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(content().string(containsString("Correct answer")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Refactoring Too Many Ifs")
+                        .setExpectedContent(
+                                "Could you please refactor this code in a "
+                                        + "way that reduces the if statements")
+                        .build();
+        runEvalTest_correctAnswer(refactorTooManyIfs, testValues);
     }
 
     @Test
     public void testEvalRefactorTooManyIfs_wrongAnswer() throws Exception {
-        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_refactor_too_many_ifs")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Refactoring Too Many Ifs")
+                        .setExpectedContent(
+                                "Could you please refactor this code in a "
+                                        + "way that reduces the if statements")
+                        .build();
+        runEvalTest_wrongAnswer(refactorTooManyIfs, testValues);
     }
 
     @Test
     public void testEvalRefactorTooManyIfs_timeout() throws Exception {
-        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_refactor_too_many_ifs")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Server timed out: "
-                                                        + TIMEOUT_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Refactoring Too Many Ifs")
+                        .setExpectedContent(
+                                "Could you please refactor this code in a "
+                                        + "way that reduces the if statements")
+                        .build();
+        runEvalTest_timeout(refactorTooManyIfs, testValues);
     }
 
     @Test
     public void testEvalRefactorTooManyIfs_unknownResponse() throws Exception {
-        when(refactorTooManyIfs.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.UNKNOWN,
-                                UNKNOWN_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_refactor_too_many_ifs")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + UNKNOWN_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Refactoring Too Many Ifs")
+                        .setExpectedContent(
+                                "Could you please refactor this code in a "
+                                        + "way that reduces the if statements")
+                        .build();
+        runEvalTest_unknownResponse(refactorTooManyIfs, testValues);
     }
 
     @Test
     public void testGetDeviceDatabase() throws Exception {
-        when(deviceDatabase.getInitialSolution())
-                .thenReturn(new UserInput(INITIAL_CALLER_CODE, INITIAL_MAIN_DEFINITION));
-        this.mockMvc
-                .perform(get("/muromuro_questions/device_database"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "which of these devices exists")))
-                .andExpect(content().string(containsString(INITIAL_CALLER_CODE)))
-                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/device_database")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
+                        .setExpectedTitle("Device Database")
+                        .setExpectedContent("which of these devices exists")
+                        .build();
+        runGetTest(deviceDatabase, testValues);
     }
 
     @Test
     public void testEvalDeviceDatabase_correctAnswer() throws Exception {
-        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_device_database")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")))
-                .andExpect(content().string(containsString("Correct answer")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_device_database")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Device Database")
+                        .setExpectedContent("which of these devices exists")
+                        .build();
+        runEvalTest_correctAnswer(deviceDatabase, testValues);
     }
 
     @Test
     public void testEvalDeviceDatabase_wrongAnswer() throws Exception {
-        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_device_database")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_device_database")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Device Database")
+                        .setExpectedContent("which of these devices exists")
+                        .build();
+        runEvalTest_wrongAnswer(deviceDatabase, testValues);
     }
 
     @Test
     public void testEvalDeviceDatabase_timeout() throws Exception {
-        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_device_database")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Server timed out: "
-                                                        + TIMEOUT_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_device_database")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Device Database")
+                        .setExpectedContent("which of these devices exists")
+                        .build();
+        runEvalTest_timeout(deviceDatabase, testValues);
     }
 
     @Test
     public void testEvalDeviceDatabase_unknownResponse() throws Exception {
-        when(deviceDatabase.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.UNKNOWN,
-                                UNKNOWN_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_device_database")
-                                .param("userInput.callerCode", INITIAL_CALLER_CODE)
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + UNKNOWN_MESSAGE)));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_device_database")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Device Database")
+                        .setExpectedContent("which of these devices exists")
+                        .build();
+        runEvalTest_unknownResponse(deviceDatabase, testValues);
     }
 
     @Test
     public void testGetDetectSubstrings() throws Exception {
-        when(detectSubstrings.getInitialSolution())
-                .thenReturn(new UserInput("", INITIAL_MAIN_DEFINITION));
-        this.mockMvc
-                .perform(get("/muromuro_questions/detect_substrings"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")))
-                .andExpect(content().string(containsString(INITIAL_MAIN_DEFINITION)))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "implement a function that takes "
-                                                        + "a String object as an input")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/detect_substrings")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
+                        .setExpectedTitle("Detect Substrings")
+                        .setExpectedContent(
+                                "implement a function that takes "
+                                        + "a String object as an input")
+                        .build();
+        runGetTest(detectSubstrings, testValues);
     }
 
     @Test
     public void testEvalDetectSubstrings_correctAnswer() throws Exception {
-        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_detect_substrings")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")))
-                .andExpect(content().string(containsString("Correct answer")));
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_detect_substrings")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Detect Substrings")
+                        .setExpectedContent(
+                                "implement a function that takes "
+                                        + "a String object as an input")
+                        .build();
+        runEvalTest_correctAnswer(detectSubstrings, testValues);
     }
 
     @Test
     public void testEvalDetectSubstrings_wrongAnswer() throws Exception {
-        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_detect_substrings")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Detect Substrings")
+                        .setExpectedContent(
+                                "implement a function that takes "
+                                        + "a String object as an input")
+                        .build();
+        runEvalTest_wrongAnswer(detectSubstrings, testValues);
+    }
+
+    @Test
+    public void testEvalDetectSubstrings_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_detect_substrings")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Detect Substrings")
+                        .setExpectedContent(
+                                "implement a function that takes "
+                                        + "a String object as an input")
+                        .build();
+        runEvalTest_timeout(detectSubstrings, testValues);
+    }
+
+    @Test
+    public void testEvalDetectSubstrings_unknownResponse() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_detect_substrings")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Detect Substrings")
+                        .setExpectedContent(
+                                "implement a function that takes "
+                                        + "a String object as an input")
+                        .build();
+        runEvalTest_unknownResponse(detectSubstrings, testValues);
+    }
+
+    private record TestValues(
+            String url,
+            String callerCode,
+            String mainDefinition,
+            String expectedTitle,
+            String expectedContent) {
+
+        static final class Builder {
+            private String url;
+            private String callerCode;
+            private String mainDefinition;
+            private String expectedTitle;
+            private String expectedContent;
+
+            Builder() {
+                url = "";
+                callerCode = "";
+                mainDefinition = "";
+                expectedTitle = "";
+                expectedContent = "";
+            }
+
+            Builder setUrl(String url) {
+                this.url = url;
+                return this;
+            }
+
+            Builder setCallerCode(String callerCode) {
+                this.callerCode = callerCode;
+                return this;
+            }
+
+            Builder setMainDefinition(String mainDefinition) {
+                this.mainDefinition = mainDefinition;
+                return this;
+            }
+
+            Builder setExpectedTitle(String expectedTitle) {
+                this.expectedTitle = expectedTitle;
+                return this;
+            }
+
+            Builder setExpectedContent(String expectedContent) {
+                this.expectedContent = expectedContent;
+                return this;
+            }
+
+            TestValues build() {
+                return new TestValues(
+                        url, callerCode, mainDefinition, expectedTitle, expectedContent);
+            }
+        }
+    }
+
+    private void runGetTest(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.getInitialSolution())
+                .thenReturn(
+                        new UserInput(
+                                testValues.callerCode(),
+                                testValues.mainDefinition()));
+        ResultActions result =
+                this.mockMvc
+                        .perform(get(testValues.url()))
+                        .andExpect(status().isOk())
+                        .andExpect(
+                                content()
+                                        .string(
+                                                containsString(
+                                                        testValues.expectedTitle())));
+        if (!testValues.callerCode().isEmpty()) {
+            result
+                    .andExpect(
+                            content()
+                                    .string(
+                                            containsString(
+                                                    testValues.callerCode())));
+        }
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                testValues.mainDefinition())))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                testValues.expectedContent())));
+    }
+
+    private void runEvalTest_correctAnswer(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer")));
+    }
+
+    private void runEvalTest_wrongAnswer(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.FAILURE,
                                 ERROR_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_detect_substrings")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")))
+        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        result
                 .andExpect(
                         content()
                                 .string(
@@ -504,19 +544,15 @@ public class QuestionControllerUnitTest {
                                                         + ERROR_MESSAGE)));
     }
 
-    @Test
-    public void testEvalDetectSubstrings_timeout() throws Exception {
-        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+    private void runEvalTest_timeout(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.TIMEOUT,
                                 TIMEOUT_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_detect_substrings")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")))
+        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        result
                 .andExpect(
                         content()
                                 .string(
@@ -525,24 +561,59 @@ public class QuestionControllerUnitTest {
                                                         + TIMEOUT_MESSAGE)));
     }
 
-    @Test
-    public void testEvalDetectSubstrings_unknownResponse() throws Exception {
-        when(detectSubstrings.evaluateSolution(any(UserInput.class)))
+    private void runEvalTest_unknownResponse(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.UNKNOWN,
                                 UNKNOWN_MESSAGE));
-        this.mockMvc
-                .perform(
-                        post("/muromuro_questions/eval_detect_substrings")
-                                .param("userInput.mainDefinition", USER_INPUT))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")))
+        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        result
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
                                                 "Unknown response: "
                                                         + UNKNOWN_MESSAGE)));
+    }
+
+    private ResultActions runEvalTest_validateCommonParts(
+            TestValues testValues) throws Exception {
+        ResultActions result;
+        if (testValues.callerCode().isEmpty()) {
+            result =
+                    this.mockMvc
+                            .perform(
+                                    post(testValues.url)
+                                            .param(
+                                                    "userInput.mainDefinition",
+                                                    testValues.mainDefinition()))
+                            .andExpect(status().isOk());
+        } else {
+            result =
+                    this.mockMvc
+                            .perform(
+                                    post(testValues.url)
+                                            .param(
+                                                    "userInput.callerCode",
+                                                    testValues.callerCode())
+                                            .param(
+                                                    "userInput.mainDefinition",
+                                                    testValues.mainDefinition()))
+                            .andExpect(status().isOk());
+        }
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                testValues.expectedTitle())))
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                testValues.expectedContent())));
+        return result;
     }
 }
