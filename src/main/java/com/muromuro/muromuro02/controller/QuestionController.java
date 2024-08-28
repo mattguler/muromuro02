@@ -133,4 +133,24 @@ public class QuestionController {
         muroMuroSolution.setResponse(response);
         return "questions/detect_substrings";
     }
+
+    @GetMapping("debug_list")
+    public String debugList(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Set the proper initial user input here.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/debug_list";
+    }
+
+    @PostMapping("eval_debug_list")
+    public String evalDebugList(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement a proper evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return "questions/debug_list";
+    }
 }

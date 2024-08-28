@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <title>Debug List</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Debug List</h2>
+    <hr>
+    <p>
+        You are given the following code which contains a couple of bugs. Please fix
+        these bugs so the correct desired output can be returned by running the code.
+    </p>
+    <p>
+        Here is what the output of the code run should look like:
+    </p>
+    <p><code>
+        Iteration 1: <br>
+        5 <br>
+        6 <br>
+        7 <br>
+        8 <br>
+        9 <br>
+        Iteration 2: <br>
+        10 <br>
+        11 <br>
+        12 <br>
+        13 <br>
+        14
+    </code></p>
+    <p>
+        Please run the code first (by pressing the Submit button) to see what the current
+        output looks like.
+    </p>
+    <p id="questionPrompt">
+        You can only change the certain parts of the code below, available to you in the
+        text area.
+    </p>
+    <hr>
+    <form action="#" th:action="@{/muromuro_questions/eval_debug_list#questionPrompt}"
+          th:object="${muroMuroSolution}" method="POST">
+        <pre><code>
+<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+        </code></pre>
+        <div th:switch="*{response.status}">
+            <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>
+            <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).SUCCESS}"
+                 class="alert alert-success col-lg-6">
+                <b th:text="'Correct answer: ' + *{response.message}"></b></div>
+            <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).FAILURE}"
+                 class="alert alert-danger col-lg-6">
+                <pre><code><b th:text="'Wrong answer: ' + *{response.message}"></b></code></pre>
+            </div>
+            <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).TIMEOUT}"
+                 class="alert alert-warning col-lg-6">
+                <b th:text="'Server timed out: ' + *{response.message}"></b></div>
+            <div th:case="*"
+                 class="alert alert-warning col-lg-6">
+                <pre><code><b th:text="'Unknown response: ' + *{response.message}"></b></code></pre>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-info col-2" onclick="disableButtonAndSubmitForm(this);">
+            Submit
+        </button>
+    </form>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
