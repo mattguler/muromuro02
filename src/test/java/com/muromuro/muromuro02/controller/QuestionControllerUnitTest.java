@@ -423,6 +423,38 @@ public class QuestionControllerUnitTest {
         runEvalTest_unknownResponse(detectSubstrings, testValues);
     }
 
+    @Test
+    public void testGetDebugList() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/debug_list")
+                        .setExpectedTitle("Debug List")
+                        .setExpectedContent("code which contains a couple of bugs")
+                        .build();
+        runGetTest_validateCommonParts(testValues);
+    }
+
+    @Test
+    public void testEvalDebugList_unknownResponse() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_debug_list")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Debug List")
+                        .setExpectedContent("code which contains a couple of bugs")
+                        .build();
+        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Evaluator not yet implemented")));
+    }
+
     private record TestValues(
             String url,
             String callerCode,
@@ -484,6 +516,11 @@ public class QuestionControllerUnitTest {
                         new UserInput(
                                 testValues.callerCode(),
                                 testValues.mainDefinition()));
+        runGetTest_validateCommonParts(testValues);
+    }
+
+    private void runGetTest_validateCommonParts(
+            TestValues testValues) throws Exception {
         ResultActions result =
                 this.mockMvc
                         .perform(get(testValues.url()))
@@ -501,12 +538,15 @@ public class QuestionControllerUnitTest {
                                             containsString(
                                                     testValues.callerCode())));
         }
+        if (!testValues.mainDefinition().isEmpty()) {
+            result
+                    .andExpect(
+                            content()
+                                    .string(
+                                            containsString(
+                                                    testValues.mainDefinition())));
+        }
         result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                testValues.mainDefinition())))
                 .andExpect(
                         content()
                                 .string(
