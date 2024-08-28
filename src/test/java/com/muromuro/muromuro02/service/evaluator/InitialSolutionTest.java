@@ -14,17 +14,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class InitialSolutionTest {
 
-        @Autowired
-        @Qualifier("refactorTooManyIfsSoln")
-        private InitialSolution refactorTooManyIfsSoln;
+    @Autowired
+    @Qualifier("debugListSoln")
+    private InitialSolution debugListSoln;
 
-        @Test
-        public void testGetContent_refactorTooManyIfsSoln() {
-            String content = refactorTooManyIfsSoln.getRelevantContent();
-            assertTrue(content.contains("public int doCalculation(String strInput, int intInput)"));
-            assertTrue(content.contains("if (strInput.equals(\"a\"))"));
-            assertTrue(content.contains("result += 1;"));
-            assertTrue(content.contains("if (strInput.equals(\"b\"))"));
-            assertTrue(content.contains("result -= 5;"));
-        }
+    @Autowired
+    @Qualifier("refactorTooManyIfsSoln")
+    private InitialSolution refactorTooManyIfsSoln;
+
+    @Test
+    public void testGetContent_debugListSoln() {
+        String content = debugListSoln.getRelevantContent();
+        assertTrue(content.contains("List<Integer> createFiveElements()"));
+        assertTrue(content.contains("void addFiveElements(List<Integer> series)"));
+        assertTrue(content.contains("void removeFirstFiveElements(List<Integer> series)"));
+    }
+
+    @Test
+    public void testGetContent_refactorTooManyIfsSoln() {
+        String content = refactorTooManyIfsSoln.getRelevantContent();
+        assertTrue(content.contains("public int doCalculation(String strInput, int intInput)"));
+        assertTrue(content.contains("if (strInput.equals(\"a\"))"));
+        assertTrue(content.contains("result += 1;"));
+        assertTrue(content.contains("if (strInput.equals(\"b\"))"));
+        assertTrue(content.contains("result -= 5;"));
+    }
 }

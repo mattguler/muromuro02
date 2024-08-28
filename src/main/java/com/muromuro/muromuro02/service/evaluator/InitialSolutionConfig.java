@@ -12,6 +12,14 @@ import java.nio.file.Files;
 /** Configures the InitialSolution beans by reading the initial solution files from the resources. */
 @Configuration
 public class InitialSolutionConfig {
+
+    @Bean(name = "debugListSoln")
+    public InitialSolution getInitialSolutionForDebugList(
+            @Value("classpath:/initialsolutions/DebugListSoln.java") Resource initialSolutionResource)
+            throws IOException {
+        return buildInitialSolution(initialSolutionResource);
+    }
+
     @Bean(name = "refactorTooManyIfsSoln")
     public InitialSolution getInitialSolutionForRefactorTooManyIfs(
             @Value("classpath:initialsolutions/RefactorTooManyIfsSoln.java") Resource initialSolutionResource)
