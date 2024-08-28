@@ -30,6 +30,10 @@ public class EvaluationCodeTest {
             "public enum SomeAccountState {}";
 
     @Autowired
+    @Qualifier("debugList")
+    private EvaluationCode debugListEval;
+
+    @Autowired
     @Qualifier("designApiWithPagination")
     private EvaluationCode designApiWithPaginationEval;
 
@@ -48,6 +52,13 @@ public class EvaluationCodeTest {
     @Autowired
     @Qualifier("representAccountStates")
     private EvaluationCode representAccountStatesEval;
+
+    @Test
+    public void testGetContent_debugListEval() {
+        String content = debugListEval.getFormattedContent();
+        assertTrue(content.contains("public class DebugListEval"));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
 
     @Test
     public void testGetContent_designApiWithPaginationEval() {

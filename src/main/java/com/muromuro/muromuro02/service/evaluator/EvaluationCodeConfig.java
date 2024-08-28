@@ -12,6 +12,14 @@ import java.nio.file.Files;
 /** Configures the EvaluationCode beans by reading the evaluator files from the resources. */
 @Configuration
 public class EvaluationCodeConfig {
+
+    @Bean(name = "debugList")
+    public EvaluationCode getEvaluationCodeForDebugList(
+            @Value("classpath:evaluators/DebugListEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "designApiWithPagination")
     public EvaluationCode getEvaluationCodeForDesignApiWithPagination(
             @Value("classpath:evaluators/DesignApiWithPaginationEval.java") Resource evaluatorResource)
