@@ -43,15 +43,31 @@
         Please run the code first (by pressing the Submit button) to see what the current
         output looks like.
     </p>
-    <p id="questionPrompt">
+    <p>
         You can only change the certain parts of the code below, available to you in the
         text area.
     </p>
     <hr>
-    <form action="#" th:action="@{/muromuro_questions/eval_debug_list#questionPrompt}"
+    <form action="#" th:action="@{/muromuro_questions/eval_debug_list#mainDefLabel}"
           th:object="${muroMuroSolution}" method="POST">
-        <pre><code>
-<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+        <pre><code><label th:for="userInput.mainDefinition" id="mainDefLabel">
+// Please fix this solution code to match the correct output.
+public class DebugListSoln {  </label>
+<textarea rows="32" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+    public void printSeries(String title) {
+        System.out.println(title);
+        for (int num : series) {
+            System.out.println(num);
+        }
+    }
+
+    public static void main(String[] args) {
+        DebugListSoln db1 = new DebugListSoln();
+        db1.printSeries("Iteration 1:");
+        DebugListSoln db2 = new DebugListSoln();
+        db2.printSeries("Iteration 2:");
+    }
+}
         </code></pre>
         <div th:switch="*{response.status}">
             <div th:case="${T(com.muromuro.muromuro02.model.MuroMuroResponse.Status).UNDEFINED}"></div>

@@ -24,6 +24,7 @@ public class QuestionController {
     private final Evaluator refactorTooManyIfs;
     private final Evaluator deviceDatabase;
     private final Evaluator detectSubstrings;
+    private final Evaluator debugList;
 
     @Autowired
     public QuestionController(
@@ -31,12 +32,14 @@ public class QuestionController {
             @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination,
             @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs,
             @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase,
-            @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings){
+            @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings,
+            @Qualifier("debugListImpl") Evaluator debugList){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
         this.deviceDatabase = deviceDatabase;
         this.detectSubstrings = detectSubstrings;
+        this.debugList = debugList;
     }
 
     @GetMapping("list")
@@ -137,7 +140,7 @@ public class QuestionController {
     @GetMapping("debug_list")
     public String debugList(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Set the proper initial user input here.
+        muroMuroSolution.setUserInput(debugList.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/debug_list";
     }
@@ -145,11 +148,8 @@ public class QuestionController {
     @PostMapping("eval_debug_list")
     public String evalDebugList(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Implement a proper evaluator and use it here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator not yet implemented.");
+                debugList.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
         return "questions/debug_list";
     }
