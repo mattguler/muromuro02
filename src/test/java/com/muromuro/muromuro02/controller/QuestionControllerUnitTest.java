@@ -54,6 +54,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("detectSubstringsImpl")
     private Evaluator detectSubstrings;
 
+    @MockBean
+    @Qualifier("debugListImpl")
+    private Evaluator debugList;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -425,19 +429,18 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetDebugList() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/debug_list")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
                         .setExpectedTitle("Debug List")
                         .setExpectedContent("code which contains a couple of bugs")
                         .build();
-        runGetTest_validateCommonParts(testValues);
+        runGetTest(debugList, testValues);
     }
 
     @Test
-    public void testEvalDebugList_unknownResponse() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+    public void testEvalDebugList_correctAnswer() throws Exception {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_debug_list")
@@ -445,14 +448,43 @@ public class QuestionControllerUnitTest {
                         .setExpectedTitle("Debug List")
                         .setExpectedContent("code which contains a couple of bugs")
                         .build();
-        ResultActions result = runEvalTest_validateCommonParts(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + "Evaluator not yet implemented")));
+        runEvalTest_correctAnswer(debugList, testValues);
+    }
+
+    @Test
+    public void testEvalDebugList_wrongAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_debug_list")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Debug List")
+                        .setExpectedContent("code which contains a couple of bugs")
+                        .build();
+        runEvalTest_wrongAnswer(debugList, testValues);
+    }
+
+    @Test
+    public void testEvalDebugList_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_debug_list")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Debug List")
+                        .setExpectedContent("code which contains a couple of bugs")
+                        .build();
+        runEvalTest_timeout(debugList, testValues);
+    }
+
+    @Test
+    public void testEvalDebugList_unknownResponse() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_debug_list")
+                        .setMainDefinition(USER_INPUT)
+                        .setExpectedTitle("Debug List")
+                        .setExpectedContent("code which contains a couple of bugs")
+                        .build();
+        runEvalTest_unknownResponse(debugList, testValues);
     }
 
     private record TestValues(
