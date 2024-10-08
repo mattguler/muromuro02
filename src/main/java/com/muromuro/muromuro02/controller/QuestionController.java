@@ -151,6 +151,15 @@ public class QuestionController {
         MuroMuroResponse response =
                 debugList.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
-        return "questions/debug_list";
+        return getPageForResponseStatus(response.getStatus());
+    }
+
+    private String getPageForResponseStatus(MuroMuroResponse.Status status) {
+        return switch (status) {
+            case SUCCESS -> "response :: success";
+            case FAILURE -> "response :: failure";
+            case TIMEOUT -> "response :: timeout";
+            default -> "response :: unknown";
+        };
     }
 }
