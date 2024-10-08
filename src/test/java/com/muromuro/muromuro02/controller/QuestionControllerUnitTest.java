@@ -445,8 +445,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Debug List")
-                        .setExpectedContent("code which contains a couple of bugs")
                         .build();
         runEvalTest_correctAnswer(debugList, testValues);
     }
@@ -457,8 +455,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Debug List")
-                        .setExpectedContent("code which contains a couple of bugs")
                         .build();
         runEvalTest_wrongAnswer(debugList, testValues);
     }
@@ -469,8 +465,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Debug List")
-                        .setExpectedContent("code which contains a couple of bugs")
                         .build();
         runEvalTest_timeout(debugList, testValues);
     }
@@ -481,8 +475,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Debug List")
-                        .setExpectedContent("code which contains a couple of bugs")
                         .build();
         runEvalTest_unknownResponse(debugList, testValues);
     }
@@ -675,17 +667,24 @@ public class QuestionControllerUnitTest {
                                                     testValues.mainDefinition()))
                             .andExpect(status().isOk());
         }
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                testValues.expectedTitle())))
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                testValues.expectedContent())));
+        // TODO: Remove the following parts after the HTMX migration is complete.
+        // TODO: Also rename this helper function after removing the following parts.
+        if (!testValues.expectedTitle().isEmpty()) {
+            result
+                    .andExpect(
+                            content()
+                                    .string(
+                                            containsString(
+                                                    testValues.expectedTitle())));
+        }
+        if (!testValues.expectedContent().isEmpty()) {
+            result
+                    .andExpect(
+                            content()
+                                    .string(
+                                            containsString(
+                                                    testValues.expectedContent())));
+        }
         return result;
     }
 }

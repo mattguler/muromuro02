@@ -362,7 +362,6 @@ public class DebugListIntegrationTest {
                 .perform(
                         post(EVAL_URL)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Debug List")));
+                .andExpect(status().isOk());
     }
 }
