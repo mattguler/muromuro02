@@ -49,7 +49,13 @@ public class RepresentAccountStatesIntegrationTest {
                 + "  DELETED\n"
                 + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Correct answer.")));
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
     }
 
     @Test
@@ -62,7 +68,13 @@ public class RepresentAccountStatesIntegrationTest {
                         + "  Suspended\n"
                         + "}\n";
         performEval(userInput)
-                .andExpect(content().string(containsString("Correct answer.")));
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
     }
 
     @Test
@@ -73,8 +85,8 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incorrect solution. "
-                                                        + "(Hint: Can you use a better data type than boolean "
+                                                "Wrong answer: Incorrect solution.\n"
+                                                        + "(Hint: Can you use a better data type than boolean\n"
                                                         + "to represent the account states?)")));
     }
 
@@ -86,8 +98,8 @@ public class RepresentAccountStatesIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incorrect solution. "
-                                                        + "(Hint: Can you think of a better data type "
+                                                "Wrong answer: Incorrect solution.\n"
+                                                        + "(Hint: Can you think of a better data type\n"
                                                         + "to represent the account states?)")));
     }
 
@@ -104,8 +116,8 @@ public class RepresentAccountStatesIntegrationTest {
                                 .string(
                                         containsString(
                                                 "Wrong answer: "
-                                                        + "The solution does not seem to represent "
-                                                        + "all the necessary account states, which are: "
+                                                        + "The solution does not seem to represent\n"
+                                                        + "all the necessary account states, which are:\n"
                                                         + "ACTIVE, INACTIVE, SUSPENDED, DELETED")));
     }
 
@@ -226,7 +238,6 @@ public class RepresentAccountStatesIntegrationTest {
                 .perform(
                         post(EVAL_URL)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Representing Account States")));
+                .andExpect(status().isOk());
     }
 }

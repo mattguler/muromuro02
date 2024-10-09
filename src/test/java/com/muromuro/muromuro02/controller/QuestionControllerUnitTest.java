@@ -97,10 +97,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Representing Account States")
-                        .setExpectedContent(
-                                "How would you alter your code to represent "
-                                        + "these new account states?")
                         .build();
         runEvalTest_correctAnswer(representAccountStates, testValues);
     }
@@ -111,10 +107,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Representing Account States")
-                        .setExpectedContent(
-                                "How would you alter your code to represent "
-                                        + "these new account states?")
                         .build();
         runEvalTest_wrongAnswer(representAccountStates, testValues);
     }
@@ -125,10 +117,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Representing Account States")
-                        .setExpectedContent(
-                                "How would you alter your code to represent "
-                                        + "these new account states?")
                         .build();
         runEvalTest_timeout(representAccountStates, testValues);
     }
@@ -139,10 +127,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Representing Account States")
-                        .setExpectedContent(
-                                "How would you alter your code to represent "
-                                        + "these new account states?")
                         .build();
         runEvalTest_unknownResponse(representAccountStates, testValues);
     }

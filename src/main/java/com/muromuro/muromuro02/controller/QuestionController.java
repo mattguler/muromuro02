@@ -63,7 +63,7 @@ public class QuestionController {
                 representAccountStates.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
-        return "questions/represent_account_states";
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
     @GetMapping("design_api_with_pagination")

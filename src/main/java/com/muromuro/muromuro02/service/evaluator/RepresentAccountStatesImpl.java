@@ -75,7 +75,10 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
     protected MuroMuroResponse analyzeEvaluation(
             String dockerEvalOutput, UserInput userInput) {
         if (containsAllAccountStates(dockerEvalOutput)) {
-            return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.SUCCESS,
+                    "The solution looks correct, but your interviewer "
+                            + "will be the final judge.");
         }
         else if (dockerEvalOutput.contains("Killed")
                 && dockerEvalOutput.contains("timeout -s SIGKILL")) {
@@ -91,18 +94,18 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
         StringBuilder errorMessage = new StringBuilder();
         String mainDefinition = userInput.getMainDefinition();
         if (!mainDefinition.contains("enum") && mainDefinition.contains("boolean")) {
-            errorMessage.append("Incorrect solution. ");
-            errorMessage.append(
-                    "(Hint: Can you use a better data type than boolean to represent the account states?)");
+            errorMessage.append("Incorrect solution.\n");
+            errorMessage.append("(Hint: Can you use a better data type than boolean\n");
+            errorMessage.append("to represent the account states?)");
         }
         else if (!mainDefinition.contains("enum")) {
-            errorMessage.append("Incorrect solution. ");
-            errorMessage.append(
-                    "(Hint: Can you think of a better data type to represent the account states?)");
+            errorMessage.append("Incorrect solution.\n");
+            errorMessage.append("(Hint: Can you think of a better data type\n");
+            errorMessage.append("to represent the account states?)");
         }
         else {
-            errorMessage.append("The solution does not seem to represent all the necessary account states, ");
-            errorMessage.append("which are: ");
+            errorMessage.append("The solution does not seem to represent\n");
+            errorMessage.append("all the necessary account states, which are:\n");
             errorMessage.append(String.join(", ", ACCOUNT_STATES));
         }
         return new MuroMuroResponse(
