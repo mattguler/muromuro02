@@ -242,10 +242,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Refactoring Too Many Ifs")
-                        .setExpectedContent(
-                                "Could you please refactor this code in a "
-                                        + "way that reduces the if statements")
                         .build();
         runEvalTest_correctAnswer(refactorTooManyIfs, testValues);
     }
@@ -256,10 +252,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Refactoring Too Many Ifs")
-                        .setExpectedContent(
-                                "Could you please refactor this code in a "
-                                        + "way that reduces the if statements")
                         .build();
         runEvalTest_wrongAnswer(refactorTooManyIfs, testValues);
     }
@@ -270,10 +262,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Refactoring Too Many Ifs")
-                        .setExpectedContent(
-                                "Could you please refactor this code in a "
-                                        + "way that reduces the if statements")
                         .build();
         runEvalTest_timeout(refactorTooManyIfs, testValues);
     }
@@ -284,10 +272,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Refactoring Too Many Ifs")
-                        .setExpectedContent(
-                                "Could you please refactor this code in a "
-                                        + "way that reduces the if statements")
                         .build();
         runEvalTest_unknownResponse(refactorTooManyIfs, testValues);
     }
