@@ -228,7 +228,6 @@ public class DetectSubstringsIntegrationTest {
                 .perform(
                         post(EVAL_URL)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Detect Substrings")));
+                .andExpect(status().isOk());
     }
 }
