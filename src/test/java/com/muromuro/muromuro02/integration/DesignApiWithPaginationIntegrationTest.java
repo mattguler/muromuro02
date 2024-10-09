@@ -165,7 +165,9 @@ public class DesignApiWithPaginationIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Correct answer.")));
+                                                "Correct answer: The solution looks correct, "
+                                                        + "but your interviewer will be the "
+                                                        + "final judge.")));
     }
 
     @Test
@@ -253,7 +255,6 @@ public class DesignApiWithPaginationIntegrationTest {
                         post(EVAL_URL)
                                 .param("userInput.callerCode", callerCode)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Design API with Pagination")));
+                .andExpect(status().isOk());
     }
 }

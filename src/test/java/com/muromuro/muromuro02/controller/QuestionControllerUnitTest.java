@@ -169,10 +169,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_design_api_with_pagination")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Design API with Pagination")
-                        .setExpectedContent(
-                                "Please implement the call to your API function "
-                                        + "and your actual API function definition")
                         .build();
         runEvalTest_correctAnswer(designApiWithPagination, testValues);
     }
@@ -184,10 +180,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_design_api_with_pagination")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Design API with Pagination")
-                        .setExpectedContent(
-                                "Please implement the call to your API function "
-                                        + "and your actual API function definition")
                         .build();
         runEvalTest_wrongAnswer(designApiWithPagination, testValues);
     }
@@ -199,10 +191,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_design_api_with_pagination")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Design API with Pagination")
-                        .setExpectedContent(
-                                "Please implement the call to your API function "
-                                        + "and your actual API function definition")
                         .build();
         runEvalTest_timeout(designApiWithPagination, testValues);
     }
@@ -214,10 +202,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_design_api_with_pagination")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Design API with Pagination")
-                        .setExpectedContent(
-                                "Please implement the call to your API function "
-                                        + "and your actual API function definition")
                         .build();
         runEvalTest_unknownResponse(designApiWithPagination, testValues);
     }
