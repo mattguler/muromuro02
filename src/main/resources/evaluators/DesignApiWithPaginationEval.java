@@ -73,7 +73,7 @@ public class DesignApiWithPaginationEval {
     public void verifyEmployees(
             String listTitle, List<Employee> employees, int startId, int endId) {
         if (employees.size() != endId - startId + 1) {
-            System.out.printf("%s is incorrectly formed.\n", listTitle);
+            System.out.println(listTitle + " is incorrectly formed.");
             return;
         }
         int id = startId;
@@ -81,12 +81,12 @@ public class DesignApiWithPaginationEval {
             Employee employee = employees.get(i);
             if (employee.getId() != id || !employee.getFirstName().equals("first_name_" + id)
                     || !employee.getLastName().equals("last_name_" + id)) {
-                System.out.printf("%s is incorrectly formed.\n", listTitle);
+                System.out.println(listTitle + " is incorrectly formed.");
                 return;
             }
             id++;
         }
-        System.out.printf("%s is correctly formed.\n", listTitle);
+        System.out.println(listTitle + " is correctly formed.");
     }
 
     public void callerFunction(

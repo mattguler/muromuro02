@@ -81,7 +81,7 @@ public class QuestionController {
                 designApiWithPagination.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
-        return "questions/design_api_with_pagination";
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
     @GetMapping("refactor_too_many_ifs")
