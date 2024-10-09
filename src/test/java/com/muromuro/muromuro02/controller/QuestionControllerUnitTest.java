@@ -312,8 +312,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_device_database")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Device Database")
-                        .setExpectedContent("which of these devices exists")
                         .build();
         runEvalTest_correctAnswer(deviceDatabase, testValues);
     }
@@ -325,8 +323,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_device_database")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Device Database")
-                        .setExpectedContent("which of these devices exists")
                         .build();
         runEvalTest_wrongAnswer(deviceDatabase, testValues);
     }
@@ -338,8 +334,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_device_database")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Device Database")
-                        .setExpectedContent("which of these devices exists")
                         .build();
         runEvalTest_timeout(deviceDatabase, testValues);
     }
@@ -351,8 +345,6 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_device_database")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Device Database")
-                        .setExpectedContent("which of these devices exists")
                         .build();
         runEvalTest_unknownResponse(deviceDatabase, testValues);
     }

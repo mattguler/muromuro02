@@ -117,7 +117,7 @@ public class QuestionController {
                 deviceDatabase.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
-        return "questions/device_database";
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
     @GetMapping("detect_substrings")

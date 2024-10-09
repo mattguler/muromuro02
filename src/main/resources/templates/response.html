@@ -11,6 +11,9 @@
     <title>Response Fragments</title>
 </head>
 <body>
+    <!-- The following are the Thymeleaf fragments returned by the Muromuro server
+         as part of the HTMX response. They are reused by all Muromuro question page views. -->
+
     <div th:fragment="success" class="alert alert-success col-lg-6">
         <b th:text="'Correct answer: ' + ${muroMuroSolution.response.message}"></b>
     </div>
