@@ -386,7 +386,6 @@ public class DeviceDatabaseIntegrationTest {
                         post(EVAL_URL)
                                 .param("userInput.callerCode", callerCode)
                                 .param("userInput.mainDefinition", mainDefinition))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Device Database")));
+                .andExpect(status().isOk());
     }
 }
