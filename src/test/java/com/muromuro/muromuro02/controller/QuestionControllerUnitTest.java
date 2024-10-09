@@ -377,10 +377,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Detect Substrings")
-                        .setExpectedContent(
-                                "implement a function that takes "
-                                        + "a String object as an input")
                         .build();
         runEvalTest_correctAnswer(detectSubstrings, testValues);
     }
@@ -391,10 +387,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Detect Substrings")
-                        .setExpectedContent(
-                                "implement a function that takes "
-                                        + "a String object as an input")
                         .build();
         runEvalTest_wrongAnswer(detectSubstrings, testValues);
     }
@@ -405,10 +397,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Detect Substrings")
-                        .setExpectedContent(
-                                "implement a function that takes "
-                                        + "a String object as an input")
                         .build();
         runEvalTest_timeout(detectSubstrings, testValues);
     }
@@ -419,10 +407,6 @@ public class QuestionControllerUnitTest {
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
-                        .setExpectedTitle("Detect Substrings")
-                        .setExpectedContent(
-                                "implement a function that takes "
-                                        + "a String object as an input")
                         .build();
         runEvalTest_unknownResponse(detectSubstrings, testValues);
     }

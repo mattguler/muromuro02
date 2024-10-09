@@ -134,7 +134,7 @@ public class QuestionController {
         MuroMuroResponse response =
                 detectSubstrings.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
-        return "questions/detect_substrings";
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
     @GetMapping("debug_list")
@@ -151,10 +151,11 @@ public class QuestionController {
         MuroMuroResponse response =
                 debugList.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
-        return getPageForResponseStatus(response.getStatus());
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
-    private String getPageForResponseStatus(MuroMuroResponse.Status status) {
+    /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
+    private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {
             case SUCCESS -> "response :: success";
             case FAILURE -> "response :: failure";
