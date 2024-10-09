@@ -99,7 +99,7 @@ public class QuestionController {
                 refactorTooManyIfs.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
 
-        return "questions/refactor_too_many_ifs";
+        return getFragmentForResponseStatus(response.getStatus());
     }
 
     @GetMapping("device_database")
