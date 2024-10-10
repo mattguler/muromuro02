@@ -1,5 +1,1 @@
-// TODO: We can remove this function when the HTMX migration is complete.
-function disableButtonAndSubmitForm(button) {
-    button.disabled = true;
-    button.form.submit();
-}
+// Any custom vanilla JS functionality used by Muromuro goes into this file.
