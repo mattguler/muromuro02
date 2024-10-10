@@ -89,7 +89,8 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
         if (dockerEvalOutput.contains("error: not a statement")
                 || dockerEvalOutput.contains("error: ';' expected")
                 || dockerEvalOutput.contains("error: <identifier> expected")
-                || dockerEvalOutput.contains("Error: Could not find or load main class")) {
+                || dockerEvalOutput.contains("Error: Could not find or load main class")
+                || dockerEvalOutput.contains("Exception in thread \"main\"")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
