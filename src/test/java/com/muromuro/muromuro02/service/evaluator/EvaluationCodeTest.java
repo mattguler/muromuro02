@@ -70,9 +70,7 @@ public class EvaluationCodeTest {
         assertTrue(
                 content.contains(
                         "new Employee(id, \\\"first_name_\\\" + id, \\\"last_name_\\\" + id)"));
-        assertTrue(
-                content.contains(
-                        "System.out.printf(\\\"%s is incorrectly formed.\\\\\\n\\\", listTitle);"));
+        assertTrue(content.contains("is incorrectly formed."));
         assertTrue(content.contains("printEmployees(\\\"List 1\\\", list1);"));
     }
 

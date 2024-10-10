@@ -510,7 +510,7 @@ public class QuestionControllerUnitTest {
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        ResultActions result = sendEvalCommand(testValues);
         result
                 .andExpect(
                         content()
@@ -526,7 +526,7 @@ public class QuestionControllerUnitTest {
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.FAILURE,
                                 ERROR_MESSAGE));
-        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        ResultActions result = sendEvalCommand(testValues);
         result
                 .andExpect(
                         content()
@@ -543,7 +543,7 @@ public class QuestionControllerUnitTest {
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.TIMEOUT,
                                 TIMEOUT_MESSAGE));
-        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        ResultActions result = sendEvalCommand(testValues);
         result
                 .andExpect(
                         content()
@@ -560,7 +560,7 @@ public class QuestionControllerUnitTest {
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.UNKNOWN,
                                 UNKNOWN_MESSAGE));
-        ResultActions result = runEvalTest_validateCommonParts(testValues);
+        ResultActions result = sendEvalCommand(testValues);
         result
                 .andExpect(
                         content()
@@ -570,7 +570,7 @@ public class QuestionControllerUnitTest {
                                                         + UNKNOWN_MESSAGE)));
     }
 
-    private ResultActions runEvalTest_validateCommonParts(
+    private ResultActions sendEvalCommand(
             TestValues testValues) throws Exception {
         ResultActions result;
         if (testValues.callerCode().isEmpty()) {
@@ -594,24 +594,6 @@ public class QuestionControllerUnitTest {
                                                     "userInput.mainDefinition",
                                                     testValues.mainDefinition()))
                             .andExpect(status().isOk());
-        }
-        // TODO: Remove the following parts after the HTMX migration is complete.
-        // TODO: Also rename this helper function after removing the following parts.
-        if (!testValues.expectedTitle().isEmpty()) {
-            result
-                    .andExpect(
-                            content()
-                                    .string(
-                                            containsString(
-                                                    testValues.expectedTitle())));
-        }
-        if (!testValues.expectedContent().isEmpty()) {
-            result
-                    .andExpect(
-                            content()
-                                    .string(
-                                            containsString(
-                                                    testValues.expectedContent())));
         }
         return result;
     }
