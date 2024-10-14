@@ -121,6 +121,11 @@ public class Utils {
         return count;
     }
 
+    /** Builds a message indicating to the user that the Muromuro run was successful. */
+    public static String buildSuccessMessage() {
+        return "The solution looks correct, but your interviewer will be the final judge.";
+    }
+
     /**
      * Builds a failure message string by appending the given dockerEvalOutput to the
      * given error message. This is meant to ease debugging by the user.

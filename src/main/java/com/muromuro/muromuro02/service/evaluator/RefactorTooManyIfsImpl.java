@@ -89,9 +89,7 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
         }
 
         return new MuroMuroResponse(
-                MuroMuroResponse.Status.SUCCESS,
-                "The solution looks correct, but your interviewer "
-                        + "will be the final judge.");
+                MuroMuroResponse.Status.SUCCESS, buildSuccessMessage());
     }
 
     private static int getIfCountInCode(UserInput userInput) {

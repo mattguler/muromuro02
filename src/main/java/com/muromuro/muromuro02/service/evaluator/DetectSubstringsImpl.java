@@ -77,9 +77,7 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
         }
         else if (matchesAllTestPatterns(dockerEvalOutput, passingTestPatterns)) {
             return new MuroMuroResponse(
-                    MuroMuroResponse.Status.SUCCESS,
-                    "The solution looks correct, but your interviewer "
-                            + "will be the final judge.");
+                    MuroMuroResponse.Status.SUCCESS, buildSuccessMessage());
         }
         // We should not be reaching here.
         return new MuroMuroResponse(
