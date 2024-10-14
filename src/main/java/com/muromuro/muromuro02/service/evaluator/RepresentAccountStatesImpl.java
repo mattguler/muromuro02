@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.muromuro.muromuro02.service.utils.Utils.replaceEnumNames;
-import static com.muromuro.muromuro02.service.utils.Utils.replaceTargetWords;
+import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RepresentAccountStates question. */
 @Service
@@ -76,9 +75,7 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
             String dockerEvalOutput, UserInput userInput) {
         if (containsAllAccountStates(dockerEvalOutput)) {
             return new MuroMuroResponse(
-                    MuroMuroResponse.Status.SUCCESS,
-                    "The solution looks correct, but your interviewer "
-                            + "will be the final judge.");
+                    MuroMuroResponse.Status.SUCCESS, buildSuccessMessage());
         }
         else if (dockerEvalOutput.contains("Killed")
                 && dockerEvalOutput.contains("timeout -s SIGKILL")) {
