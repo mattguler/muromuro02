@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- HTMX imports. -->
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <title>Parse CSV</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Parse CSV</h2>
+    <hr>
+    <p>
+        You are given a comma separated value (CSV) file string to parse. You are
+        asked to parse this multi-line CSV string into a list of data structures.
+    </p>
+    <p>
+        Your input is a CSV string of multiple lines. The very first line contains
+        the names of the fields represented in the subsequent lines. This particular
+        CSV string represents a list of Accounts, and all the information related
+        to those accounts.
+    </p>
+    <p>
+        Here is an example of a CSV file string, to be parsed by your program.
+        (One thing you might notice here is that some values are missing. We'll
+        come back to this.)
+    </p>
+    <pre><code class="text-primary">
+    id, account_name, account_state, account_age, owner_first_name, owner_last_name
+    15001, Foobar, , 5, Matt, Smith
+    15002, Barbaz, ACTIVE, 2, , Brown
+    15005, Bazbat, INACTIVE, 4, Joe, Miller
+    ...
+    </code></pre>
+    <p>
+        Your output is going to be a list of Account object instances.
+        The Account is a Java record class which is defined as the following:
+    </p>
+    <pre><code>
+    record Account(
+        int id,
+        String name,
+        AccountState accountState,
+        int accountAge,  // in years
+        String ownerFirstName,
+        String ownerLastName
+    ) {}
+    </code></pre>
+    <p>
+        The AccountState is a type of enum which is defined as the following:
+    </p>
+    <pre><code>
+    enum AccountState {
+        UNDEFINED,
+        ACTIVE,
+        INACTIVE
+    }
+    </code></pre>
+    <p>
+        <b>Here are a few caveats and important points:</b>
+    </p>
+    <p>
+        1. As you noticed, some of the values in the CSV string are missing. For
+        string values, you should parse these entries as empty strings. For integer
+        values, you should parse them as 0. For the empty AccountState entries in
+        the CSV, you should parse them as UNDEFINED.
+    </p>
+    <p>
+        2. <span class="highlighted">The order of the columns in the CSV file string
+        could be randomly shuffled.</span> This means the account_state and account_age
+        could come before  id and account_name, or owner_last_name could come before
+        owner_first_name. The only way to determine the order of the cells is to parse
+        the field names in the first line of the CSV.
+    </p>
+    <p>
+        3. The field names are not going to change. The same fields are going to
+        exist in all CSV file strings. It's just that their order in the CSV could
+        change, as mentioned in the point above.
+    </p>
+    <p>
+        Please implement your solution below. You may use any Java String library
+        function or anything from java.utils.* in your implementation.
+    </p>
+    <hr>
+    <form th:object="${muroMuroSolution}"
+          hx-post="/muromuro_questions/eval_parse_csv"
+          hx-trigger="submit"
+          hx-target="#muromuro-response-div"
+          hx-swap="innerHTML"
+          hx-disabled-elt="find button">
+        <pre><code>
+<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+        </code></pre>
+        <button type="submit" class="btn btn-info col-2">
+            Submit
+        </button>
+        <div id="muromuro-response-div"></div>
+    </form>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

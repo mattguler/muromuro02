@@ -154,6 +154,26 @@ public class QuestionController {
         return getFragmentForResponseStatus(response.getStatus());
     }
 
+    @GetMapping("parse_csv")
+    public String parseCsv(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Set the proper initial user input here.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/parse_csv";
+    }
+
+    @PostMapping("eval_parse_csv")
+    public String evalParseCsv(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement a proper evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return getFragmentForResponseStatus(response.getStatus());
+    }
+
     /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
     private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {
