@@ -25,6 +25,7 @@ public class QuestionController {
     private final Evaluator deviceDatabase;
     private final Evaluator detectSubstrings;
     private final Evaluator debugList;
+    private final Evaluator parseCsv;
 
     @Autowired
     public QuestionController(
@@ -33,13 +34,15 @@ public class QuestionController {
             @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs,
             @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase,
             @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings,
-            @Qualifier("debugListImpl") Evaluator debugList){
+            @Qualifier("debugListImpl") Evaluator debugList,
+            @Qualifier("parseCsvImpl") Evaluator parseCsv){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
         this.deviceDatabase = deviceDatabase;
         this.detectSubstrings = detectSubstrings;
         this.debugList = debugList;
+        this.parseCsv = parseCsv;
     }
 
     @GetMapping("list")
@@ -157,7 +160,7 @@ public class QuestionController {
     @GetMapping("parse_csv")
     public String parseCsv(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Set the proper initial user input here.
+        muroMuroSolution.setUserInput(parseCsv.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/parse_csv";
     }
@@ -165,11 +168,8 @@ public class QuestionController {
     @PostMapping("eval_parse_csv")
     public String evalParseCsv(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Implement a proper evaluator and use it here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator not yet implemented.");
+                parseCsv.evaluateSolution(muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());
     }

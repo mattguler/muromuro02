@@ -46,6 +46,10 @@ public class EvaluationCodeTest {
     private EvaluationCode deviceDatabaseEval;
 
     @Autowired
+    @Qualifier("parseCsv")
+    private EvaluationCode parseCsvEval;
+
+    @Autowired
     @Qualifier("refactorTooManyIfs")
     private EvaluationCode refactorTooManyIfsEval;
 
@@ -160,6 +164,13 @@ public class EvaluationCodeTest {
         assertTrue(content.contains("interface DeviceDatabase"));
         assertTrue(content.contains(DEVICE_DATABASE_CALLER_CODE));
         assertTrue(content.contains(DEVICE_DATABASE_MAIN_DEFINITION));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testGetContent_parseCsvEval() {
+        String content = parseCsvEval.getFormattedContent();
+        assertTrue(content.contains("public class ParseCsvEval"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 

@@ -6,7 +6,7 @@ package com.muromuro.muromuro02.service.evaluator;
  * are replaced by the user-input solutions. Then the resulting code is sent to
  * the remote Docker container to run an evaluation of the user solution.
  */
-class EvaluationCode {
+public class EvaluationCode {
 
     private static final String CALLER_CODE_START = "// Start caller code implementation.";
     private static final String CALLER_CODE_END = "// End caller code implementation.";
