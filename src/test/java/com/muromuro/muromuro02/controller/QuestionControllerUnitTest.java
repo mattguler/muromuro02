@@ -58,6 +58,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("debugListImpl")
     private Evaluator debugList;
 
+    @MockBean
+    @Qualifier("parseCsvImpl")
+    private Evaluator parseCsv;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -409,33 +413,55 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetParseCsv() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/parse_csv")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
                         .setExpectedTitle("Parse CSV")
                         .setExpectedContent(
                                 "You are given a comma separated value (CSV) file string")
                         .build();
-        runGetTest_validateCommonParts(testValues);
+        runGetTest(parseCsv, testValues);
     }
 
     @Test
-    public void testEvalParseCsv_unknownResponse() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+    public void testEvalParseCsv_correctAnswer() throws Exception {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        ResultActions result = sendEvalCommand(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + "Evaluator not yet implemented")));
+        runEvalTest_correctAnswer(parseCsv, testValues);
+    }
+
+    @Test
+    public void testEvalParseCsv_wrongAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_parse_csv")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_wrongAnswer(parseCsv, testValues);
+    }
+
+    @Test
+    public void testEvalParseCsv_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_parse_csv")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_timeout(parseCsv, testValues);
+    }
+
+    @Test
+    public void testEvalParseCsv_unknownResponse() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_parse_csv")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_unknownResponse(parseCsv, testValues);
     }
 
     private record TestValues(

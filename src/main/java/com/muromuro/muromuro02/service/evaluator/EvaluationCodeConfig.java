@@ -41,6 +41,13 @@ public class EvaluationCodeConfig {
         return buildEvaluationCode(evaluatorResource);
     }
 
+    @Bean(name = "parseCsv")
+    public EvaluationCode getEvaluationCodeForParseCsv(
+            @Value("classpath:evaluators/ParseCsvEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "refactorTooManyIfs")
     public EvaluationCode getEvaluationCodeForRefactorTooManyIfs(
             @Value("classpath:evaluators/RefactorTooManyIfsEval.java") Resource evaluatorResource)
