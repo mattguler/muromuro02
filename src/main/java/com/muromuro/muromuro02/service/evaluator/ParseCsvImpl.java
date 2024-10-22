@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ParseCsvImpl extends AbstractEvaluatorImpl {
 
-    private static final int USER_CODE_MAX_LENGTH = 2500;
+    private static final int USER_CODE_MAX_LENGTH = 4000;
 
     private static final String INITIAL_SOLUTION =
             """
