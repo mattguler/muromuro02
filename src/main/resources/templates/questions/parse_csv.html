@@ -72,10 +72,10 @@
         <b>Here are a few caveats and important points:</b>
     </p>
     <p>
-        1. As you noticed, some of the values in the CSV string are missing. For
-        string values, you should parse these entries as empty strings. For integer
-        values, you should parse them as 0. For the empty AccountState entries in
-        the CSV, you should parse them as UNDEFINED.
+        1. As you noticed, <span class="highlighted">some of the values in the CSV
+        string are missing.</span> For string values, you should parse these entries
+        as empty strings. For integer values, you should parse them as 0. For the
+        empty AccountState entries in the CSV, you should parse them as UNDEFINED.
     </p>
     <p>
         2. <span class="highlighted">The order of the columns in the CSV file string
@@ -85,13 +85,18 @@
         the field names in the first line of the CSV.
     </p>
     <p>
-        3. The field names are not going to change. The same fields are going to
-        exist in all CSV file strings. It's just that their order in the CSV could
-        change, as mentioned in the point above.
+        3. The field name titles are not going to change. The same field titles are
+        going to exist in all CSV file strings, even if the rest of the file is empty.
+        It's just that the order of the field titles in the CSV could change, as
+        mentioned in the point above.
+    </p>
+    <p>
+        4. None of the given field values are going to contain commas (",").
+        The commas are only used as field separators and nothing else.
     </p>
     <p>
         Please implement your solution below. You may use any Java String library
-        function or anything from java.utils.* in your implementation.
+        function or anything from java.utils.* and java.utils.stream.* in your implementation.
     </p>
     <hr>
     <form th:object="${muroMuroSolution}"

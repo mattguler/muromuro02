@@ -31,7 +31,7 @@ public class ParseCsvIntegrationTest {
                 .validateContains(
                         "You are given a comma separated value (CSV) file string")
                 .validateContains(
-                        "some of the values in the CSV string are missing");
+                        "Here are a few caveats and important points");
     }
 
     @Test
@@ -60,7 +60,7 @@ public class ParseCsvIntegrationTest {
 
     @Test
     public void testEval_withLengthyInput() throws Exception {
-        performEval("a".repeat(2501))
+        performEval("a".repeat(4001))
                 .validateContains(
                         "Wrong answer: The solution seems insecure, with its "
                                 + "length exceeding the max allowable length.");
