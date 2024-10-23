@@ -42,6 +42,18 @@ public class ParseCsvEval {
                     15025, Enterprise, ACTIVE, , James, Kirk
                     """;
 
+    public static final String CSV_INPUT_04 =
+            """
+                    account_state, account_age, account_name, id, owner_last_name, owner_first_name
+                    , 5, Foobar, 15001, Smith, Matt
+                    ACTIVE, 2, Barbaz, 15002, Brown,
+                    INACTIVE, 4, Rocinante, 15005, Miller, Joe
+                    UNDEFINED, 17, , 15007, Picard, Jean Luc
+                    INACTIVE, 15, Earth, , Riker, Will
+                    ACTIVE, 5, Vulcan, 15015, , Spock
+                    ACTIVE, , Enterprise, 15025, Kirk, James
+                    """;
+
     public enum AccountState {
         UNDEFINED,
         ACTIVE,
@@ -72,7 +84,10 @@ public class ParseCsvEval {
     public void runTest0() {
         List<Account> expected = List.of();
         List<Account> accounts = parseCsv(CSV_INPUT_00);
-        if (!assertEquals(expected, accounts, /* testId= */ 0)) {
+        String failureMsg =
+                "Test 0 failed. Solution cannot handle "
+                        + "empty CSV string with only titles.";
+        if (!assertEquals(expected, accounts, failureMsg)) {
             return;
         }
         System.out.println("Test 0 passed.");
@@ -89,7 +104,7 @@ public class ParseCsvEval {
                                 "Joe",
                                 "Miller"));
         List<Account> accounts = parseCsv(CSV_INPUT_01);
-        if (!assertEquals(expected, accounts, /* testId= */ 1)) {
+        if (!assertEquals(expected, accounts, "Test 1 failed.")) {
             return;
         }
         System.out.println("Test 1 passed.");
@@ -148,7 +163,7 @@ public class ParseCsvEval {
                                 "James",
                                 "Kirk"));
         List<Account> accounts = parseCsv(CSV_INPUT_02);
-        if (!assertEquals(expected, accounts, /* testId= */ 2)) {
+        if (!assertEquals(expected, accounts, "Test 2 failed.")) {
             return;
         }
         System.out.println("Test 2 passed.");
@@ -174,24 +189,87 @@ public class ParseCsvEval {
                                 "James",
                                 "Kirk"));
         List<Account> accounts = parseCsv(CSV_INPUT_03);
-        if (!assertEquals(expected, accounts, /* testId= */ 3)) {
+        String failureMsg =
+                "Test 3 failed. Solution cannot handle comma separated empty rows.";
+        if (!assertEquals(expected, accounts, failureMsg)) {
             return;
         }
         System.out.println("Test 3 passed.");
     }
 
+    public void runTest4() {
+        List<Account> expected =
+                List.of(
+                        new Account(
+                                15001,
+                                "Foobar",
+                                AccountState.UNDEFINED,
+                                5,
+                                "Matt",
+                                "Smith"),
+                        new Account(
+                                15002,
+                                "Barbaz",
+                                AccountState.ACTIVE,
+                                2,
+                                "",
+                                "Brown"),
+                        new Account(
+                                15005,
+                                "Rocinante",
+                                AccountState.INACTIVE,
+                                4,
+                                "Joe",
+                                "Miller"),
+                        new Account(
+                                15007,
+                                "",
+                                AccountState.UNDEFINED,
+                                17,
+                                "Jean Luc",
+                                "Picard"),
+                        new Account(
+                                0,
+                                "Earth",
+                                AccountState.INACTIVE,
+                                15,
+                                "Will",
+                                "Riker"),
+                        new Account(
+                                15015,
+                                "Vulcan",
+                                AccountState.ACTIVE,
+                                5,
+                                "Spock",
+                                ""),
+                        new Account(
+                                15025,
+                                "Enterprise",
+                                AccountState.ACTIVE,
+                                0,
+                                "James",
+                                "Kirk"));
+        List<Account> accounts = parseCsv(CSV_INPUT_04);
+        String failureMsg =
+                "Test 4 failed. Solution cannot handle shuffled columns.";
+        if (!assertEquals(expected, accounts, failureMsg)) {
+            return;
+        }
+        System.out.println("Test 4 passed.");
+    }
+
     private boolean assertEquals(
-            List<Account> expected, List<Account> result, int testId) {
+            List<Account> expected, List<Account> result, String failureMsg) {
         if (expected.size() != result.size()) {
+            System.out.println(failureMsg);
             System.out.println(
-                    "Test " + testId + " failed. "
-                            + "Parse function should have returned "
+                    "Parse function should have returned "
                             + expected.size() + " accounts, not "
                             + result.size() + ".");
             return false;
         }
         for (int i = 0; i < expected.size(); i++) {
-            if (!assertEquals(expected.get(i), result.get(i), testId, i)) {
+            if (!assertEquals(expected.get(i), result.get(i), failureMsg, i)) {
                 return false;
             }
         }
@@ -199,16 +277,16 @@ public class ParseCsvEval {
     }
 
     private boolean assertEquals(
-            Account expected, Account result, int testId, int accountNum) {
+            Account expected, Account result, String failureMsg, int accountNum) {
         if (result.id() != expected.id() ||
                 !result.name().equals(expected.name()) ||
                 result.accountState() != expected.accountState() ||
                 result.accountAge() != expected.accountAge() ||
                 !result.ownerFirstName().equals(expected.ownerFirstName()) ||
                 !result.ownerLastName().equals(expected.ownerLastName())) {
+            System.out.println(failureMsg);
             System.out.println(
-                    "Test " + testId + " failed. "
-                            + "Account " + accountNum + " in the result list "
+                    "Account " + accountNum + " in the result list "
                             + "doesn't match the expected.");
             System.out.println("***** Expected:");
             System.out.println(expected);
