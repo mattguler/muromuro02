@@ -304,5 +304,6 @@ public class ParseCsvEval {
         parseCsvEval.runTest1();
         parseCsvEval.runTest2();
         parseCsvEval.runTest3();
+        parseCsvEval.runTest4();
     }
 }
