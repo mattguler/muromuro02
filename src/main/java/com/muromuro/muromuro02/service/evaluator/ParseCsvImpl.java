@@ -7,11 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.regex.Pattern;
+
+import static com.muromuro.muromuro02.service.utils.Utils.*;
+
 /** The evaluator for the Parse CSV question. */
 @Service
 public class ParseCsvImpl extends AbstractEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 4000;
+    private static final int NUMBER_OF_TESTS = 5;
 
     private static final String INITIAL_SOLUTION =
             """
@@ -19,6 +25,18 @@ public class ParseCsvImpl extends AbstractEvaluatorImpl {
                         // Your implementation goes here.
                     }
                     """;
+
+    private final Map<Integer, Pattern> passingTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d passed",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS - 1);
+
+    private final Map<Integer, Pattern> failingTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d failed",
+                    /* startTestId= */ 0,
+                    /* endTestId= */ NUMBER_OF_TESTS - 1);
 
     @Autowired
     public ParseCsvImpl(
@@ -47,11 +65,27 @@ public class ParseCsvImpl extends AbstractEvaluatorImpl {
     @Override
     protected MuroMuroResponse analyzeEvaluation(
             String dockerEvalOutput, UserInput userInput) {
-        // TODO: Fully implement this analysis.
+        MuroMuroResponse initialAnalysis = analyzeForBasicErrors(dockerEvalOutput);
+        if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
+            return initialAnalysis;
+        }
+        if (matchesAnyTestPattern(dockerEvalOutput, failingTestPatterns)) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Incorrect solution. Fails validation."));
+        }
+        else if (matchesAllTestPatterns(dockerEvalOutput, passingTestPatterns)) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.SUCCESS, buildSuccessMessage());
+        }
+        // We should not be reaching here.
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.UNKNOWN,
-                String.format(
-                        "Parse CSV evaluator not yet implemented.\n\n%s",
-                        dockerEvalOutput));
+                buildFailureMessage(
+                        dockerEvalOutput,
+                        "Internal server failure.\n"
+                                + "Please contact support with the following output."));
     }
 }
