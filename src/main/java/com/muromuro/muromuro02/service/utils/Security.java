@@ -3,10 +3,19 @@ package com.muromuro.muromuro02.service.utils;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 /**
  * The Security class which is used to validate the security of the user's solution.
  */
 public class Security {
+
+    public enum Options {
+        ENABLE_MULTI_THREAD_SUPPORT,
+        ENABLE_FILE_IO_SUPPORT
+    }
 
     private static final String SYSTEM_KEYWORD = "System";
 
@@ -29,16 +38,10 @@ public class Security {
      * Returns a MuroMuroResponse object containing the status and the error message if applicable.
      * The user input is an arbitrary Java code snippet. It is meant to be run on a Docker container.
      * The code snippet is considered secure if it does not contain any specific target keyword.
+     * Pass in optional arguments to enable support for multithreading and/or file io operations.
      */
-    public static MuroMuroResponse checkIfCodeSecure(UserInput userInput) {
-        String[] targetWords = {
-                "Runtime",
-                "Process",
-                "Thread",
-                "SecurityManager",
-                "ClassLoader",
-                "Class.forName"
-        };
+    public static MuroMuroResponse checkIfCodeSecure(UserInput userInput, Options... options) {
+        List<String> targetWords = getTargetWords(options);
         for (String target : targetWords) {
             if (userInput.getCallerCode().contains(target)
                     || userInput.getMainDefinition().contains(target)) {
@@ -58,6 +61,25 @@ public class Security {
                             SYSTEM_KEYWORD));
         }
         return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+    }
+
+    private static List<String> getTargetWords(Options[] options) {
+        List<String> targetWords =
+                new ArrayList<>(List.of(
+                        "Runtime",
+                        "Process",
+                        "SecurityManager",
+                        "ClassLoader",
+                        "Class.forName"));
+        Set<Options> optionsSet = Set.of(options);
+        if (!optionsSet.contains(Options.ENABLE_MULTI_THREAD_SUPPORT)) {
+            targetWords.add("Thread");
+            targetWords.add("java.util.concurrent");
+        }
+        if (!optionsSet.contains(Options.ENABLE_FILE_IO_SUPPORT)) {
+            targetWords.add("java.io");
+        }
+        return targetWords;
     }
 
     /**
