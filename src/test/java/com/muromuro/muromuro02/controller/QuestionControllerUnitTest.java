@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // TODO: See if we can reduce some of the code duplication here.
 /** Runs unit tests for the QuestionController. */
 @WebMvcTest(QuestionController.class)
+@WithMockUser("interviewee")
 public class QuestionControllerUnitTest {
 
     private static final String INITIAL_CALLER_CODE = "initial caller code";
@@ -637,7 +640,8 @@ public class QuestionControllerUnitTest {
                                     post(testValues.url)
                                             .param(
                                                     "userInput.mainDefinition",
-                                                    testValues.mainDefinition()))
+                                                    testValues.mainDefinition())
+                                            .with(csrf()))
                             .andExpect(status().isOk());
         } else {
             result =
@@ -649,7 +653,8 @@ public class QuestionControllerUnitTest {
                                                     testValues.callerCode())
                                             .param(
                                                     "userInput.mainDefinition",
-                                                    testValues.mainDefinition()))
+                                                    testValues.mainDefinition())
+                                            .with(csrf()))
                             .andExpect(status().isOk());
         }
         return result;
