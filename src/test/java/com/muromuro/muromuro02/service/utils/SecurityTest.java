@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_FILE_IO_SUPPORT;
+import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Unit tests the methods in the Security class. */
@@ -79,11 +81,31 @@ public class SecurityTest {
         validateMainDefinitionSecure(
                 "ProcessBuilder().command(\"rm\", \"-rf\", \"/\").start()", false);
         validateCallerCodeSecure("Thread.currentThread().sleep(1000);", false);
+        validateMainDefinitionSecure(
+                "java.util.concurrent.ExecutorService pool;", false);
+        validateCallerCodeSecure(
+                "java.util.concurrent.ExecutorService pool;\n"
+                        + "Thread.currentThread().sleep(1000);",
+                true,
+                ENABLE_MULTI_THREAD_SUPPORT);
         validateMainDefinitionSecure("SecurityManager.getClass()", false);
         validateCallerCodeSecure("ClassLoader", false);
         validateMainDefinitionSecure(
                 "Class.forName(\"java.lang.Something\").getMethod(\"exit\", int.class).invoke(null, 0);",
                 false);
+        validateCallerCodeSecure(
+                "java.io.File f = new File(\"some_system_file\");", false);
+        validateMainDefinitionSecure(
+                "java.io.File f = new File(\"some_system_file\");",
+                true,
+                ENABLE_FILE_IO_SUPPORT);
+        validateMainDefinitionSecure(
+                "java.util.concurrent.ExecutorService pool;\n"
+                        + "Thread.currentThread().sleep(1000);"
+                        + "java.io.File f = new File(\"some_system_file\");",
+                true,
+                ENABLE_MULTI_THREAD_SUPPORT,
+                ENABLE_FILE_IO_SUPPORT);
 
         validateCallerCodeSecure("int i = 0;", true);
         validateMainDefinitionSecure("int i = 5; i++;", true);
@@ -99,10 +121,11 @@ public class SecurityTest {
         return String.format(EXAMPLE_JAVA_CODE_STR_FORMAT, codeWithKeyword);
     }
 
-    private void validateCallerCodeSecure(String codeWithKeyword, boolean expectedResult) {
+    private void validateCallerCodeSecure(
+            String codeWithKeyword, boolean expectedResult, Security.Options... options) {
         UserInput userInput =
                 new UserInput(buildExampleJavaCode(codeWithKeyword), "");
-        MuroMuroResponse response = Security.checkIfCodeSecure(userInput);
+        MuroMuroResponse response = Security.checkIfCodeSecure(userInput, options);
         if (expectedResult) {
             assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         }
@@ -111,10 +134,11 @@ public class SecurityTest {
         }
     }
 
-    private void validateMainDefinitionSecure(String codeWithKeyword, boolean expectedResult) {
+    private void validateMainDefinitionSecure(
+            String codeWithKeyword, boolean expectedResult, Security.Options... options) {
         UserInput userInput =
                 new UserInput("", buildExampleJavaCode(codeWithKeyword));
-        MuroMuroResponse response = Security.checkIfCodeSecure(userInput);
+        MuroMuroResponse response = Security.checkIfCodeSecure(userInput, options);
         if (expectedResult) {
             assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         }
