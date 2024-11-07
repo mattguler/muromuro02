@@ -39,8 +39,13 @@ public class SecurityConfiguration {
                         .requestMatchers("/muromuro_questions/**").hasRole("USER")
                         .requestMatchers("/**").permitAll())
                 .httpBasic(Customizer.withDefaults())
-                // TODO: Implement a custom login page for Muromuro.
-                .formLogin(Customizer.withDefaults());
+                .formLogin(form -> form.loginPage("/login").permitAll())
+                .logout(
+                        logout -> logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login?logout=true")
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID"));
         return httpSecurity.build();
     }
 }

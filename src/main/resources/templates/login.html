@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <title>Muromuro Login</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Login to Muromuro</h2>
+    <hr>
+    <p>Please login to access the Muromuro content.</p>
+    <form th:action="@{/login}" method="POST">
+        <div class="m-2">
+            <label for="username"><b>Username:</b></label>
+            <input type="text" id="username" name="username"/>
+        </div>
+        <div class="m-2">
+            <label for="password"><b>Password:</b></label>
+            <input type="password" id="password" name="password"/>
+        </div>
+        <div class="m-2">
+            <button type="submit" class="btn btn-info col-2"><b>Submit</b></button>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger col-lg-6 m-2">
+            Invalid username and password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success col-lg-6 m-2">
+            You have been logged out.
+        </div>
+    </form>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
