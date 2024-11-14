@@ -54,6 +54,7 @@ public class ListQuestionsIntegrationTest {
                 .andExpect(content().string(containsString("Device Database")))
                 .andExpect(content().string(containsString("Detect Substrings")))
                 .andExpect(content().string(containsString("Debug List")))
-                .andExpect(content().string(containsString("Parse CSV")));
+                .andExpect(content().string(containsString("Parse CSV")))
+                .andExpect(content().string(containsString("Long Running Functions")));
     }
 }

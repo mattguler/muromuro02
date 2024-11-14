@@ -174,6 +174,26 @@ public class QuestionController {
         return getFragmentForResponseStatus(response.getStatus());
     }
 
+    @GetMapping("long_running_functions")
+    public String longRunningFunctions(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Set the proper initial user input here.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/long_running_functions";
+    }
+
+    @PostMapping("eval_long_running_functions")
+    public String evalLongRunningFunctions(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement a proper evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return getFragmentForResponseStatus(response.getStatus());
+    }
+
     /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
     private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {

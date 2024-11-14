@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- HTMX imports. -->
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <!-- Meta tags to help resolve the HTMX issues with Spring Security. -->
+    <meta name="csrf-header" th:content="${_csrf.headerName}" />
+    <meta name="csrf-token" th:content="${_csrf.token}" />
+
+    <title>Long Running Functions</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Long Running Functions</h2>
+    <hr>
+    <p>
+        You are given a bunch of Black Box Processor objects that operate on a
+        shared Account object. Each Black Box process() function takes a relatively
+        long time to run. At the end of each run, the function updates the shared
+        Account object's value. There are a number of Black Box processors running
+        multiple times each in this given program. Naturally, the program is taking
+        a long time to run. You are asked to make this program run quicker.
+    </p>
+    <p>
+        The shared <code>Account</code> object has a simple class description, with
+        an account value, its setter, getter, and a class constructor:
+    </p>
+    <pre><code class="text-success">
+    public class Account {
+
+        private int value;
+
+        public Account(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+    }
+    </code></pre>
+    <p>
+        The <code>BlackBox</code> class contains the <code>process()</code> function
+        that operates on the shared Account object. The exact implementation details
+        of the BlackBox class are not important. Here is what we really need to know
+        about this class...
+    </p>
+    <pre><code class="text-success">
+    public class BlackBox {
+
+        private final int id;       // Each BlackBox object has a unique ID.
+
+        public BlackBox(int id) {
+            this.id = id;
+            // Other initializations take place here.
+            ...
+        }
+
+        public boolean process(
+                Account account,    // The shared account object reference.
+                int code,           // Some integer code.
+                // This method accepts a lambda to update the account:
+                BiConsumer&lt;Account, Integer&gt; accountUpdater) {
+
+            // This implementation here takes a long time to run.
+            // It might be calling remote APIs, retrieving data from remote databases,
+            // or just be waiting for something, who knows?
+            // If anything goes wrong during this long process, this method returns
+            // false.
+            ...
+
+            // Finally, determines the amount to update the account with.
+            // The given code value and BlackBox object's own ID factor into
+            // determining the exact update amount.
+            int amount = ...
+
+            // Updates the account using the lambda function, and returns true.
+            accountUpdater.accept(account, amount);
+            return true;
+        }
+    }
+    </code></pre>
+    <p>
+        Each <code>BlackBox</code> object is created with a unique integer ID:
+    </p>
+    <pre><code class="text-success">
+    BlackBox blackBox = new BlackBox(id);
+    </code></pre>
+    <p>
+        Its <code>process()</code> method takes in an Account object reference,
+        an integer code, and a lambda function that describes how the account is
+        meant to be updated. In this example, we update the account by adding the
+        amount determined by the process() method to the account's current value.
+        The process method also returns a boolean indicating the success of its run.
+    </p>
+    <pre><code class="text-success">
+    boolean result =
+        blackBox.process(
+            account,  // The shared Account object reference.
+            code,     // An int.
+            (acct, amount) -> acct.setValue(acct.getValue() + amount));  // A lambda.
+    </code></pre>
+    <p>
+        A few other caveats to consider:
+    </p>
+    <ul>
+        <li>If any of the <code>BlackBox</code> processes fail (i.e. return false),
+            the shared account might be left in an invalid state.</li>
+        <li>Feel free to define your own data structures and helper methods to solve
+            this problem. But you cannot alter the definitions of the
+            <code>Account</code> or <code>BlackBox</code> classes themselves.</li>
+    </ul>
+    <p>
+        Please take a look at the following code and think of ways to make it
+        run with less latency. Any Java utility library you might use for the purposes
+        of this question has already been included in the code. There is no need to
+        define any other includes of your own.
+    </p>
+    <hr>
+    <form th:object="${muroMuroSolution}"
+          hx-post="/muromuro_questions/eval_long_running_functions"
+          hx-trigger="submit"
+          hx-target="#muromuro-response-div"
+          hx-swap="innerHTML"
+          hx-disabled-elt="find button">
+        <pre><code>
+<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+        </code></pre>
+        <button type="submit" class="btn btn-info col-2">
+            Submit
+        </button>
+        <div id="muromuro-response-div"></div>
+    </form>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!-- Extra custom Muromuro scripts called here. -->
+<script>
+    // Calling this function to help resolve the HTMX issues with Spring Security.
+    configureHtmxWithCsrf();
+</script>
+</body>
+</html>
