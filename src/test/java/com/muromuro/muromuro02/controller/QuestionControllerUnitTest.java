@@ -467,6 +467,37 @@ public class QuestionControllerUnitTest {
         runEvalTest_unknownResponse(parseCsv, testValues);
     }
 
+    @Test
+    public void testGetLongRunningFunctions() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/long_running_functions")
+                        .setExpectedTitle("Long Running Functions")
+                        .setExpectedContent(
+                                "You are given a bunch of Black Box Processor objects")
+                        .build();
+        runGetTest_validateCommonParts(testValues);
+    }
+
+    @Test
+    public void testEvalLongRunningFunctions_unknownResponse() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_long_running_functions")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        ResultActions result = sendEvalCommand(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Evaluator not yet implemented")));
+    }
+
     private record TestValues(
             String url,
             String callerCode,
