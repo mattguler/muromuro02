@@ -41,6 +41,13 @@ public class EvaluationCodeConfig {
         return buildEvaluationCode(evaluatorResource);
     }
 
+    @Bean(name = "longRunningFunctions")
+    public EvaluationCode getEvalCodeForLongRunningFunctions(
+            @Value("classpath:evaluators/LongRunningFunctionsEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "parseCsv")
     public EvaluationCode getEvaluationCodeForParseCsv(
             @Value("classpath:evaluators/ParseCsvEval.java") Resource evaluatorResource)

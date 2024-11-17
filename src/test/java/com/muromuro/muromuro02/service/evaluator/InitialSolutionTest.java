@@ -19,6 +19,10 @@ public class InitialSolutionTest {
     private InitialSolution debugListSoln;
 
     @Autowired
+    @Qualifier("longRunningFunctionsSoln")
+    private InitialSolution longRunningFunctionsSoln;
+
+    @Autowired
     @Qualifier("refactorTooManyIfsSoln")
     private InitialSolution refactorTooManyIfsSoln;
 
@@ -28,6 +32,15 @@ public class InitialSolutionTest {
         assertTrue(content.contains("List<Integer> createFiveElements()"));
         assertTrue(content.contains("void addFiveElements(List<Integer> series)"));
         assertTrue(content.contains("void removeFirstFiveElements(List<Integer> series)"));
+    }
+
+    @Test
+    public void testGetContent_longRunningFunctionsSoln() {
+        String content = longRunningFunctionsSoln.getRelevantContent();
+        assertTrue(content.contains("public boolean runBlackBoxProcesses("));
+        assertTrue(
+                content.contains(
+                        "(acct, amount) -> acct.setValue(acct.getValue() + amount)"));
     }
 
     @Test

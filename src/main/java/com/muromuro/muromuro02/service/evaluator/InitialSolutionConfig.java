@@ -20,6 +20,13 @@ public class InitialSolutionConfig {
         return buildInitialSolution(initialSolutionResource);
     }
 
+    @Bean(name = "longRunningFunctionsSoln")
+    public InitialSolution getSolnForLongRunningFunctions(
+            @Value("classpath:initialsolutions/LongRunningFunctionsSoln.java") Resource initialSolutionResource)
+            throws IOException {
+        return buildInitialSolution(initialSolutionResource);
+    }
+
     @Bean(name = "refactorTooManyIfsSoln")
     public InitialSolution getInitialSolutionForRefactorTooManyIfs(
             @Value("classpath:initialsolutions/RefactorTooManyIfsSoln.java") Resource initialSolutionResource)
