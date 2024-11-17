@@ -5,7 +5,7 @@ package com.muromuro.muromuro02.service.evaluator;
  * Its content is read from a resource file, and then its relevant parts
  * are served to the user.
  */
-class InitialSolution {
+public class InitialSolution {
 
         private static final String INITIAL_SOLUTION_START = "// Start initial solution implementation.";
         private static final String INITIAL_SOLUTION_END = "// End initial solution implementation.";

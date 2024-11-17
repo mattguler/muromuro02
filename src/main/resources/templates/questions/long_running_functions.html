@@ -73,6 +73,7 @@
             ...
         }
 
+        // Returns true if the account is successfully processed, false otherwise.
         public boolean process(
                 Account account,    // The shared account object reference.
                 int code,           // Some integer code.
@@ -104,11 +105,9 @@
     BlackBox blackBox = new BlackBox(id);
     </code></pre>
     <p>
-        Its <code>process()</code> method takes in an Account object reference,
-        an integer code, and a lambda function that describes how the account is
-        meant to be updated. In this example, we update the account by adding the
-        amount determined by the process() method to the account's current value.
-        The process method also returns a boolean indicating the success of its run.
+        The BlackBox <code>process()</code> method is called as following in our
+        example here. The lambda function updates the current account by adding the
+        determined amount value to it.
     </p>
     <pre><code class="text-success">
     boolean result =
@@ -123,6 +122,9 @@
     <ul>
         <li>If any of the <code>BlackBox</code> processes fail (i.e. return false),
             the shared account might be left in an invalid state.</li>
+        <li>Thus, the code below returns false if any of the <code>BlackBox</code>
+            <code>process()</code> calls fail. It returns true if all
+            <code>process()</code> calls succeed.</li>
         <li>Feel free to define your own data structures and helper methods to solve
             this problem. But you cannot alter the definitions of the
             <code>Account</code> or <code>BlackBox</code> classes themselves.</li>
@@ -141,7 +143,7 @@
           hx-swap="innerHTML"
           hx-disabled-elt="find button">
         <pre><code>
-<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
+<textarea rows="28" cols="80" th:field="*{userInput.mainDefinition}"></textarea>
         </code></pre>
         <button type="submit" class="btn btn-info col-2">
             Submit
