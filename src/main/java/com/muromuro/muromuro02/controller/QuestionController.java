@@ -26,6 +26,7 @@ public class QuestionController {
     private final Evaluator detectSubstrings;
     private final Evaluator debugList;
     private final Evaluator parseCsv;
+    private final Evaluator longRunningFunctions;
 
     @Autowired
     public QuestionController(
@@ -35,7 +36,8 @@ public class QuestionController {
             @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase,
             @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings,
             @Qualifier("debugListImpl") Evaluator debugList,
-            @Qualifier("parseCsvImpl") Evaluator parseCsv){
+            @Qualifier("parseCsvImpl") Evaluator parseCsv,
+            @Qualifier("longRunningFunctionsImpl") Evaluator longRunningFunctions){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
@@ -43,6 +45,7 @@ public class QuestionController {
         this.detectSubstrings = detectSubstrings;
         this.debugList = debugList;
         this.parseCsv = parseCsv;
+        this.longRunningFunctions = longRunningFunctions;
     }
 
     @GetMapping("list")
@@ -177,7 +180,7 @@ public class QuestionController {
     @GetMapping("long_running_functions")
     public String longRunningFunctions(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Set the proper initial user input here.
+        muroMuroSolution.setUserInput(longRunningFunctions.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/long_running_functions";
     }
@@ -185,11 +188,9 @@ public class QuestionController {
     @PostMapping("eval_long_running_functions")
     public String evalLongRunningFunctions(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Implement a proper evaluator and use it here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator not yet implemented.");
+                longRunningFunctions.evaluateSolution(
+                        muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());
     }

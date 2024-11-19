@@ -43,8 +43,8 @@ public class LongRunningFunctionsSoln {
     }
 
     // Start initial solution implementation.
-    // Returns true if all BlackBox processes run successfully.
-    public boolean runBlackBoxProcesses(
+    // Returns true if all BlackBoxes run successfully.
+    public boolean runAllBlackBoxes(
             List<BlackBox> blackBoxes,
             Account account) {
         for (int code = 0; code < 10; code++) {

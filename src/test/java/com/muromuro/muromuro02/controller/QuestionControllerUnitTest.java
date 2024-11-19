@@ -65,6 +65,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("parseCsvImpl")
     private Evaluator parseCsv;
 
+    @MockBean
+    @Qualifier("longRunningFunctionsImpl")
+    private Evaluator longRunningFunctions;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -469,33 +473,55 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetLongRunningFunctions() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/long_running_functions")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
                         .setExpectedTitle("Long Running Functions")
                         .setExpectedContent(
                                 "You are given a bunch of Black Box Processor objects")
                         .build();
-        runGetTest_validateCommonParts(testValues);
+        runGetTest(longRunningFunctions, testValues);
     }
 
     @Test
-    public void testEvalLongRunningFunctions_unknownResponse() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+    public void testEvalLongRunningFunctions_correctAnswer() throws Exception {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        ResultActions result = sendEvalCommand(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + "Evaluator not yet implemented")));
+        runEvalTest_correctAnswer(longRunningFunctions, testValues);
+    }
+
+    @Test
+    public void testEvalLongRunningFunctions_wrongAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_long_running_functions")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_wrongAnswer(longRunningFunctions, testValues);
+    }
+
+    @Test
+    public void testEvalLongRunningFunctions_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_long_running_functions")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_timeout(longRunningFunctions, testValues);
+    }
+
+    @Test
+    public void testEvalLongRunningFunctions_unknownResponse() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_long_running_functions")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_unknownResponse(longRunningFunctions, testValues);
     }
 
     private record TestValues(
