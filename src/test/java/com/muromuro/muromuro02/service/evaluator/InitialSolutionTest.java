@@ -37,10 +37,10 @@ public class InitialSolutionTest {
     @Test
     public void testGetContent_longRunningFunctionsSoln() {
         String content = longRunningFunctionsSoln.getRelevantContent();
-        assertTrue(content.contains("public boolean runBlackBoxProcesses("));
+        assertTrue(content.contains("public boolean runAllBlackBoxes("));
         assertTrue(
                 content.contains(
-                        "(acct, amount) -> acct.setValue(acct.getValue() + amount)"));
+                        "acct.setValue(acct.getValue() + amount)"));
     }
 
     @Test
