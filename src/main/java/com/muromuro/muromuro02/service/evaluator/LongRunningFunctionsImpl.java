@@ -7,6 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
+import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
+import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
+import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
+
 /** The evaluator for the Long Running Functions question. */
 @Service
 public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
@@ -32,6 +37,15 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     @Override
     protected int getUserCodeMaxLength() {
         return USER_CODE_MAX_LENGTH;
+    }
+
+    // Overriding this method to enable the multi-thread support.
+    @Override
+    protected MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
+        return MuroMuroResponse.combineResponses(
+                validateCodeLength(userInput, getUserCodeMaxLength()),
+                checkIfCodeSecure(userInput, ENABLE_MULTI_THREAD_SUPPORT),
+                validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     @Override
