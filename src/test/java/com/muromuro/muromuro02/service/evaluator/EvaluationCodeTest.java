@@ -175,6 +175,8 @@ public class EvaluationCodeTest {
     public void testGetContent_longRunningFunctionsEval() {
         String content = longRunningFunctionsEval.getFormattedContent();
         assertTrue(content.contains("public class LongRunningFunctionsEval"));
+        assertTrue(content.contains("public static class Account"));
+        assertTrue(content.contains("public static class BlackBox"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
