@@ -185,7 +185,7 @@ public class LongRunningFunctionsEval {
                 return;
             }
             if (elapsedTime > EXPECTED_RUN_TIME_IN_MS) {
-                System.out.println("Test 1 failed. Code took too long to run.");
+                System.out.println("Test 1 failed. Code still took too long to run.");
                 return;
             }
         }
@@ -205,7 +205,7 @@ public class LongRunningFunctionsEval {
                 return;
             }
             if (elapsedTime > EXPECTED_RUN_TIME_IN_MS) {
-                System.out.println("Test 2 failed. Code took too long to run.");
+                System.out.println("Test 2 failed. Code still took too long to run.");
                 return;
             }
         }
