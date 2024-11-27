@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
+
 /** This maps to the rows of the users database of Muromuro. */
 @Entity
 @Table(name = "users")
@@ -22,6 +24,13 @@ public class User {
 
     @Column(name = "authorities", length = 512, nullable = false)
     private String authorities;
+
+    @Column(name = "created_at",
+            nullable = false,
+            updatable = false,
+            insertable = false,
+            columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime createdAt;
 
     public String getUsername() {
         return username;
@@ -53,5 +62,13 @@ public class User {
 
     public void setAuthorities(String authorities) {
         this.authorities = authorities;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
