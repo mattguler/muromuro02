@@ -20,6 +20,13 @@ public class InitialSolutionConfig {
         return buildInitialSolution(initialSolutionResource);
     }
 
+    @Bean(name = "incompatibleInterfacesSoln")
+    public InitialSolution getSolnForIncompatibleInterfaces(
+            @Value("classpath:/initialsolutions/IncompatibleInterfacesSoln.java")
+                    Resource initialSolutionResource) throws IOException {
+        return buildInitialSolution(initialSolutionResource);
+    }
+
     @Bean(name = "longRunningFunctionsSoln")
     public InitialSolution getSolnForLongRunningFunctions(
             @Value("classpath:initialsolutions/LongRunningFunctionsSoln.java") Resource initialSolutionResource)

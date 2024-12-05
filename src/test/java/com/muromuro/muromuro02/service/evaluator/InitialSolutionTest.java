@@ -19,6 +19,10 @@ public class InitialSolutionTest {
     private InitialSolution debugListSoln;
 
     @Autowired
+    @Qualifier("incompatibleInterfacesSoln")
+    private InitialSolution incompatibleInterfacesSoln;
+
+    @Autowired
     @Qualifier("longRunningFunctionsSoln")
     private InitialSolution longRunningFunctionsSoln;
 
@@ -32,6 +36,15 @@ public class InitialSolutionTest {
         assertTrue(content.contains("List<Integer> createFiveElements()"));
         assertTrue(content.contains("void addFiveElements(List<Integer> series)"));
         assertTrue(content.contains("void removeFirstFiveElements(List<Integer> series)"));
+    }
+
+    @Test
+    public void testGetContent_incompatibleInterfacesSoln() {
+        String content = incompatibleInterfacesSoln.getRelevantContent();
+        assertTrue(content.contains("private final Client client;"));
+        assertTrue(content.contains("private final Processor2 processor2;"));
+        assertTrue(content.contains("public int runProcess(int x)"));
+        assertTrue(content.contains("return client.runProcess(processor1, x);"));
     }
 
     @Test

@@ -46,6 +46,10 @@ public class EvaluationCodeTest {
     private EvaluationCode deviceDatabaseEval;
 
     @Autowired
+    @Qualifier("incompatibleInterfaces")
+    private EvaluationCode incompatibleInterfacesEval;
+
+    @Autowired
     @Qualifier("longRunningFunctions")
     private EvaluationCode longRunningFunctionsEval;
 
@@ -168,6 +172,13 @@ public class EvaluationCodeTest {
         assertTrue(content.contains("interface DeviceDatabase"));
         assertTrue(content.contains(DEVICE_DATABASE_CALLER_CODE));
         assertTrue(content.contains(DEVICE_DATABASE_MAIN_DEFINITION));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testGetContent_incompatibleInterfacesEval() {
+        String content = incompatibleInterfacesEval.getFormattedContent();
+        assertTrue(content.contains("public class IncompatibleInterfacesEval"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
