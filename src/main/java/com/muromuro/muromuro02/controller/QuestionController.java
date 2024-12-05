@@ -203,6 +203,18 @@ public class QuestionController {
         return "questions/incompatible_interfaces";
     }
 
+    @PostMapping("eval_incompatible_interfaces")
+    public String evalIncompatibleInterfaces(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement a proper evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return getFragmentForResponseStatus(response.getStatus());
+    }
+
     /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
     private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {

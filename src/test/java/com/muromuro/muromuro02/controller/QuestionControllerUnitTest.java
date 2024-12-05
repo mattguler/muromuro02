@@ -537,6 +537,24 @@ public class QuestionControllerUnitTest {
         runGetTest_validateCommonParts(testValues);
     }
 
+    @Test
+    public void testEvalIncompatibleInterfaces() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_incompatible_interfaces")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        ResultActions result = sendEvalCommand(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Evaluator not yet implemented")));
+    }
+
     private record TestValues(
             String url,
             String callerCode,
