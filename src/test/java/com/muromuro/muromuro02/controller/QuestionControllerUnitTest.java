@@ -524,6 +524,19 @@ public class QuestionControllerUnitTest {
         runEvalTest_unknownResponse(longRunningFunctions, testValues);
     }
 
+    @Test
+    public void testGetIncompatibleInterfaces() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/incompatible_interfaces")
+                        .setExpectedTitle("Incompatible Interfaces")
+                        .setExpectedContent(
+                                "You now have to use more processors to get the job done.")
+                        .build();
+        runGetTest_validateCommonParts(testValues);
+    }
+
     private record TestValues(
             String url,
             String callerCode,

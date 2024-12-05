@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- HTMX imports. -->
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <!-- Meta tags to help resolve the HTMX issues with Spring Security. -->
+    <meta name="csrf-header" th:content="${_csrf.headerName}" />
+    <meta name="csrf-token" th:content="${_csrf.token}" />
+
+    <title>Incompatible Interfaces</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Incompatible Interfaces</h2>
+    <hr>
+    <p>
+        There is a <code>Processor</code> interface defined in your codebase.
+        This interface defines a <code>run()</code> method which accepts two integer
+        arguments, and returns an integer result.
+    </p>
+    <pre><code class="text-success">
+    public interface Processor {
+        int run(int x, int y);
+    }
+    </code></pre>
+    <p>
+        There is also a <code>Processor1</code> class defined, which implements the
+        <code>Processor</code> interface. What exactly this implementation does
+        is not really important for the purposes of this question. You can think
+        of it as a blackbox.
+    </p>
+    <pre><code class="text-success">
+    public final class Processor1 implements Processor {
+
+        @Override
+        public int run(int x, int y) {
+            // Some complicated implementation here.
+            ...
+            return someResult;
+        }
+    }
+    </code></pre>
+    <p>
+        In the codebase, there is also a <code>Client</code> class defined. The Client
+        class contains a <code>runProcess()</code> method definition which accepts a
+        <code>Processor</code> instance as well as an <code>x</code> integer argument.
+        The <code>Client</code> class determines the <code>y</code> value itself after
+        a series of complex calculations in the <code>runProcess()</code> implementation,
+        and finally calls <code>processor.run(x, y)</code>. Once again, what exactly
+        this implementation does is not really important for the purposes of this
+        question.
+    </p>
+    <pre><code class="text-success">
+    public final class Client {
+
+        // Other fields and methods of Client are defined here.
+        ...
+
+        public int runProcess(Processor processor, int x) {
+            // The y value is determined here after a series of calculations.
+            ...
+            // And finally, call the processor and return the result.
+            return processor.run(x, y);
+        }
+    }
+    </code></pre>
+    <p>
+        You have your own <code>MyClass</code> which you are working on. It accepts
+        a <code>Client</code> instance and a <code>Processor</code> instance in its
+        constructor, which then assigns to respective member fields. MyClass also
+        contains a <code>runProcess()</code> method which accepts an <code>x</code>
+        argument, with which it makes a call to the client as seen below:
+    </p>
+    <pre><code class="text-success">
+        // This implementation is soon about to change.
+        public final class MyClass {
+            private final Client client;
+            private final Processor processor1;
+
+            public MyClass(Client client, Processor processor1) {
+                this.client = client;
+                this.processor1 = processor1;
+            }
+
+            public int runProcess(Client client, Processor processor1, int x) {
+                return client.runProcess(processor1, x);
+            }
+
+            // There might be other methods define here.
+            ...
+        }
+    </code></pre>
+    <p>
+        All is nice and well, until one day...
+    </p>
+    <p>
+        <b>Your project requirements change.</b>
+    </p>
+    <p>
+        You now have to use more processors to get the job done. You are given
+        instances of <code>Processor2</code> and <code>Processor3</code>. You need
+        to use them in your <code>MyClass</code> along with the already existing
+        <code>Processor1</code> instance. In your <code>runProcess()</code> method,
+        depending on the exact given <code>x</code> value, you are going to call
+        <code>client.runProcess()</code>with one of the given processor instances.
+    </p>
+    <p>
+        However, there are a few additional twists.
+    </p>
+    <p>
+        First of all, <span class="highlighted"> the new processor classes do not
+        implement the <code>Processor</code> interface.</span> They are completely
+        separate classes with their own method definitions:
+    </p>
+    <pre><code class="text-success">
+    public final class Processor2 {
+        public int makeCalculations(int x, int y) {
+            ...
+        }
+    }
+
+    public final class Processor3 {
+        public int execute(int x, int y) {
+            ...
+        }
+    }
+    </code></pre>
+    <p>
+        You are not allowed to make any changes to any of the class definitions of
+        <code>Processor1, Processor2, Processor3, Client,</code> and the
+        <code>Processor</code> interface. These classes are already used in dozens of
+        places all over the codebase, so no changes are allowed. You can only change
+        your own part of the codebase.
+    </p>
+    <p>
+        Also, because of the way everything is implemented, when the
+        the <code>Processor2</code> and <code>Processor3</code> instances are called,
+        <span class="highlighted">the caller needs to make some offset adjustments
+            to their <code>y</code> argument values</span>, as following:
+    </p>
+    <pre><code class="text-success">
+    processor2.makeCalculations(x, y - 1);
+
+    processor3.execute(x, y + 1);
+    </code></pre>
+    <p>
+        One cannot call all these 3 processors with the same y value. The necessary
+        offset adjustments need to be made, otherwise the system won't operate correctly.
+    </p>
+    <p>
+        And one final twist: The tech lead who reviews your code believes that the world
+        would be a better place without any if-then statements.
+        <span class="highlighted">So you are discouraged from using any <code>if</code>
+            statements.</span>
+    </p>
+    <p>
+        Please make all the necessary changes in the following code to make it work.
+    </p>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!-- Extra custom Muromuro scripts called here. -->
+<script>
+    // Calling this function to help resolve the HTMX issues with Spring Security.
+    configureHtmxWithCsrf();
+</script>
+</body>
+</html>
