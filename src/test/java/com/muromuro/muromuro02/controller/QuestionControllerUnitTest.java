@@ -69,6 +69,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("longRunningFunctionsImpl")
     private Evaluator longRunningFunctions;
 
+    @MockBean
+    @Qualifier("incompatibleInterfacesImpl")
+    private Evaluator incompatibleInterfaces;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -530,29 +534,22 @@ public class QuestionControllerUnitTest {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/incompatible_interfaces")
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
                         .setExpectedTitle("Incompatible Interfaces")
                         .setExpectedContent(
                                 "You now have to use more processors to get the job done.")
                         .build();
-        runGetTest_validateCommonParts(testValues);
+        runGetTest(incompatibleInterfaces, testValues);
     }
 
     @Test
     public void testEvalIncompatibleInterfaces() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        ResultActions result = sendEvalCommand(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + "Evaluator not yet implemented")));
+        runEvalTest_unknownResponse(incompatibleInterfaces, testValues);
     }
 
     private record TestValues(
