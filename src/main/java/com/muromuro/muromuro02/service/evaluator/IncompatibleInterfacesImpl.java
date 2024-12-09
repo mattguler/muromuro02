@@ -8,11 +8,7 @@ import org.springframework.stereotype.Service;
 
 import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 
-/**
- * The evaluator for the Incompatible Interfaces question.
- * TODO: Make this work with its current initial solution, which contains the
- *       forbidden word "Process".
- * */
+/** The evaluator for the Incompatible Interfaces question. */
 @Service
 public class IncompatibleInterfacesImpl extends AbstractEvaluatorImpl {
 

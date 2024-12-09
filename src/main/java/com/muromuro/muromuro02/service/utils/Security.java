@@ -18,6 +18,7 @@ public class Security {
     }
 
     private static final String SYSTEM_KEYWORD = "System";
+    private static final String PROCESS_KEYWORD = "Process";
 
     /**
      * Validates if the given user input code is below a certain given length.
@@ -60,6 +61,14 @@ public class Security {
                             "The solution seems insecure, with forbidden keyword: %s",
                             SYSTEM_KEYWORD));
         }
+        if (containsProcessCalls(userInput.getCallerCode())
+                || containsProcessCalls(userInput.getMainDefinition())) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    String.format(
+                            "The solution seems insecure, with forbidden keyword: %s",
+                            PROCESS_KEYWORD));
+        }
         return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
     }
 
@@ -67,7 +76,6 @@ public class Security {
         List<String> targetWords =
                 new ArrayList<>(List.of(
                         "Runtime",
-                        "Process",
                         "SecurityManager",
                         "ClassLoader",
                         "Class.forName"));
@@ -95,6 +103,26 @@ public class Security {
                 return true;
             }
             index = input.indexOf(SYSTEM_KEYWORD, index + 1);
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the Process keyword exists in the input string,
+     * false otherwise. However, also returns false if the word is "Processor"
+     * or "runProcess".
+     */
+    private static boolean containsProcessCalls(String input) {
+        int index = input.indexOf(PROCESS_KEYWORD);
+        while (index >= 0) {
+            if (index < 3 && !input.startsWith("Processor", index)) {
+                return true;
+            }
+            else if (!input.startsWith("Processor", index)
+                    && !input.startsWith("runProcess", index - 3)) {
+                return true;
+            }
+            index = input.indexOf(PROCESS_KEYWORD, index + 1);
         }
         return false;
     }
