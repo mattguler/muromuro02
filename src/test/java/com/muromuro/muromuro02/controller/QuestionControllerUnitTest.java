@@ -530,7 +530,6 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetIncompatibleInterfaces() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/incompatible_interfaces")
@@ -541,6 +540,8 @@ public class QuestionControllerUnitTest {
                         .build();
         runGetTest(incompatibleInterfaces, testValues);
     }
+
+    // TODO: Implement more tests here for the Incompatible Interfaces question.
 
     @Test
     public void testEvalIncompatibleInterfaces() throws Exception {

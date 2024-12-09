@@ -80,6 +80,12 @@ public class SecurityTest {
         validateCallerCodeSecure("Runtime.getRuntime().exec(\"rm -rf /\")", false);
         validateMainDefinitionSecure(
                 "ProcessBuilder().command(\"rm\", \"-rf\", \"/\").start()", false);
+        validateCallerCodeSecure("Process process;", false);
+        validateMainDefinitionSecure("Processor processor1;", true);
+        validateCallerCodeSecure("runProcess();", true);
+        validateMainDefinitionSecure("int a = 5;\nProcess process;", false);
+        validateCallerCodeSecure("int a = 5;\nProcessor processor1;", true);
+        validateMainDefinitionSecure("int a = 5;\nrunProcess();", true);
         validateCallerCodeSecure("Thread.currentThread().sleep(1000);", false);
         validateMainDefinitionSecure(
                 "java.util.concurrent.ExecutorService pool;", false);
