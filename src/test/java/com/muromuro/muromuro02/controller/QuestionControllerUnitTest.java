@@ -541,10 +541,38 @@ public class QuestionControllerUnitTest {
         runGetTest(incompatibleInterfaces, testValues);
     }
 
-    // TODO: Implement more tests here for the Incompatible Interfaces question.
+    @Test
+    public void testEvalIncompatibleInterfaces_correctAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_incompatible_interfaces")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_correctAnswer(incompatibleInterfaces, testValues);
+    }
 
     @Test
-    public void testEvalIncompatibleInterfaces() throws Exception {
+    public void testEvalIncompatibleInterfaces_wrongAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_incompatible_interfaces")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_wrongAnswer(incompatibleInterfaces, testValues);
+    }
+
+    @Test
+    public void testEvalIncompatibleInterfaces_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_incompatible_interfaces")
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_timeout(incompatibleInterfaces, testValues);
+    }
+
+    @Test
+    public void testEvalIncompatibleInterfaces_unknownResponse() throws Exception {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
