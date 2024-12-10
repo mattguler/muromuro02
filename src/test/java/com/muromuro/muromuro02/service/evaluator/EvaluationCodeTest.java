@@ -179,6 +179,8 @@ public class EvaluationCodeTest {
     public void testGetContent_incompatibleInterfacesEval() {
         String content = incompatibleInterfacesEval.getFormattedContent();
         assertTrue(content.contains("public class IncompatibleInterfacesEval"));
+        assertTrue(content.contains("public interface Processor"));
+        assertTrue(content.contains("private final Client client;"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 
