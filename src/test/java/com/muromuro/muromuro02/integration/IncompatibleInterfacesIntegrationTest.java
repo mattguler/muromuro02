@@ -26,6 +26,149 @@ public class IncompatibleInterfacesIntegrationTest {
     private static final String GET_URL = "/muromuro_questions/incompatible_interfaces";
     private static final String EVAL_URL = "/muromuro_questions/eval_incompatible_interfaces";
 
+    private static final String MAIN_DEFINITION_TEMPLATE =
+            """
+                    // The field definitions.
+                    %s
+                    
+                    // Constructor.
+                    public MyClass(
+                            Client client,
+                            Processor processor1,
+                            Processor2 processor2,
+                            Processor3 processor3
+                            ) {
+                        // Constructor definition.
+                        %s
+                    }
+                    
+                    // Method definition.
+                    %s
+                    """;
+
+    private static final String DEFAULT_FIELDS =
+            """
+                    private final Client client;
+                    private final Processor processor1;
+                    private final Processor2 processor2;
+                    private final Processor3 processor3;
+                    """;
+
+    private static final String MAP_FIELDS =
+            """
+                    private final Client client;
+                    private final Processor processor1;
+                    private final Map<Integer, Processor> processorMap;
+                    """;
+
+    private static final String DEFAULT_CONSTRUCTOR =
+            """
+                    this.client = client;
+                    this.processor1 = processor1;
+                    this.processor2 = processor2;
+                    this.processor3 = processor3;
+                    """;
+
+    private static final String TIMEOUT_CONSTRUCTOR =
+            """
+                    this.client = client;
+                    this.processor1 = processor1;
+                    this.processor2 = processor2;
+                    this.processor3 = processor3;
+                    while(true) { }
+                    """;
+
+    private static final String MAP_CONSTRUCTOR =
+            """
+                    this.client = client;
+                    this.processor1 = processor1;
+                    Processor proc2Adapter =
+                        (x, y) -> processor2.makeCalculations(x, y - 1);
+                    Processor proc3Adapter =
+                        (x, y) -> processor3.execute(x, y + 1);
+                    this.processorMap =
+                        Map.ofEntries(
+                            Map.entry(1, proc3Adapter),
+                            Map.entry(2, proc2Adapter),
+                            Map.entry(3, proc2Adapter),
+                            Map.entry(4, proc3Adapter));
+                    """;
+
+    private static final String DEFAULT_METHOD =
+            """
+                    public int runProcess(int x) {
+                        if (x == 2 || x == 3) {
+                            return client.runProcess(processor2, x);
+                        }
+                        else if (x == 1 || x == 4) {
+                            return client.runProcess(processor3, x);
+                        }
+                        else {
+                            return client.runProcess(processor1, x);
+                        }
+                    }
+                    """;
+
+    private static final String WRONG_METHOD =
+            """
+                    public int runProcess(int x) {
+                        return 0;
+                    }
+                    """;
+
+    private static final String PARTIALLY_WRONG_METHOD =
+            """
+                    public int runProcess(int x) {
+                        if (x == 2 || x == 3) {
+                            return client.runProcess(
+                                (xx, yy) -> processor2.makeCalculations(xx, yy),
+                                x);
+                        }
+                        else if (x == 1 || x == 4) {
+                            return client.runProcess(
+                                (xx, yy) -> processor3.execute(xx, yy),
+                                x);
+                        }
+                        else {
+                            return client.runProcess(processor1, x);
+                        }
+                    }
+                    """;
+
+    private static final String PARTIALLY_CORRECT_METHOD =
+            """
+                    public int runProcess(int x) {
+                        if (x == 2 || x == 3) {
+                            return client.runProcess(
+                                (xx, yy) -> processor2.makeCalculations(xx, yy - 1),
+                                x);
+                        }
+                        else if (x == 1 || x == 4) {
+                            return client.runProcess(
+                                (xx, yy) -> processor3.execute(xx, yy + 1),
+                                x);
+                        }
+                        else {
+                            return client.runProcess(processor1, x);
+                        }
+                    }
+                    """;
+
+    private static final String MAP_METHOD =
+            """
+                    public int runProcess(int x) {
+                        Processor processor =
+                            processorMap.getOrDefault(x, processor1);
+                        return client.runProcess(processor, x);
+                    }
+                    """;
+
+    private static String buildSolution(
+            String fields, String constructor, String method) {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE, fields, constructor, method);
+    }
+
     @Autowired
     WebApplicationContext context;
 
@@ -72,13 +215,69 @@ public class IncompatibleInterfacesIntegrationTest {
                                 + "length exceeding the max allowable length.");
     }
 
-    // TODO: Remove this test once the evaluator is fully implemented.
     @Test
-    public void testEval_withUnknownResponse() throws Exception {
+    public void testEval_withBadInput() throws Exception {
         performEval("blahblah")
+                .validateContains("Wrong answer: Invalid solution.");
+    }
+
+    @Test
+    public void testEval_withTimeout() throws Exception {
+        String mainDefinition =
+                buildSolution(DEFAULT_FIELDS, TIMEOUT_CONSTRUCTOR, WRONG_METHOD);
+        performEval(mainDefinition)
+                .validateContains("Server timed out");
+    }
+
+    @Test
+    public void testEval_withWrongAnswer() throws Exception {
+        String mainDefinition =
+                buildSolution(DEFAULT_FIELDS, DEFAULT_CONSTRUCTOR, DEFAULT_METHOD);
+        performEval(mainDefinition)
+                .validateContains("Wrong answer: Invalid solution.");
+    }
+
+    @Test
+    public void testEval_withWrongAnswer_2() throws Exception {
+        String mainDefinition =
+                buildSolution(DEFAULT_FIELDS, DEFAULT_CONSTRUCTOR, WRONG_METHOD);
+        performEval(mainDefinition)
                 .validateContains(
-                        "Unknown response: Incompatible Interfaces "
-                                + "evaluator not yet implemented.");
+                        "Wrong answer: Incorrect solution. Fails validation.");
+    }
+
+    @Test
+    public void testEval_withPartiallyWrongAnswer() throws Exception {
+        String mainDefinition =
+                buildSolution(
+                        DEFAULT_FIELDS,
+                        DEFAULT_CONSTRUCTOR,
+                        PARTIALLY_WRONG_METHOD);
+        performEval(mainDefinition)
+                .validateContains("Wrong answer: Getting closer.");
+    }
+
+    @Test
+    public void testEval_withPartiallyCorrectAnswer() throws Exception {
+        String mainDefinition =
+                buildSolution(
+                        DEFAULT_FIELDS,
+                        DEFAULT_CONSTRUCTOR,
+                        PARTIALLY_CORRECT_METHOD);
+        performEval(mainDefinition)
+                .validateContains(
+                        "Correct answer: However, the solution could be better");
+    }
+
+    @Test
+    public void testEval_withCorrectAnswer() throws Exception {
+        String mainDefinition =
+                buildSolution(
+                        MAP_FIELDS,
+                        MAP_CONSTRUCTOR,
+                        MAP_METHOD);
+        performEval(mainDefinition)
+                .validateContains("Correct answer: The solution looks correct");
     }
 
     private ResultWrapper performGet() throws Exception {
