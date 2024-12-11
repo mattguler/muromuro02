@@ -12,7 +12,11 @@ import org.springframework.context.annotation.Configuration;
  * The configuration for the Docker client.
  * In order to run MuroMuro on your server, you first need to have a Docker daemon
  * installed and running. Follow the instructions on the Docker website to install Docker.
- * Once Docker is installed, run the following command to install the openjdk:11 Docker image
+ * Once Docker is installed, go to Settings -> Resources, and decrease all the resource
+ * allocation to amounts manageable on your VPS or Cloud Server.
+ * You may also want to disable the Resource Saver, since it has caused problems before
+ * with the Docker service not being responsive to the Muromuro server requests.
+ * When all the settings are done, run the following command to install the openjdk image
  * on your server, for the Docker daemon to use:
  * $ docker pull openjdk:17
  */
