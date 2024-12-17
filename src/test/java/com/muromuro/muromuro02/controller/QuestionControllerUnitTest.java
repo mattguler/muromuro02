@@ -581,6 +581,19 @@ public class QuestionControllerUnitTest {
         runEvalTest_unknownResponse(incompatibleInterfaces, testValues);
     }
 
+    @Test
+    public void testGetDuplicateRpcs() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/duplicate_rpcs")
+                        .setExpectedTitle("Duplicate RPCs")
+                        .setExpectedContent(
+                                "Please identify and fix this issue of duplicate RPC requests.")
+                        .build();
+        runGetTest_validateCommonParts(testValues);
+    }
+
     private record TestValues(
             String url,
             String callerCode,

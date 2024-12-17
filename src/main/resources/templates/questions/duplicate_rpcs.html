@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+
+    <!-- HTMX imports. -->
+    <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <!-- Meta tags to help resolve the HTMX issues with Spring Security. -->
+    <meta name="csrf-header" th:content="${_csrf.headerName}" />
+    <meta name="csrf-token" th:content="${_csrf.token}" />
+
+    <title>Duplicate RPCs</title>
+</head>
+
+<body>
+<div class="container bg-light px-3 pt-3 pb-5">
+    <h2>Duplicate RPCs</h2>
+    <hr>
+    <p>
+        You are developing a client-server system. The server is designed as a
+        key-value store. For a given key, it stores a list of given objects.
+        The client and server communicate through Remote Procedure Calls (RPC).
+        The service interface is defined as the following:
+    </p>
+    <pre><code class="text-success">
+    // Key-Value List storage service definition.
+    public interface KVListService&lt;K, V&gt; {
+        List&lt;V&gt; get(K key);
+        void append(K key, V value);
+        void replaceAll(K key, Iterable&lt;V&gt; values);
+        void delete(K key);
+    }
+    </code></pre>
+    <p>
+        The server is implemented as the following. As you can see, at this point
+        it is just a simple wrapper around the database.
+    </p>
+    <pre><code class="text-success">
+    // Key-Value List storage service implementation.
+    public final class KVListServiceImpl&lt;K, V&gt;
+            implements KVListService&lt;K, V&gt; {
+
+        private final KVListDb&lt;K, V&gt; db;
+
+        public KVListServiceImpl(KVListDb&lt;K, V&gt; db) {
+            this.db = db;
+        }
+
+        // Returns null if no list exists for the given key.
+        @Override
+        public List&lt;V&gt; get(K key) {
+            return db.get(key);
+        }
+
+        // Creates a new internal list first if none exists for the given key.
+        @Override
+        public void append(K key, V value) {
+            db.append(key, value);
+        }
+
+        // Creates a new internal list and populates it with all the
+        // elements from the given iterable into the list, for the given key.
+        @Override
+        public void replaceAll(K key, Iterable&lt;V&gt; values) {
+            db.replaceAll(key, values);
+        }
+
+        // Trying to delete a non-existing key will be a no-op.
+        @Override
+        public void delete(K key) {
+            db.delete(key);
+        }
+    }
+    </code></pre>
+    <p>
+        The database itself is defined as the following. The exact implementation
+        of its methods are irrelevant for the scope of this question.
+    </p>
+    <pre><code class="text-success">
+    // A Key-Value List database. Stores the given list of values
+    // for the given key.
+    public final class KVListDb&lt;K, V&gt; {
+
+        // For those who need a brand new separate key/value db to use.
+        public static &lt;K, V&gt; KVListDb&lt;K, V&gt; createDb() {
+            ...
+        }
+
+        // Returns null if no list exists for the given key.
+        public List&lt;V&gt; get(K key) {
+            ...
+        }
+
+        // Creates a new internal list first if none exists for the given key.
+        public void append(K key, V value) {
+            ...
+        }
+
+        // Creates a new internal list and populates it with all the
+        // elements from the given iterable into the list, for the given key.
+        public void replaceAll(K key, Iterable&lt;V&gt; values) {
+            ...
+        }
+
+        // Trying to delete a non-existing key will be a no-op.
+        public void delete(K key) {
+            ...
+        }
+    }
+    </code></pre>
+    <p>
+        And finally, your client implementation is as the following. The client
+        accepts a <code>serviceProxy</code> reference to the <code>KVListService</code>.
+        The Proxy takes care of making the actual RPC requests to the server.
+    </p>
+    <pre><code class="text-success">
+    public final class KVListClient&lt;K, V&gt; {
+
+        private final KVListService&lt;K, V&gt; serviceProxy;
+
+        public KVListClient(KVListService&lt;K, V&gt; serviceProxy) {
+            this.serviceProxy = serviceProxy;
+        }
+
+        public List&lt;V&gt; get(K key) {
+            return serviceProxy.get(key);
+        }
+
+        public void append(K key, V value) {
+            serviceProxy.append(key, value);
+        }
+
+        public void replaceAll(K key, Iterable&lt;V&gt; values) {
+            serviceProxy.replaceAll(key, values);
+        }
+
+        public void delete(K key) {
+            serviceProxy.delete(key);
+        }
+    }
+    </code></pre>
+    <p>
+        Once you finish implementing your client-server system and start testing it,
+        you realize there is a serious problem...
+    </p>
+    <p>
+        Due to some issues in the network, and due to the way the RPC system is
+        implemented, <span class="highlighted">some of the RPC requests are being
+        duplicated.</span> Some copies of the RPC requests arrive multiple times to
+        the server, which are then all processed. The processing of duplicate RPC
+        requests are causing unpredictable results in the database storage.
+    </p>
+    <p>
+        <b>Please identify and fix this issue of duplicate RPC requests.</b>
+    </p>
+    <p>
+        A few additional points to mention:
+    </p>
+    <ul>
+        <li>Please feel free to make any changes to the Client and Service
+            implementations.</li>
+        <li>You can make changes to the Service interface as well,
+            however, you should not touch the Client's own method signatures, as
+            indicated below.</li>
+        <li>You can assume that any changes you make to the <code>KVListService</code>
+            interface definition are automatically going to be reflected on the
+            <code>serviceProxy</code> implementation. The RPC system is going to take
+            care of marshalling any new method arguments, etc.</li>
+    </ul>
+</div>
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!-- Extra custom Muromuro scripts called here. -->
+<script>
+    // Calling this function to help resolve the HTMX issues with Spring Security.
+    configureHtmxWithCsrf();
+</script>
+</body>
+</html>

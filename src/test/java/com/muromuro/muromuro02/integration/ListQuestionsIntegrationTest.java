@@ -56,6 +56,7 @@ public class ListQuestionsIntegrationTest {
                 .andExpect(content().string(containsString("Debug List")))
                 .andExpect(content().string(containsString("Parse CSV")))
                 .andExpect(content().string(containsString("Long Running Functions")))
-                .andExpect(content().string(containsString("Incompatible Interfaces")));
+                .andExpect(content().string(containsString("Incompatible Interfaces")))
+                .andExpect(content().string(containsString("Duplicate RPCs")));
     }
 }
