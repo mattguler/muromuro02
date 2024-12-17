@@ -216,6 +216,14 @@ public class QuestionController {
         return getFragmentForResponseStatus(response.getStatus());
     }
 
+    @GetMapping("duplicate_rpcs")
+    public String duplicateRpcs(Model model) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        // TODO: Set the proper initial user input here.
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return "questions/duplicate_rpcs";
+    }
+
     /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
     private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {
