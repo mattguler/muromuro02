@@ -594,6 +594,25 @@ public class QuestionControllerUnitTest {
         runGetTest_validateCommonParts(testValues);
     }
 
+    @Test
+    public void testEvalDuplicateRpcs_unknownResponse() throws Exception {
+        // TODO: Implement evaluator mocking and input validation here.
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_duplicate_rpcs")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        ResultActions result = sendEvalCommand(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + "Evaluator not yet implemented")));
+    }
+
     private record TestValues(
             String url,
             String callerCode,

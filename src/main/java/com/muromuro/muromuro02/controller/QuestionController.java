@@ -224,6 +224,18 @@ public class QuestionController {
         return "questions/duplicate_rpcs";
     }
 
+    @PostMapping("eval_duplicate_rpcs")
+    public String evalDuplicateRpcs(
+            @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        // TODO: Implement a proper evaluator and use it here.
+        MuroMuroResponse response =
+                new MuroMuroResponse(
+                        MuroMuroResponse.Status.UNKNOWN,
+                        "Evaluator not yet implemented.");
+        muroMuroSolution.setResponse(response);
+        return getFragmentForResponseStatus(response.getStatus());
+    }
+
     /** Returns a Thymeleaf fragment for the given Muromuro response status code. */
     private String getFragmentForResponseStatus(MuroMuroResponse.Status status) {
         return switch (status) {
