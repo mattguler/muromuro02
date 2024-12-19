@@ -46,6 +46,10 @@ public class EvaluationCodeTest {
     private EvaluationCode deviceDatabaseEval;
 
     @Autowired
+    @Qualifier("duplicateRpcs")
+    private EvaluationCode duplicateRpcsEval;
+
+    @Autowired
     @Qualifier("incompatibleInterfaces")
     private EvaluationCode incompatibleInterfacesEval;
 
@@ -172,6 +176,13 @@ public class EvaluationCodeTest {
         assertTrue(content.contains("interface DeviceDatabase"));
         assertTrue(content.contains(DEVICE_DATABASE_CALLER_CODE));
         assertTrue(content.contains(DEVICE_DATABASE_MAIN_DEFINITION));
+        assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testGetContent_duplicateRpcsEval() {
+        String content = duplicateRpcsEval.getFormattedContent();
+        assertTrue(content.contains("public class DuplicateRpcsEval"));
         assertTrue(content.contains("public static void main(String[] args)"));
     }
 

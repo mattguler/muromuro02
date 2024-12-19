@@ -41,6 +41,13 @@ public class EvaluationCodeConfig {
         return buildEvaluationCode(evaluatorResource);
     }
 
+    @Bean(name = "duplicateRpcs")
+    public EvaluationCode getEvalCodeForDuplicateRpcs(
+            @Value("classpath:evaluators/DuplicateRpcsEval.java") Resource evaluatorResource)
+            throws IOException {
+        return buildEvaluationCode(evaluatorResource);
+    }
+
     @Bean(name = "incompatibleInterfaces")
     public EvaluationCode getEvalCodeForIncompatibleInterfaces(
             @Value("classpath:evaluators/IncompatibleInterfacesEval.java")
