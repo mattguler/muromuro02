@@ -48,7 +48,7 @@ public class IncompatibleInterfacesImpl extends AbstractEvaluatorImpl {
 
     @Override
     public UserInput getInitialSolution() {
-        return new UserInput("", initialSolution.getRelevantContent());
+        return new UserInput("", initialSolution.getMainDefinition());
     }
 
     @Override

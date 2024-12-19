@@ -7,8 +7,10 @@ package com.muromuro.muromuro02.service.evaluator;
  */
 public class InitialSolution {
 
-        private static final String INITIAL_SOLUTION_START = "// Start initial solution implementation.";
-        private static final String INITIAL_SOLUTION_END = "// End initial solution implementation.";
+        private static final String INITIAL_MAIN_DEF_START =
+                "// Start initial main definition implementation.";
+        private static final String INITIAL_MAIN_DEF_END =
+                "// End initial main definition implementation.";
 
         private final String content;
 
@@ -17,15 +19,17 @@ public class InitialSolution {
         }
 
         /**
-         * Returns the content of the initial solution between the INITIAL_SOLUTION_START
-         * and INITIAL_SOLUTION_END strings.
+         * Returns the content of the initial main definition between the
+         * INITIAL_MAIN_DEF_START and the INITIAL_MAIN_DEF_END strings.
          */
-        public String getRelevantContent() {
-            int beginningIndex = content.indexOf(INITIAL_SOLUTION_START);
-            int endIndex = content.indexOf(INITIAL_SOLUTION_END);
+        public String getMainDefinition() {
+            int beginningIndex = content.indexOf(INITIAL_MAIN_DEF_START);
+            int endIndex = content.indexOf(INITIAL_MAIN_DEF_END);
             if (beginningIndex == -1 || endIndex == -1) {
-                throw new IllegalArgumentException("Could not find the beginning or end sequence.");
+                throw new IllegalArgumentException(
+                        "Could not find the beginning or end sequence.");
             }
-            return content.substring(beginningIndex + INITIAL_SOLUTION_START.length(), endIndex);
+            return content.substring(
+                    beginningIndex + INITIAL_MAIN_DEF_START.length(), endIndex);
         }
 }

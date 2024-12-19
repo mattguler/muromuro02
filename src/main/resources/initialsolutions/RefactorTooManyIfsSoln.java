@@ -6,7 +6,7 @@
  */
 public class RefactorTooManyIfsSoln {
 
-    // Start initial solution implementation.
+    // Start initial main definition implementation.
     public int doCalculation(String strInput, int intInput) {
         int result = intInput;
         if (strInput.equals("a")) {
@@ -32,5 +32,5 @@ public class RefactorTooManyIfsSoln {
         }
         return result;
     }
-    // End initial solution implementation.
+    // End initial main definition implementation.
 }
