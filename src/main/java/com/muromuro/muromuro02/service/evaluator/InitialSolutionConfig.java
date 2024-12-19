@@ -20,6 +20,13 @@ public class InitialSolutionConfig {
         return buildInitialSolution(initialSolutionResource);
     }
 
+    @Bean(name = "duplicateRpcsSoln")
+    public InitialSolution getSolnForDuplicateRpcs(
+            @Value("classpath:/initialsolutions/DuplicateRpcsSoln.java")
+                    Resource initialSolutionResource) throws IOException {
+        return buildInitialSolution(initialSolutionResource);
+    }
+
     @Bean(name = "incompatibleInterfacesSoln")
     public InitialSolution getSolnForIncompatibleInterfaces(
             @Value("classpath:/initialsolutions/IncompatibleInterfacesSoln.java")

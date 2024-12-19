@@ -19,6 +19,10 @@ public class InitialSolutionTest {
     private InitialSolution debugListSoln;
 
     @Autowired
+    @Qualifier("duplicateRpcsSoln")
+    private InitialSolution duplicateRpcsSoln;
+
+    @Autowired
     @Qualifier("incompatibleInterfacesSoln")
     private InitialSolution incompatibleInterfacesSoln;
 
@@ -36,6 +40,15 @@ public class InitialSolutionTest {
         assertTrue(content.contains("List<Integer> createFiveElements()"));
         assertTrue(content.contains("void addFiveElements(List<Integer> series)"));
         assertTrue(content.contains("void removeFirstFiveElements(List<Integer> series)"));
+    }
+
+    @Test
+    public void testGetContent_duplicateRpcsSoln() {
+        String mainDef = duplicateRpcsSoln.getMainDefinition();
+        assertTrue(mainDef.contains("public interface KVListService<K, V>"));
+        assertTrue(mainDef.contains("public static final class KVListServiceImpl<K, V>"));
+        String callerCode = duplicateRpcsSoln.getCallerCode();
+        assertTrue(callerCode.contains("public static final class KVListClient<K, V>"));
     }
 
     @Test
