@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class DebugListSoln {
 
-    // Start initial solution implementation.
+    // Start initial main definition implementation.
     private List<Integer> series;
 
     public DebugListSoln() {
@@ -38,7 +38,7 @@ public class DebugListSoln {
             series.remove(i);
         }
     }
-    // End initial solution implementation.
+    // End initial main definition implementation.
 
     public void printSeries(String title) {
         System.out.println(title);

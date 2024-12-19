@@ -32,7 +32,7 @@ public class InitialSolutionTest {
 
     @Test
     public void testGetContent_debugListSoln() {
-        String content = debugListSoln.getRelevantContent();
+        String content = debugListSoln.getMainDefinition();
         assertTrue(content.contains("List<Integer> createFiveElements()"));
         assertTrue(content.contains("void addFiveElements(List<Integer> series)"));
         assertTrue(content.contains("void removeFirstFiveElements(List<Integer> series)"));
@@ -40,7 +40,7 @@ public class InitialSolutionTest {
 
     @Test
     public void testGetContent_incompatibleInterfacesSoln() {
-        String content = incompatibleInterfacesSoln.getRelevantContent();
+        String content = incompatibleInterfacesSoln.getMainDefinition();
         assertTrue(content.contains("private final Client client;"));
         assertTrue(content.contains("private final Processor2 processor2;"));
         assertTrue(content.contains("public int runProcess(int x)"));
@@ -49,7 +49,7 @@ public class InitialSolutionTest {
 
     @Test
     public void testGetContent_longRunningFunctionsSoln() {
-        String content = longRunningFunctionsSoln.getRelevantContent();
+        String content = longRunningFunctionsSoln.getMainDefinition();
         assertTrue(content.contains("public boolean runAllBlackBoxes("));
         assertTrue(
                 content.contains(
@@ -58,7 +58,7 @@ public class InitialSolutionTest {
 
     @Test
     public void testGetContent_refactorTooManyIfsSoln() {
-        String content = refactorTooManyIfsSoln.getRelevantContent();
+        String content = refactorTooManyIfsSoln.getMainDefinition();
         assertTrue(content.contains("public int doCalculation(String strInput, int intInput)"));
         assertTrue(content.contains("if (strInput.equals(\"a\"))"));
         assertTrue(content.contains("result += 1;"));

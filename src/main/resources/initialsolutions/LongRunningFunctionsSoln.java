@@ -42,7 +42,7 @@ public class LongRunningFunctionsSoln {
         }
     }
 
-    // Start initial solution implementation.
+    // Start initial main definition implementation.
     // Returns true if no BlackBoxes fail during their process.
     public boolean runAllBlackBoxes(
             List<BlackBox> blackBoxes,
@@ -62,5 +62,5 @@ public class LongRunningFunctionsSoln {
         }
         return true;
     }
-    // End initial solution implementation.
+    // End initial main definition implementation.
 }
