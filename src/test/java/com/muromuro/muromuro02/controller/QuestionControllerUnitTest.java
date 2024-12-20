@@ -73,6 +73,10 @@ public class QuestionControllerUnitTest {
     @Qualifier("incompatibleInterfacesImpl")
     private Evaluator incompatibleInterfaces;
 
+    @MockBean
+    @Qualifier("duplicateRpcsImpl")
+    private Evaluator duplicateRpcs;
+
     @Test
     public void testListQuestions() throws Exception {
         this.mockMvc
@@ -583,34 +587,60 @@ public class QuestionControllerUnitTest {
 
     @Test
     public void testGetDuplicateRpcs() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/duplicate_rpcs")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(INITIAL_MAIN_DEFINITION)
                         .setExpectedTitle("Duplicate RPCs")
                         .setExpectedContent(
                                 "Please identify and fix this issue of duplicate RPC requests.")
                         .build();
-        runGetTest_validateCommonParts(testValues);
+        runGetTest(duplicateRpcs, testValues);
     }
 
     @Test
-    public void testEvalDuplicateRpcs_unknownResponse() throws Exception {
-        // TODO: Implement evaluator mocking and input validation here.
+    public void testEvalDuplicateRpcs_correctAnswer() throws Exception {
         TestValues testValues =
                 new TestValues.Builder()
                         .setUrl("/muromuro_questions/eval_duplicate_rpcs")
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        ResultActions result = sendEvalCommand(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + "Evaluator not yet implemented")));
+        runEvalTest_correctAnswer(duplicateRpcs, testValues);
+    }
+
+    @Test
+    public void testEvalDuplicateRpcs_wrongAnswer() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_duplicate_rpcs")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_wrongAnswer(duplicateRpcs, testValues);
+    }
+
+    @Test
+    public void testEvalDuplicateRpcs_timeout() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_duplicate_rpcs")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_timeout(duplicateRpcs, testValues);
+    }
+
+    @Test
+    public void testEvalDuplicateRpcs_unknownResponse() throws Exception {
+        TestValues testValues =
+                new TestValues.Builder()
+                        .setUrl("/muromuro_questions/eval_duplicate_rpcs")
+                        .setCallerCode(INITIAL_CALLER_CODE)
+                        .setMainDefinition(USER_INPUT)
+                        .build();
+        runEvalTest_unknownResponse(duplicateRpcs, testValues);
     }
 
     private record TestValues(

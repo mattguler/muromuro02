@@ -28,6 +28,7 @@ public class QuestionController {
     private final Evaluator parseCsv;
     private final Evaluator longRunningFunctions;
     private final Evaluator incompatibleInterfaces;
+    private final Evaluator duplicateRpcs;
 
     @Autowired
     public QuestionController(
@@ -39,7 +40,8 @@ public class QuestionController {
             @Qualifier("debugListImpl") Evaluator debugList,
             @Qualifier("parseCsvImpl") Evaluator parseCsv,
             @Qualifier("longRunningFunctionsImpl") Evaluator longRunningFunctions,
-            @Qualifier("incompatibleInterfacesImpl") Evaluator incompatibleInterfaces){
+            @Qualifier("incompatibleInterfacesImpl") Evaluator incompatibleInterfaces,
+            @Qualifier("duplicateRpcsImpl") Evaluator duplicateRpcs){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
@@ -49,6 +51,7 @@ public class QuestionController {
         this.parseCsv = parseCsv;
         this.longRunningFunctions = longRunningFunctions;
         this.incompatibleInterfaces = incompatibleInterfaces;
+        this.duplicateRpcs = duplicateRpcs;
     }
 
     @GetMapping("list")
@@ -219,7 +222,7 @@ public class QuestionController {
     @GetMapping("duplicate_rpcs")
     public String duplicateRpcs(Model model) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        // TODO: Set the proper initial user input here.
+        muroMuroSolution.setUserInput(duplicateRpcs.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return "questions/duplicate_rpcs";
     }
@@ -227,11 +230,9 @@ public class QuestionController {
     @PostMapping("eval_duplicate_rpcs")
     public String evalDuplicateRpcs(
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        // TODO: Implement a proper evaluator and use it here.
         MuroMuroResponse response =
-                new MuroMuroResponse(
-                        MuroMuroResponse.Status.UNKNOWN,
-                        "Evaluator not yet implemented.");
+                duplicateRpcs.evaluateSolution(
+                        muroMuroSolution.getUserInput());
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());
     }
