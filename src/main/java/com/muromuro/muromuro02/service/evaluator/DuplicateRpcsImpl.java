@@ -38,10 +38,14 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
         return USER_CODE_MAX_LENGTH;
     }
 
+    // TODO: Refactor this method here (and everywhere else) to return
+    //     an error status value in addition to the actual result.
     @Override
     protected String buildEvaluationCode(UserInput userInput) {
+        String callerCode =
+                refineCallerCode(userInput.getCallerCode());
         return evaluationCode
-                .replaceCallerCode(userInput.getCallerCode())
+                .replaceCallerCode(callerCode)
                 .replaceMainDefinition(userInput.getMainDefinition())
                 .getFormattedContent();
     }
@@ -55,5 +59,21 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
                 buildFailureMessage(
                         dockerEvalOutput,
                         "Duplicate RPCs evaluator not yet implemented."));
+    }
+
+    /**
+     * Makes updates to the given caller code help simulate the test scenarios
+     * for duplicating the RPCs.
+     */
+    private String refineCallerCode(String callerCode) {
+        // TODO: Implement the simulated test scenarios for duplicated RPCs.
+        //     Also implement some more validation of the caller code input.
+        String clientCode1 =
+                callerCode.replace("KVListClient", "KVListClient1");
+        String clientCode2 =
+                callerCode.replace("KVListClient", "KVListClient2");
+        String clientCode3 =
+                callerCode.replace("KVListClient", "KVListClient3");
+        return clientCode1 + "\n\n" + clientCode2 + "\n\n" + clientCode3;
     }
 }
