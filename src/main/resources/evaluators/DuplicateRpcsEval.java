@@ -19,7 +19,8 @@ public class DuplicateRpcsEval {
         }
 
         public List<V> get(K key) {
-            return serviceProxy.get(key);
+            List<V> result = serviceProxy.get(key);
+            return result;
         }
 
         public void append(K key, V value) {

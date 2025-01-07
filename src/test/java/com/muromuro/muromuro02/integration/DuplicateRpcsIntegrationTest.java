@@ -93,15 +93,6 @@ public class DuplicateRpcsIntegrationTest {
                                 + "length exceeding the max allowable length.");
     }
 
-    // TODO: Remove this test once the evaluator is fully implemented.
-    @Test
-    public void testEval_withUnknownResponse() throws Exception {
-        performEval("blah", "blahblah")
-                .validateContains(
-                        "Unknown response: Duplicate RPCs evaluator "
-                                + "not yet implemented.");
-    }
-
     private ResultWrapper performGet() throws Exception {
         ResultActions resultActions =
                 this.mockMvc
