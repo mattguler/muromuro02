@@ -52,13 +52,12 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected String buildEvaluationCode(UserInput userInput) {
+    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
         mainDefinition =
                 mainDefinition.replace("DebugListSoln", "DebugListEval");
         return evaluationCode
-                .replaceMainDefinition(mainDefinition)
-                .getFormattedContent();
+                .replaceMainDefinition(mainDefinition);
     }
 
     @Override

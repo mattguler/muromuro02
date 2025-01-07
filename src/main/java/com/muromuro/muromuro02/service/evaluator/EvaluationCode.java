@@ -1,5 +1,7 @@
 package com.muromuro.muromuro02.service.evaluator;
 
+import com.muromuro.muromuro02.model.MuroMuroResponse;
+
 /**
  * Represents the code that is used to evaluate a solution.
  * The actual eval code is read from a resource file, and then its relevant parts
@@ -13,10 +15,21 @@ public class EvaluationCode {
     private static final String MAIN_DEFINITION_START = "// Start main definition implementation.";
     private static final String MAIN_DEFINITION_END = "// End main definition implementation.";
 
+    // Represents the string content of the evaluation code.
     private final String content;
+
+    // Represents the build response status of the evaluation code.
+    // It has a default value of success, until the eval code build fails for some reason.
+    private final MuroMuroResponse buildResponse;
 
     public EvaluationCode(String content) {
         this.content = content;
+        this.buildResponse = new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
+    }
+
+    public EvaluationCode(String content, MuroMuroResponse buildResponse) {
+        this.content = content;
+        this.buildResponse = buildResponse;
     }
 
     /**
@@ -29,11 +42,25 @@ public class EvaluationCode {
         return formattedContent;
     }
 
+    /** Returns the build response status of the evaluation code. */
+    public MuroMuroResponse getBuildResponse() {
+        return this.buildResponse;
+    }
+
+    /**
+     * Updates the build response status of the evaluation code.
+     * Returns a newly built EvaluationCode instance with the updated response status.
+     */
+    public EvaluationCode updateBuildResponse(MuroMuroResponse buildResponse) {
+        return new EvaluationCode(this.content, buildResponse);
+    }
+
     /** Replaces the caller code in the evaluation code with the given string. */
     public EvaluationCode replaceCallerCode(String callerCode) {
         return new EvaluationCode(
                 replaceSection(
-                        content, CALLER_CODE_START, CALLER_CODE_END, callerCode));
+                        content, CALLER_CODE_START, CALLER_CODE_END, callerCode),
+                this.buildResponse);
     }
 
     /** Replaces the main definition in the evaluation code with the given string. */
@@ -43,7 +70,8 @@ public class EvaluationCode {
                         content,
                         MAIN_DEFINITION_START,
                         MAIN_DEFINITION_END,
-                        mainDefinition));
+                        mainDefinition),
+                this.buildResponse);
     }
 
     /**

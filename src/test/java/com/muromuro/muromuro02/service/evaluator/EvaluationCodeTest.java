@@ -1,12 +1,12 @@
 package com.muromuro.muromuro02.service.evaluator;
 
+import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the EvaluationCode object. This is an integration test because
@@ -184,6 +184,24 @@ public class EvaluationCodeTest {
         String content = duplicateRpcsEval.getFormattedContent();
         assertTrue(content.contains("public class DuplicateRpcsEval"));
         assertTrue(content.contains("public static void main(String[] args)"));
+    }
+
+    @Test
+    public void testGetBuildResponse_duplicateRpcsEval() {
+        assertEquals(
+                MuroMuroResponse.Status.SUCCESS,
+                duplicateRpcsEval.getBuildResponse().getStatus());
+        EvaluationCode updatedEvalCode =
+                duplicateRpcsEval.updateBuildResponse(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                "Failed to build eval code."));
+        assertEquals(
+                updatedEvalCode.getBuildResponse().getStatus(),
+                MuroMuroResponse.Status.FAILURE);
+        assertEquals(
+                updatedEvalCode.getBuildResponse().getMessage(),
+                "Failed to build eval code.");
     }
 
     @Test

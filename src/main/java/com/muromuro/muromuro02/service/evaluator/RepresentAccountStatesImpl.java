@@ -53,7 +53,7 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected String buildEvaluationCode(UserInput userInput) {
+    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
         mainDefinition = replaceEnumNames(mainDefinition, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
@@ -66,8 +66,7 @@ public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
         mainDefinition =
                 replaceTargetWords(mainDefinition, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
         return evaluationCode
-                .replaceMainDefinition(mainDefinition)
-                .getFormattedContent();
+                .replaceMainDefinition(mainDefinition);
     }
 
     @Override
