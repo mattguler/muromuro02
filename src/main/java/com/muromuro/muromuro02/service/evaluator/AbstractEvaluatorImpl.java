@@ -43,8 +43,13 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
         if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return securityResponse;
         }
-        String evalCode = buildEvaluationCode(userInput);
-        String containerId = dockerProxy.startContainer(evalCode);
+        EvaluationCode updatedEvalCode = buildEvaluationCode(userInput);
+        if (updatedEvalCode.getBuildResponse().getStatus()
+                != MuroMuroResponse.Status.SUCCESS) {
+            return updatedEvalCode.getBuildResponse();
+        }
+        String containerId =
+                dockerProxy.startContainer(updatedEvalCode.getFormattedContent());
         String dockerEvalOutput = dockerProxy.getContainerOutput(containerId);
         // Note: Comment this out when debugging the container logs.
         dockerProxy.cleanUpContainer(containerId);
@@ -69,7 +74,7 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
      * Builds the code that will be used to evaluate the user's solution.
      * This code will be used by the external resource (e.g. Docker) in the evaluation process.
      */
-    abstract protected String buildEvaluationCode(UserInput userInput);
+    abstract protected EvaluationCode buildEvaluationCode(UserInput userInput);
 
     /**
      * Analyzes the evaluation output from the external resource (e.g. Docker)

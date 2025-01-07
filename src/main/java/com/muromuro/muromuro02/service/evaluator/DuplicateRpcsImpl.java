@@ -38,16 +38,13 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
         return USER_CODE_MAX_LENGTH;
     }
 
-    // TODO: Refactor this method here (and everywhere else) to return
-    //     an error status value in addition to the actual result.
     @Override
-    protected String buildEvaluationCode(UserInput userInput) {
+    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
         String callerCode =
                 refineCallerCode(userInput.getCallerCode());
         return evaluationCode
                 .replaceCallerCode(callerCode)
-                .replaceMainDefinition(userInput.getMainDefinition())
-                .getFormattedContent();
+                .replaceMainDefinition(userInput.getMainDefinition());
     }
 
     @Override

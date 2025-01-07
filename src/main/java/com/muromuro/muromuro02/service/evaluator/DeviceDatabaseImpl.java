@@ -59,11 +59,10 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected String buildEvaluationCode(UserInput userInput) {
+    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
         return evaluationCode
                 .replaceCallerCode(userInput.getCallerCode())
-                .replaceMainDefinition(userInput.getMainDefinition())
-                .getFormattedContent();
+                .replaceMainDefinition(userInput.getMainDefinition());
     }
 
     @Override
