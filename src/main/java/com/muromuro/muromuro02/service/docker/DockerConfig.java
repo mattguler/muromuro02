@@ -14,11 +14,34 @@ import org.springframework.context.annotation.Configuration;
  * installed and running. Follow the instructions on the Docker website to install Docker.
  *
  * If the Docker Desktop is not opening properly (which sometimes seems to happen),
- * run the following commands on your terminal, then open Docker again and go through
- * the installation process:
- * $ sudo rm -rf ~/Library/Group\ Containers/group.com.docker/
- * $ sudo rm -rf ~/Library/Containers/com.docker.docker/
- * $ sudo rm -rf ~/Library/Application\ Support/Docker\ Desktop/
+ * run the following commands on your terminal to completely remove it.
+ * (These commands apply to MAC OS. They might be different for Linux machines.)
+ *
+ * #!/bin/bash
+ * sudo rm -rf /Applications/Docker.app
+ * sudo rm -rf ~/Library/Group\ Containers/group.com.docker
+ * sudo rm -rf ~/Library/Containers/com.docker.docker
+ * sudo rm -rf ~/Library/Application\ Support/Docker\ Desktop
+ * sudo rm -rf ~/.docker
+ * sudo rm /usr/local/bin/docker
+ * sudo rm /usr/local/bin/docker-compose
+ * sudo rm /usr/local/bin/com.docker.cli
+ * sudo rm /usr/local/bin/docker-credential-desktop
+ * sudo rm /usr/local/bin/docker-credential-ecr-login
+ * sudo rm /usr/local/bin/docker-credential-osxkeychain
+ * sudo rm /usr/local/bin/hub-tool
+ * sudo rm /usr/local/bin/hyperkit
+ * sudo rm /usr/local/bin/kubectl.docker
+ * sudo rm /usr/local/bin/notary
+ * sudo rm /usr/local/bin/vpnkit
+ * sudo rm -rf ~/Library/Logs/Docker\ Desktop
+ * sudo rm -rf /usr/local/lib/docker
+ * sudo rm -rf /var/tmp/docker.*
+ * # Remove any Docker networks that may exist (optional but recommended for a clean start):
+ * docker network prune -f
+ *
+ * Restart your machine once these commands have run successfully.
+ * Afterwards, download a new Docker image and go through the installation process.
  *
  * Once Docker is installed, go to Settings -> Resources, and decrease all the resource
  * allocation to amounts manageable on your VPS or Cloud Server.

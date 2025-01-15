@@ -28,139 +28,141 @@ public class IncompatibleInterfacesIntegrationTest {
 
     private static final String MAIN_DEFINITION_TEMPLATE =
             """
-                    // The field definitions.
-                    %s
-                    
-                    // Constructor.
-                    public MyClass(
-                            Client client,
-                            Processor processor1,
-                            Processor2 processor2,
-                            Processor3 processor3
-                            ) {
-                        // Constructor definition.
+                    public final class MyClass {
+                        // The field definitions.
+                        %s
+                        
+                        // Constructor.
+                        public MyClass(
+                                Client client,
+                                Processor processor1,
+                                Processor2 processor2,
+                                Processor3 processor3
+                                ) {
+                            // Constructor definition.
+                            %s
+                        }
+                        
+                        // Method definition.
                         %s
                     }
-                    
-                    // Method definition.
-                    %s
                     """;
 
     private static final String DEFAULT_FIELDS =
             """
-                    private final Client client;
-                    private final Processor processor1;
-                    private final Processor2 processor2;
-                    private final Processor3 processor3;
+                        private final Client client;
+                        private final Processor processor1;
+                        private final Processor2 processor2;
+                        private final Processor3 processor3;
                     """;
 
     private static final String MAP_FIELDS =
             """
-                    private final Client client;
-                    private final Processor processor1;
-                    private final Map<Integer, Processor> processorMap;
+                        private final Client client;
+                        private final Processor processor1;
+                        private final Map<Integer, Processor> processorMap;
                     """;
 
     private static final String DEFAULT_CONSTRUCTOR =
             """
-                    this.client = client;
-                    this.processor1 = processor1;
-                    this.processor2 = processor2;
-                    this.processor3 = processor3;
+                        this.client = client;
+                        this.processor1 = processor1;
+                        this.processor2 = processor2;
+                        this.processor3 = processor3;
                     """;
 
     private static final String TIMEOUT_CONSTRUCTOR =
             """
-                    this.client = client;
-                    this.processor1 = processor1;
-                    this.processor2 = processor2;
-                    this.processor3 = processor3;
-                    while(true) { }
+                        this.client = client;
+                        this.processor1 = processor1;
+                        this.processor2 = processor2;
+                        this.processor3 = processor3;
+                        while(true) { }
                     """;
 
     private static final String MAP_CONSTRUCTOR =
             """
-                    this.client = client;
-                    this.processor1 = processor1;
-                    Processor proc2Adapter =
-                        (x, y) -> processor2.makeCalculations(x, y - 1);
-                    Processor proc3Adapter =
-                        (x, y) -> processor3.execute(x, y + 1);
-                    this.processorMap =
-                        Map.ofEntries(
-                            Map.entry(1, proc3Adapter),
-                            Map.entry(2, proc2Adapter),
-                            Map.entry(3, proc2Adapter),
-                            Map.entry(4, proc3Adapter));
+                        this.client = client;
+                        this.processor1 = processor1;
+                        Processor proc2Adapter =
+                            (x, y) -> processor2.makeCalculations(x, y - 1);
+                        Processor proc3Adapter =
+                            (x, y) -> processor3.execute(x, y + 1);
+                        this.processorMap =
+                            Map.ofEntries(
+                                Map.entry(1, proc3Adapter),
+                                Map.entry(2, proc2Adapter),
+                                Map.entry(3, proc2Adapter),
+                                Map.entry(4, proc3Adapter));
                     """;
 
     private static final String DEFAULT_METHOD =
             """
-                    public int runProcess(int x) {
-                        if (x == 2 || x == 3) {
-                            return client.runProcess(processor2, x);
+                        public int runProcess(int x) {
+                            if (x == 2 || x == 3) {
+                                return client.runProcess(processor2, x);
+                            }
+                            else if (x == 1 || x == 4) {
+                                return client.runProcess(processor3, x);
+                            }
+                            else {
+                                return client.runProcess(processor1, x);
+                            }
                         }
-                        else if (x == 1 || x == 4) {
-                            return client.runProcess(processor3, x);
-                        }
-                        else {
-                            return client.runProcess(processor1, x);
-                        }
-                    }
                     """;
 
     private static final String WRONG_METHOD =
             """
-                    public int runProcess(int x) {
-                        return 0;
-                    }
+                        public int runProcess(int x) {
+                            return 0;
+                        }
                     """;
 
     private static final String PARTIALLY_WRONG_METHOD =
             """
-                    public int runProcess(int x) {
-                        if (x == 2 || x == 3) {
-                            return client.runProcess(
-                                (xx, yy) -> processor2.makeCalculations(xx, yy),
-                                x);
+                        public int runProcess(int x) {
+                            if (x == 2 || x == 3) {
+                                return client.runProcess(
+                                    (xx, yy) -> processor2.makeCalculations(xx, yy),
+                                    x);
+                            }
+                            else if (x == 1 || x == 4) {
+                                return client.runProcess(
+                                    (xx, yy) -> processor3.execute(xx, yy),
+                                    x);
+                            }
+                            else {
+                                return client.runProcess(processor1, x);
+                            }
                         }
-                        else if (x == 1 || x == 4) {
-                            return client.runProcess(
-                                (xx, yy) -> processor3.execute(xx, yy),
-                                x);
-                        }
-                        else {
-                            return client.runProcess(processor1, x);
-                        }
-                    }
                     """;
 
     private static final String PARTIALLY_CORRECT_METHOD =
             """
-                    public int runProcess(int x) {
-                        if (x == 2 || x == 3) {
-                            return client.runProcess(
-                                (xx, yy) -> processor2.makeCalculations(xx, yy - 1),
-                                x);
+                        public int runProcess(int x) {
+                            if (x == 2 || x == 3) {
+                                return client.runProcess(
+                                    (xx, yy) -> processor2.makeCalculations(xx, yy - 1),
+                                    x);
+                            }
+                            else if (x == 1 || x == 4) {
+                                return client.runProcess(
+                                    (xx, yy) -> processor3.execute(xx, yy + 1),
+                                    x);
+                            }
+                            else {
+                                return client.runProcess(processor1, x);
+                            }
                         }
-                        else if (x == 1 || x == 4) {
-                            return client.runProcess(
-                                (xx, yy) -> processor3.execute(xx, yy + 1),
-                                x);
-                        }
-                        else {
-                            return client.runProcess(processor1, x);
-                        }
-                    }
                     """;
 
     private static final String MAP_METHOD =
             """
-                    public int runProcess(int x) {
-                        Processor processor =
-                            processorMap.getOrDefault(x, processor1);
-                        return client.runProcess(processor, x);
-                    }
+                        public int runProcess(int x) {
+                            Processor processor =
+                                processorMap.getOrDefault(x, processor1);
+                            return client.runProcess(processor, x);
+                        }
                     """;
 
     private static String buildSolution(
@@ -293,7 +295,7 @@ public class IncompatibleInterfacesIntegrationTest {
                 this.mockMvc
                         .perform(
                                 post(EVAL_URL)
-                                        .param("userInput.mainDefinition", mainDefinition)
+                                        .param("main-def-input", mainDefinition)
                                         .with(csrf()))
                         .andExpect(status().isOk());
         return new ResultWrapper(resultActions);
@@ -301,7 +303,6 @@ public class IncompatibleInterfacesIntegrationTest {
 
     /** This is here to decrease code clutter in the integration tests. */
     private record ResultWrapper(ResultActions resultActions) {
-
         ResultWrapper validateContains(String str) throws Exception {
             this.resultActions().andExpect(content().string(containsString(str)));
             return this;
