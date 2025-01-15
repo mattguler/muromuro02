@@ -180,11 +180,7 @@
           hx-swap="innerHTML"
           hx-disabled-elt="find button">
         <!-- CodeMirror div. The editor shows up here, for the user to make updates. -->
-        <!-- TODO: Incorporate these code fragments into the CodeMirror editor itself,
-                 and remove them from here. -->
-        <!-- p>public final class MyClass {</p -->
         <div id="editor"></div>
-        <!-- p>}</p -->
         <!-- The hidden input here gets updated by CodeMirror each time the user makes a
              change. We cannot submit the CodeMirror div itself with this form, therefore
              we need this. We also cannot use th:field here because two-way data binding
