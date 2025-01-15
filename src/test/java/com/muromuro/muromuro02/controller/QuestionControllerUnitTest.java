@@ -552,7 +552,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(incompatibleInterfaces, testValues);
+        runEvalTest_correctAnswer_CM(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -562,7 +562,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(incompatibleInterfaces, testValues);
+        runEvalTest_wrongAnswer_CM(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -572,7 +572,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(incompatibleInterfaces, testValues);
+        runEvalTest_timeout_CM(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -582,7 +582,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(incompatibleInterfaces, testValues);
+        runEvalTest_unknownResponse_CM(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -742,6 +742,23 @@ public class QuestionControllerUnitTest {
                                                 testValues.expectedContent())));
     }
 
+    // TODO: Rename all the CodeMirror (CM) compatible versions of the methods below to
+    //      original names once the CodeMirror migration is complete.
+    //      Also remove all the old outdated methods.
+
+    private void runEvalTest_correctAnswer_CM(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
+                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
+        ResultActions result = sendEvalCommand_CM(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Correct answer")));
+    }
+
     private void runEvalTest_correctAnswer(
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
@@ -753,6 +770,23 @@ public class QuestionControllerUnitTest {
                                 .string(
                                         containsString(
                                                 "Correct answer")));
+    }
+
+    private void runEvalTest_wrongAnswer_CM(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.FAILURE,
+                                ERROR_MESSAGE));
+        ResultActions result = sendEvalCommand_CM(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Wrong answer: "
+                                                        + ERROR_MESSAGE)));
     }
 
     private void runEvalTest_wrongAnswer(
@@ -772,6 +806,23 @@ public class QuestionControllerUnitTest {
                                                         + ERROR_MESSAGE)));
     }
 
+    private void runEvalTest_timeout_CM(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.TIMEOUT,
+                                TIMEOUT_MESSAGE));
+        ResultActions result = sendEvalCommand_CM(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Server timed out: "
+                                                        + TIMEOUT_MESSAGE)));
+    }
+
     private void runEvalTest_timeout(
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
@@ -789,6 +840,23 @@ public class QuestionControllerUnitTest {
                                                         + TIMEOUT_MESSAGE)));
     }
 
+    private void runEvalTest_unknownResponse_CM(
+            Evaluator evaluator, TestValues testValues) throws Exception {
+        when(evaluator.evaluateSolution(any(UserInput.class)))
+                .thenReturn(
+                        new MuroMuroResponse(
+                                MuroMuroResponse.Status.UNKNOWN,
+                                UNKNOWN_MESSAGE));
+        ResultActions result = sendEvalCommand_CM(testValues);
+        result
+                .andExpect(
+                        content()
+                                .string(
+                                        containsString(
+                                                "Unknown response: "
+                                                        + UNKNOWN_MESSAGE)));
+    }
+
     private void runEvalTest_unknownResponse(
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
@@ -804,6 +872,36 @@ public class QuestionControllerUnitTest {
                                         containsString(
                                                 "Unknown response: "
                                                         + UNKNOWN_MESSAGE)));
+    }
+
+    private ResultActions sendEvalCommand_CM(
+            TestValues testValues) throws Exception {
+        ResultActions result;
+        if (testValues.callerCode().isEmpty()) {
+            result =
+                    this.mockMvc
+                            .perform(
+                                    post(testValues.url)
+                                            .param(
+                                                    "main-def-input",
+                                                    testValues.mainDefinition())
+                                            .with(csrf()))
+                            .andExpect(status().isOk());
+        } else {
+            result =
+                    this.mockMvc
+                            .perform(
+                                    post(testValues.url)
+                                            .param(
+                                                    "caller-code-input",
+                                                    testValues.callerCode())
+                                            .param(
+                                                    "main-def-input",
+                                                    testValues.mainDefinition())
+                                            .with(csrf()))
+                            .andExpect(status().isOk());
+        }
+        return result;
     }
 
     private ResultActions sendEvalCommand(

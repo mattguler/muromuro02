@@ -2,15 +2,13 @@ package com.muromuro.muromuro02.controller;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.MuroMuroSolution;
+import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.evaluator.Evaluator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * The controller for listing the MuroMuro questions, and for evaluating the solutions.
@@ -211,10 +209,11 @@ public class QuestionController {
 
     @PostMapping("eval_incompatible_interfaces")
     public String evalIncompatibleInterfaces(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
+        UserInput userInput = new UserInput("", mainDefInput);
         MuroMuroResponse response =
-                incompatibleInterfaces.evaluateSolution(
-                        muroMuroSolution.getUserInput());
+                incompatibleInterfaces.evaluateSolution(userInput);
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());
     }

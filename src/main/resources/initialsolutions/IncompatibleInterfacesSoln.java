@@ -42,8 +42,9 @@ public class IncompatibleInterfacesSoln {
 
 // Altered its indendation slightly to make it look better
 // on the question's page view.
-public static final class MyClass {
-    // Start initial main definition implementation.
+// Start initial main definition implementation.
+public final class MyClass {
+
     // Feel free to alter these fields or add new fields here.
     private final Client client;
     private final Processor processor1;
@@ -83,8 +84,7 @@ public static final class MyClass {
 
     // Feel free to add any additional helper methods, data structures,
     // or static inner classes to this code.
-    // End initial main definition implementation.
 
-    // Other methods and data structures might already be defined here.
 }
+// End initial main definition implementation.
 }

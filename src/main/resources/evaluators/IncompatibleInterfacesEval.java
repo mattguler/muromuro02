@@ -88,8 +88,9 @@ public class IncompatibleInterfacesEval {
     }
 
 
-    public static final class MyClass {
-        // Start main definition implementation.
+    // Start main definition implementation.
+    public final class MyClass {
+
         // Feel free to alter these fields or add new fields here.
         private final Client client;
         private final Processor processor1;
@@ -129,8 +130,9 @@ public class IncompatibleInterfacesEval {
 
         // Feel free to add any additional helper methods, data structures,
         // or static inner classes to this code.
-        // End main definition implementation.
+
     }
+    // End main definition implementation.
 
     public void runTest1() {
         runTest(
