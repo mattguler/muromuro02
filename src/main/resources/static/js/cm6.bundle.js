@@ -21048,6 +21048,13 @@ var cm6 = (function (exports) {
       { key: "Alt-A", run: toggleBlockComment },
       { key: "Ctrl-m", mac: "Shift-Alt-m", run: toggleTabFocusMode },
   ].concat(standardKeymap);
+  /**
+  A binding that binds Tab to [`indentMore`](https://codemirror.net/6/docs/ref/#commands.indentMore) and
+  Shift-Tab to [`indentLess`](https://codemirror.net/6/docs/ref/#commands.indentLess).
+  Please see the [Tab example](../../examples/tab/) before using
+  this.
+  */
+  const indentWithTab = { key: "Tab", run: indentMore, shift: indentLess };
 
   function crelt() {
     var elt = arguments[0];
@@ -26481,6 +26488,8 @@ var cm6 = (function (exports) {
                       document.getElementById(mainDefInputId).value = code;
                   }
               }),
+              indentUnit.of("    "),  // 4 spaces
+              keymap.of([indentWithTab]),
           ]
       });
   }
