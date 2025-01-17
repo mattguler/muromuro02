@@ -201,21 +201,15 @@ public class QuestionController {
 
     @GetMapping("incompatible_interfaces")
     public String incompatibleInterfaces(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(incompatibleInterfaces.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/incompatible_interfaces";
+        String view = "questions/incompatible_interfaces";
+        return getPage(model, view, incompatibleInterfaces);
     }
 
     @PostMapping("eval_incompatible_interfaces")
     public String evalIncompatibleInterfaces(
             @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        UserInput userInput = new UserInput("", mainDefInput);
-        MuroMuroResponse response =
-                incompatibleInterfaces.evaluateSolution(userInput);
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, incompatibleInterfaces);
     }
 
     @GetMapping("duplicate_rpcs")
@@ -232,6 +226,26 @@ public class QuestionController {
         MuroMuroResponse response =
                 duplicateRpcs.evaluateSolution(
                         muroMuroSolution.getUserInput());
+        muroMuroSolution.setResponse(response);
+        return getFragmentForResponseStatus(response.getStatus());
+    }
+
+    private String getPage(Model model, String view, Evaluator evaluator) {
+        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
+        muroMuroSolution.setUserInput(evaluator.getInitialSolution());
+        model.addAttribute("muroMuroSolution", muroMuroSolution);
+        return view;
+    }
+
+    private String evalSolution(
+            String mainDefInput, MuroMuroSolution muroMuroSolution, Evaluator evaluator) {
+        UserInput userInput = new UserInput("", mainDefInput);
+        return evalSolution(userInput, muroMuroSolution, evaluator);
+    }
+
+    private String evalSolution(
+            UserInput userInput, MuroMuroSolution muroMuroSolution, Evaluator evaluator) {
+        MuroMuroResponse response = evaluator.evaluateSolution(userInput);
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());
     }

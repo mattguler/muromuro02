@@ -202,9 +202,7 @@
 
     // Populating the CodeMirror div. Also initialize the hidden code input value.
     const initialMainDef = /*[[${muroMuroSolution.userInput.mainDefinition}]]*/ "";
-    document.getElementById("main-def-input").value = initialMainDef;
-    const initialState = cm6.createEditorState(initialMainDef, "main-def-input");
-    const view = cm6.createEditorView(initialState, "editor");
+    setupCodeMirror(initialMainDef);
 </script>
 </body>
 </html>
