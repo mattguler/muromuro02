@@ -214,7 +214,7 @@ public class LongRunningFunctionsIntegrationTest {
                 this.mockMvc
                         .perform(
                                 post(EVAL_URL)
-                                        .param("userInput.mainDefinition", mainDefinition)
+                                        .param("main-def-input", mainDefinition)
                                         .with(csrf()))
                         .andExpect(status().isOk());
         return new ResultWrapper(resultActions);

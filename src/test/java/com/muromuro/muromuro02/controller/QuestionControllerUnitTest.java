@@ -446,7 +446,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(parseCsv, testValues);
+        runEvalTest_correctAnswer_CM(parseCsv, testValues);
     }
 
     @Test
@@ -456,7 +456,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(parseCsv, testValues);
+        runEvalTest_wrongAnswer_CM(parseCsv, testValues);
     }
 
     @Test
@@ -466,7 +466,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(parseCsv, testValues);
+        runEvalTest_timeout_CM(parseCsv, testValues);
     }
 
     @Test
@@ -476,7 +476,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(parseCsv, testValues);
+        runEvalTest_unknownResponse_CM(parseCsv, testValues);
     }
 
     @Test
@@ -499,7 +499,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(longRunningFunctions, testValues);
+        runEvalTest_correctAnswer_CM(longRunningFunctions, testValues);
     }
 
     @Test
@@ -509,7 +509,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(longRunningFunctions, testValues);
+        runEvalTest_wrongAnswer_CM(longRunningFunctions, testValues);
     }
 
     @Test
@@ -519,7 +519,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(longRunningFunctions, testValues);
+        runEvalTest_timeout_CM(longRunningFunctions, testValues);
     }
 
     @Test
@@ -529,7 +529,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(longRunningFunctions, testValues);
+        runEvalTest_unknownResponse_CM(longRunningFunctions, testValues);
     }
 
     @Test
