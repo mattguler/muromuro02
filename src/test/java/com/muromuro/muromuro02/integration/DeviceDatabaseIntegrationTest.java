@@ -29,7 +29,15 @@ public class DeviceDatabaseIntegrationTest {
     private static final String EVAL_URL = "/muromuro_questions/eval_device_database";
 
     private static final String CALLER_CODE =
-            "areDevicesInDdb(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);";
+            """
+                    public void callerFunction(
+                                List<String> inputDevices,
+                                DeviceDatabase ddb,
+                                List<String> resultDevicesInDdb,
+                                List<String> resultDevicesNotInDdb) {
+                            areDevicesInDdb(inputDevices, ddb, resultDevicesInDdb, resultDevicesNotInDdb);
+                    }
+                    """;
 
     private static final String MAIN_DEFINITION_TEMPLATE =
             """
@@ -75,6 +83,14 @@ public class DeviceDatabaseIntegrationTest {
     private static final String ADD_WRONG_DEVICES_TO_DB =
             "resultDevicesInDdb.addAll(inputDevices);";
 
+    private static final String TIMEOUT_LOOP =
+            """
+                    int a = 5;
+                    while (a < 10) {
+                        a = -a;
+                    }
+                    """;
+
     private static final String WRONG_IF_EMPTY =
             """
                         if (inputDevices.isEmpty()) {
@@ -98,6 +114,16 @@ public class DeviceDatabaseIntegrationTest {
                             return device;
                         }
             """;
+
+    private static String getTimeoutSolution() {
+        return String.format(
+                MAIN_DEFINITION_TEMPLATE,
+                TIMEOUT_LOOP,
+                CHECK_FOR_NULL,
+                ADD_DEVICES_NOT_IN_DB,
+                ADD_DEVICES_NOT_IN_DB,
+                DEVICE_LENGTH_CHECK);
+    }
 
     private static String getCorrectSolution() {
         return String.format(
@@ -293,8 +319,7 @@ public class DeviceDatabaseIntegrationTest {
 
     @Test
     public void testEval_withTimeout() throws Exception {
-        String callerCode = "while (true) { }";
-        performEval(callerCode, "")
+        performEval(CALLER_CODE, getTimeoutSolution())
                 .andExpect(
                         content()
                                 .string(
@@ -309,7 +334,7 @@ public class DeviceDatabaseIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incorrect solution.")));
+                                                "Wrong answer: Invalid solution.")));
     }
 
     @Test
@@ -402,8 +427,8 @@ public class DeviceDatabaseIntegrationTest {
         return this.mockMvc
                 .perform(
                         post(EVAL_URL)
-                                .param("userInput.callerCode", callerCode)
-                                .param("userInput.mainDefinition", mainDefinition)
+                                .param("caller-code-input", callerCode)
+                                .param("main-def-input", mainDefinition)
                                 .with(csrf()))
                 .andExpect(status().isOk());
     }
