@@ -20,10 +20,8 @@ function configureHtmxWithCsrf() {
 
 // Initializes the CodeMirror editor in your page. Also initializes the
 // hidden code input value.
-// Make sure you have divs with IDs "editor" and "main-def-input".
-function setupCodeMirror(initialMainDef) {
-    // Also initialize the hidden code input value.
-    document.getElementById("main-def-input").value = initialMainDef;
-    const initialState = cm6.createEditorState(initialMainDef, "main-def-input");
-    const view = cm6.createEditorView(initialState, "editor");
+function setupCodeMirror(codeMirrorDiv, hiddenInputDiv, initialCode) {
+    document.getElementById(hiddenInputDiv).value = initialCode;
+    const initialState = cm6.createEditorState(initialCode, hiddenInputDiv);
+    const view = cm6.createEditorView(initialState, codeMirrorDiv);
 }
