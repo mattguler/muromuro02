@@ -166,37 +166,28 @@ public class QuestionController {
 
     @GetMapping("parse_csv")
     public String parseCsv(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(parseCsv.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/parse_csv";
+        String view = "questions/parse_csv";
+        return getPage(model, view, parseCsv);
     }
 
     @PostMapping("eval_parse_csv")
     public String evalParseCsv(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                parseCsv.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, parseCsv);
     }
 
     @GetMapping("long_running_functions")
     public String longRunningFunctions(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(longRunningFunctions.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/long_running_functions";
+        String view = "questions/long_running_functions";
+        return getPage(model, view, longRunningFunctions);
     }
 
     @PostMapping("eval_long_running_functions")
     public String evalLongRunningFunctions(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                longRunningFunctions.evaluateSolution(
-                        muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, longRunningFunctions);
     }
 
     @GetMapping("incompatible_interfaces")
