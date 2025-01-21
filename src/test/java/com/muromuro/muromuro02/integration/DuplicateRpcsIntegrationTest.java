@@ -366,8 +366,8 @@ public class DuplicateRpcsIntegrationTest {
                 this.mockMvc
                         .perform(
                                 post(EVAL_URL)
-                                        .param("userInput.callerCode", callerCode)
-                                        .param("userInput.mainDefinition", mainDefinition)
+                                        .param("caller-code-input", callerCode)
+                                        .param("main-def-input", mainDefinition)
                                         .with(csrf()))
                         .andExpect(status().isOk());
         return new ResultWrapper(resultActions);

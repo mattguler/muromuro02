@@ -26476,7 +26476,7 @@ var cm6 = (function (exports) {
       return new LanguageSupport(javaLanguage);
   }
 
-  function createEditorState(initialContents, mainDefInputId) {
+  function createEditorState(initialContents, hiddenInputDivId) {
       return EditorState.create({
           doc: initialContents,
           extensions: [
@@ -26485,7 +26485,7 @@ var cm6 = (function (exports) {
               EditorView.updateListener.of((v) => {
                   if (v.docChanged) {
                       let code = v.state.doc.toString();
-                      document.getElementById(mainDefInputId).value = code;
+                      document.getElementById(hiddenInputDivId).value = code;
                   }
               }),
               indentUnit.of("    "),  // 4 spaces
@@ -26494,10 +26494,10 @@ var cm6 = (function (exports) {
       });
   }
 
-  function createEditorView(startState, elementId) {
+  function createEditorView(startState, editorDivId) {
       return new EditorView({
           state: startState,
-          parent: document.getElementById(elementId),
+          parent: document.getElementById(editorDivId),
       });
   }
 

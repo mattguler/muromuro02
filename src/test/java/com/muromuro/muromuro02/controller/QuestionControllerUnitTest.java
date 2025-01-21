@@ -607,7 +607,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(duplicateRpcs, testValues);
+        runEvalTest_correctAnswer_CM(duplicateRpcs, testValues);
     }
 
     @Test
@@ -618,7 +618,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(duplicateRpcs, testValues);
+        runEvalTest_wrongAnswer_CM(duplicateRpcs, testValues);
     }
 
     @Test
@@ -629,7 +629,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(duplicateRpcs, testValues);
+        runEvalTest_timeout_CM(duplicateRpcs, testValues);
     }
 
     @Test
@@ -640,7 +640,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(duplicateRpcs, testValues);
+        runEvalTest_unknownResponse_CM(duplicateRpcs, testValues);
     }
 
     private record TestValues(

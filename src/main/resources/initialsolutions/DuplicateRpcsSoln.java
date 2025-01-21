@@ -8,6 +8,10 @@ import java.util.*;
  */
 public class DuplicateRpcsSoln {
     // Start initial caller code implementation.
+    // Please make the client related updates below. You should not change the
+    // method signatures here, but you can change their implementations in any
+    // way you want. Some of the serviceProxy calls below might randomly get
+    // duplicated as a result of networking problems. Please fix this issue.
     public static final class KVListClient<K, V> {
 
         private final KVListService<K, V> serviceProxy;
@@ -36,6 +40,8 @@ public class DuplicateRpcsSoln {
     // End initial caller code implementation.
 
     // Start initial main definition implementation.
+    // Please make the server related updates below. You can change both the
+    // method signatures and the method implementations here.
     public interface KVListService<K, V> {
         List<V> get(K key);
         void append(K key, V value);

@@ -214,20 +214,17 @@ public class QuestionController {
 
     @GetMapping("duplicate_rpcs")
     public String duplicateRpcs(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(duplicateRpcs.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/duplicate_rpcs";
+        String view = "questions/duplicate_rpcs";
+        return getPage(model, view, duplicateRpcs);
     }
 
     @PostMapping("eval_duplicate_rpcs")
     public String evalDuplicateRpcs(
+            @RequestParam("caller-code-input") String callerCodeInput,
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                duplicateRpcs.evaluateSolution(
-                        muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(
+                callerCodeInput, mainDefInput, muroMuroSolution, duplicateRpcs);
     }
 
     private String getPage(Model model, String view, Evaluator evaluator) {
@@ -235,6 +232,15 @@ public class QuestionController {
         muroMuroSolution.setUserInput(evaluator.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return view;
+    }
+
+    private String evalSolution(
+            String callerCodeInput,
+            String mainDefInput,
+            MuroMuroSolution muroMuroSolution,
+            Evaluator evaluator) {
+        UserInput userInput = new UserInput(callerCodeInput, mainDefInput);
+        return evalSolution(userInput, muroMuroSolution, evaluator);
     }
 
     private String evalSolution(

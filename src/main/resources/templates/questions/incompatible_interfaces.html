@@ -179,14 +179,15 @@
           hx-target="#muromuro-response-div"
           hx-swap="innerHTML"
           hx-disabled-elt="find button">
-        <!-- CodeMirror div. The editor shows up here, for the user to make updates. -->
-        <div id="editor"></div>
-        <hr>
+        <!-- CodeMirror div. The main definition editor shows up here, for the user to
+             make updates. -->
+        <div id="main-def-editor"></div>
         <!-- The hidden input here gets updated by CodeMirror each time the user makes a
              change. We cannot submit the CodeMirror div itself with this form, therefore
              we need this. We also cannot use th:field here because two-way data binding
              is not possible. CodeMirror manages its content (the code) internally. -->
         <input type="hidden" id="main-def-input" name="main-def-input">
+        <hr>
         <button type="submit" class="btn btn-info col-2">
             Submit
         </button>
@@ -202,7 +203,7 @@
 
     // Populating the CodeMirror div. Also initialize the hidden code input value.
     const initialMainDef = /*[[${muroMuroSolution.userInput.mainDefinition}]]*/ "";
-    setupCodeMirror(initialMainDef);
+    setupCodeMirror("main-def-editor", "main-def-input", initialMainDef);
 </script>
 </body>
 </html>
