@@ -28,40 +28,54 @@ public class DesignApiWithPaginationIntegrationTest {
     private static final String EVAL_URL = "/muromuro_questions/eval_design_api_with_pagination";
 
     private static final String CALLER_CODE_TEMPLATE =
-            "System.out.println();\n" +
-                    "List<Employee> results =\n" +
-                    "        retrieveEmployees(\n" +
-                    "                dbProxy, companyId, /* offset= */ %s, %s);\n" +
-                    "list1.addAll(results);\n" +
-                    "results =\n" +
-                    "        retrieveEmployees(\n" +
-                    "                dbProxy, companyId, /* offset= */ maxSize, maxSize);\n" +
-                    "list2.addAll(results);\n" +
-                    "results =\n" +
-                    "        retrieveEmployees(\n" +
-                    "                dbProxy, companyId, /* offset= */ 2 * maxSize, maxSize);\n" +
-                    "list3.addAll(results);\n" +
-                    "results =\n" +
-                    "        retrieveEmployees(\n" +
-                    "                dbProxy, companyId, /* offset= */ 3 * maxSize, maxSize);\n" +
-                    "list4.addAll(results);";
+            """
+                    public void callerFunction(
+                        List<Employee> list1,
+                        List<Employee> list2,
+                        List<Employee> list3,
+                        List<Employee> list4,
+                        int maxSize,
+                        long companyId,
+                        DatabaseProxy dbProxy
+                    ) {
+                        System.out.println();
+                        List<Employee> results =
+                                retrieveEmployees(
+                                        dbProxy, companyId, /* offset= */ %s, %s);
+                        list1.addAll(results);
+                        results =
+                                retrieveEmployees(
+                                        dbProxy, companyId, /* offset= */ maxSize, maxSize);
+                        list2.addAll(results);
+                        results =
+                                retrieveEmployees(
+                                        dbProxy, companyId, /* offset= */ 2 * maxSize, maxSize);
+                        list3.addAll(results);
+                        results =
+                                retrieveEmployees(
+                                        dbProxy, companyId, /* offset= */ 3 * maxSize, maxSize);
+                        list4.addAll(results);
+                    }
+                    """;
 
     private static final String MAIN_DEFINITION =
-            "public List<Employee> retrieveEmployees(\n" +
-                    "        DatabaseProxy dbProxy,\n" +
-                    "        long companyId,\n" +
-                    "        int offset,\n" +
-                    "        int maxSize) {\n" +
-                    "    List<Employee> allEmployees = dbProxy.getEmployees(companyId);\n" +
-                    "    List<Employee> results = new ArrayList<>();\n" +
-                    "    for (int i = offset; i < allEmployees.size(); i++) {\n" +
-                    "        results.add(allEmployees.get(i));\n" +
-                    "        if (results.size() >= maxSize) {\n" +
-                    "            break;\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "    return results;\n" +
-                    "}";
+            """
+                    public List<Employee> retrieveEmployees(
+                            DatabaseProxy dbProxy,
+                            long companyId,
+                            int offset,
+                            int maxSize) {
+                        List<Employee> allEmployees = dbProxy.getEmployees(companyId);
+                        List<Employee> results = new ArrayList<>();
+                        for (int i = offset; i < allEmployees.size(); i++) {
+                            results.add(allEmployees.get(i));
+                            if (results.size() >= maxSize) {
+                                break;
+                            }
+                        }
+                        return results;
+                    }
+                    """;
 
     @Autowired
     WebApplicationContext context;
@@ -151,8 +165,7 @@ public class DesignApiWithPaginationIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Incorrect solution. One or more of "
-                                                        + "the lists are not\ncorrectly populated.")));
+                                                "Wrong answer: Invalid solution.")));
     }
 
     @Test
@@ -226,7 +239,21 @@ public class DesignApiWithPaginationIntegrationTest {
 
     @Test
     public void testEval_withWrongAnswer_4() throws Exception {
-        performEval("int i = 5;", "boolean failureScenario = true;")
+        String callerCode =
+                """
+                        public void callerFunction(
+                            List<Employee> list1,
+                            List<Employee> list2,
+                            List<Employee> list3,
+                            List<Employee> list4,
+                            int maxSize,
+                            long companyId,
+                            DatabaseProxy dbProxy
+                        ) {
+                            int i = 5;
+                        }
+                        """;
+        performEval(callerCode, "boolean failureScenario = true;")
                 .andExpect(
                         content()
                                 .string(
@@ -239,19 +266,21 @@ public class DesignApiWithPaginationIntegrationTest {
     public void testEval_withTimeout() throws Exception {
         String callerCode = String.format(CALLER_CODE_TEMPLATE, "0", "maxSize");
         String mainDefinition =
-                "List<Employee> retrieveEmployees(\n" +
-                        "        DatabaseProxy dbProxy,\n" +
-                        "        long companyId,\n" +
-                        "        int offset,\n" +
-                        "        int maxSize) {\n" +
-                        "    List<Employee> allEmployees = dbProxy.getEmployees(companyId);\n" +
-                        "    List<Employee> results = new ArrayList<>();\n" +
-                        "    int a = 2;\n" +
-                        "    while(a != 0) {\n" +
-                        "        a = -a;\n" +
-                        "    }\n" +
-                        "    return results;\n" +
-                        "}";
+                """
+                        List<Employee> retrieveEmployees(
+                                DatabaseProxy dbProxy,
+                                long companyId,
+                                int offset,
+                                int maxSize) {
+                            List<Employee> allEmployees = dbProxy.getEmployees(companyId);
+                            List<Employee> results = new ArrayList<>();
+                            int a = 2;
+                            while(a != 0) {
+                                a = -a;
+                            }
+                            return results;
+                        }
+                        """;
         performEval(callerCode, mainDefinition)
                 .andExpect(
                         content()
@@ -271,8 +300,8 @@ public class DesignApiWithPaginationIntegrationTest {
         return this.mockMvc
                 .perform(
                         post(EVAL_URL)
-                                .param("userInput.callerCode", callerCode)
-                                .param("userInput.mainDefinition", mainDefinition)
+                                .param("caller-code-input", callerCode)
+                                .param("main-def-input", mainDefinition)
                                 .with(csrf()))
                 .andExpect(status().isOk());
     }

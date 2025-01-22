@@ -28,9 +28,7 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
      * This is the placeholder solution until the user enters their own solution.
      */
     @Override
-    public UserInput getInitialSolution() {
-        return new UserInput("", "");
-    }
+    public abstract UserInput getInitialSolution();
 
     /**
      * Evaluates the user's solution to the Muromuro interview question.
