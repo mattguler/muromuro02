@@ -12,6 +12,9 @@
     <!-- HTMX imports. -->
     <script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous"></script>
 
+    <!-- CodeMirror imports. -->
+    <script th:src="@{/js/cm6.bundle.js}"></script>
+
     <!-- Muromuro's own CSS and JS imports. -->
     <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
     <script th:src="@{/js/viewutils.js}"></script>
@@ -84,34 +87,17 @@
           hx-target="#muromuro-response-div"
           hx-swap="innerHTML"
           hx-disabled-elt="find button">
-    <pre><code><label th:for="userInput.callerCode" id="callerLabel">
-// Here is the code for the caller function that is supposed to call your API.
-// All the employee lists to be populated by your API are included here for the
-// sake of this question. Please implement the calls to your API function here, and
-// populate all 4 lists in order, with the Employee objects returned from the calls
-// to <span class="highlighted">your API function</span>. Each list is going to take in a maxSize number of employees:
-//
-public void callerFunction(
-    List&lt;Employee&gt; list1,  // The first list to populate and return to the caller.
-    List&lt;Employee&gt; list2,  // The second list to populate and return to the caller.
-    List&lt;Employee&gt; list3,  // The third list to populate and return to the caller.
-    List&lt;Employee&gt; list4,  // The fourth list to populate and return to the caller.
-    int maxSize,  // The maximum number of employees to be placed in each list.
-    long companyId,  // The company ID to be used in the database calls. Pass it into your API.
-    DatabaseProxy dbProxy  // Please pass this into your API function as well.
-) {
-</label>
-    <textarea rows="20" cols="80" th:field="*{userInput.callerCode}"></textarea>
-}
-<label th:for="userInput.mainDefinition" id="mainDefLabel">
-// Please write your API function implementation here.
-// Please make sure to include the pagination capability.
-// Your API function input parameters should contain the companyID and the dbProxy
-// at the very least, along with the necessary input parameters for pagination.
-// Your function should return List&lt;Employee&gt; as a subset of the employees,
-// in the same sorted order as they are returned from the database.
-</label>
-<textarea rows="20" cols="80" th:field="*{userInput.mainDefinition}"></textarea></code></pre>
+        <!-- CodeMirror div for the caller code editor. -->
+        <div id="caller-code-editor"></div>
+        <!-- The hidden input for the caller code. -->
+        <input type="hidden" id="caller-code-input" name="caller-code-input">
+        <hr>
+        <hr>
+        <!-- CodeMirror div for the main definition editor. -->
+        <div id="main-def-editor"></div>
+        <!-- The hidden input for the main definition. -->
+        <input type="hidden" id="main-def-input" name="main-def-input">
+        <hr>
         <button type="submit" class="btn btn-info col-2">
             Submit
         </button>
@@ -121,9 +107,14 @@ public void callerFunction(
 <!-- Bootstrap JS link. -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!-- Extra custom Muromuro scripts called here. -->
-<script>
+<script th:inline="javascript">
     // Calling this function to help resolve the HTMX issues with Spring Security.
     configureHtmxWithCsrf();
+    // CodeMirror related setup code.
+    const initialCallerCode = /*[[${muroMuroSolution.userInput.callerCode}]]*/ "";
+    setupCodeMirror("caller-code-editor", "caller-code-input", initialCallerCode);
+    const initialMainDef = /*[[${muroMuroSolution.userInput.mainDefinition}]]*/ "";
+    setupCodeMirror("main-def-editor", "main-def-input", initialMainDef);
 </script>
 </body>
 </html>

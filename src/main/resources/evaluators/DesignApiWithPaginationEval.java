@@ -89,6 +89,7 @@ public class DesignApiWithPaginationEval {
         System.out.println(listTitle + " is correctly formed.");
     }
 
+    // Start caller code implementation.
     public void callerFunction(
             List<Employee> list1,
             List<Employee> list2,
@@ -97,7 +98,6 @@ public class DesignApiWithPaginationEval {
             int maxSize,
             long companyId,
             DatabaseProxy dbProxy) {
-        // Start caller code implementation.
         List<Employee> results =
                 retrieveEmployees(
                         dbProxy, companyId, /* offset= */ 0, maxSize);
@@ -114,8 +114,8 @@ public class DesignApiWithPaginationEval {
                 retrieveEmployees(
                         dbProxy, companyId, /* offset= */ 3 * maxSize, maxSize);
         list4.addAll(results);
-        // End caller code implementation.
     }
+    // End caller code implementation.
 
     // Start main definition implementation.
     public List<Employee> retrieveEmployees(

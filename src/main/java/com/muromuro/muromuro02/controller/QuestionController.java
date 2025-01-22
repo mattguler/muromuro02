@@ -78,38 +78,30 @@ public class QuestionController {
 
     @GetMapping("design_api_with_pagination")
     public String designApiWithPagination(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(designApiWithPagination.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/design_api_with_pagination";
+        String view = "questions/design_api_with_pagination";
+        return getPage(model, view, designApiWithPagination);
     }
 
     @PostMapping("eval_design_api_with_pagination")
     public String evalDesignApiWithPagination(
+            @RequestParam("caller-code-input") String callerCodeInput,
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                designApiWithPagination.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-
-        return getFragmentForResponseStatus(response.getStatus());
+        UserInput userInput = new UserInput(callerCodeInput, mainDefInput);
+        return evalSolution(userInput, muroMuroSolution, designApiWithPagination);
     }
 
     @GetMapping("refactor_too_many_ifs")
     public String refactorTooManyIfs(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(refactorTooManyIfs.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/refactor_too_many_ifs";
+        String view = "questions/refactor_too_many_ifs";
+        return getPage(model, view, refactorTooManyIfs);
     }
 
     @PostMapping("eval_refactor_too_many_ifs")
     public String evalRefactorTooManyIfs(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                refactorTooManyIfs.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, refactorTooManyIfs);
     }
 
     @GetMapping("device_database")

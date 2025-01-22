@@ -173,7 +173,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(designApiWithPagination, testValues);
+        runEvalTest_correctAnswer_CM(designApiWithPagination, testValues);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(designApiWithPagination, testValues);
+        runEvalTest_wrongAnswer_CM(designApiWithPagination, testValues);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(designApiWithPagination, testValues);
+        runEvalTest_timeout_CM(designApiWithPagination, testValues);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(designApiWithPagination, testValues);
+        runEvalTest_unknownResponse_CM(designApiWithPagination, testValues);
     }
 
     @Test
@@ -230,7 +230,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(refactorTooManyIfs, testValues);
+        runEvalTest_correctAnswer_CM(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -240,7 +240,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(refactorTooManyIfs, testValues);
+        runEvalTest_wrongAnswer_CM(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -250,7 +250,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(refactorTooManyIfs, testValues);
+        runEvalTest_timeout_CM(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -260,7 +260,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(refactorTooManyIfs, testValues);
+        runEvalTest_unknownResponse_CM(refactorTooManyIfs, testValues);
     }
 
     @Test
