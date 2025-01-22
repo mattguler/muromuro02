@@ -21,6 +21,28 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2500;
     private static final int NUMBER_OF_TESTS = 4;
 
+    private static final String INITIAL_CALLER_CODE =
+            """
+                    // This is the caller code that is supposed to call your own function's API.
+                    // Please pass in the given inputDevices list and the ddb proxy object to
+                    // your function. Populate the result lists with the devices that exist and
+                    // do not exist in the ddb.
+                    public void callerFunction(
+                        List<String> inputDevices,
+                        DeviceDatabase ddb,
+                        List<String> resultDevicesInDdb,
+                        List<String> resultDevicesNotInDdb
+                    ) {
+                        // Make call to your function here.
+                    }
+                    """;
+
+    private static final String INITIAL_MAIN_DEFINITION =
+            """
+                    // Please implement your function here. Also define here any other data
+                    // structures or helper functions that you might need.
+                    """;
+
     private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d passed",
@@ -51,6 +73,11 @@ public class DeviceDatabaseImpl extends AbstractEvaluatorImpl {
             DockerProxy dockerProxy,
             @Qualifier("deviceDatabase") EvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
+    }
+
+    @Override
+    public UserInput getInitialSolution() {
+        return new UserInput(INITIAL_CALLER_CODE, INITIAL_MAIN_DEFINITION);
     }
 
     @Override

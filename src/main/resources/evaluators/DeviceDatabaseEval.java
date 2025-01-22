@@ -60,14 +60,15 @@ public class DeviceDatabaseEval {
         System.out.println(String.join(", ", list));
     }
 
+    // Start caller code implementation.
     public void callerFunction(
             List<String> inputDevices,
             DeviceDatabase ddb,
             List<String> resultDevicesInDdb,
             List<String> resultDevicesNotInDdb) {
-        // Start caller code implementation.
-        // End caller code implementation.
+        //
     }
+    // End caller code implementation.
 
     // Start main definition implementation.
     // End main definition implementation.

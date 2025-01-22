@@ -114,37 +114,30 @@ public class QuestionController {
 
     @GetMapping("device_database")
     public String deviceDatabase(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(deviceDatabase.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/device_database";
+        String view = "questions/device_database";
+        return getPage(model, view, deviceDatabase);
     }
 
     @PostMapping("eval_device_database")
     public String evalDeviceDatabase(
+            @RequestParam("caller-code-input") String callerCodeInput,
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                deviceDatabase.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-
-        return getFragmentForResponseStatus(response.getStatus());
+        UserInput userInput = new UserInput(callerCodeInput, mainDefInput);
+        return evalSolution(userInput, muroMuroSolution, deviceDatabase);
     }
 
     @GetMapping("detect_substrings")
     public String detectSubstrings(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(detectSubstrings.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/detect_substrings";
+        String view = "questions/detect_substrings";
+        return getPage(model, view, detectSubstrings);
     }
 
     @PostMapping("eval_detect_substrings")
     public String evalDetectSubstrings(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                detectSubstrings.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, detectSubstrings);
     }
 
     @GetMapping("debug_list")
@@ -214,8 +207,8 @@ public class QuestionController {
             @RequestParam("caller-code-input") String callerCodeInput,
             @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        return evalSolution(
-                callerCodeInput, mainDefInput, muroMuroSolution, duplicateRpcs);
+        UserInput userInput = new UserInput(callerCodeInput, mainDefInput);
+        return evalSolution(userInput, muroMuroSolution, duplicateRpcs);
     }
 
     private String getPage(Model model, String view, Evaluator evaluator) {
@@ -223,15 +216,6 @@ public class QuestionController {
         muroMuroSolution.setUserInput(evaluator.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return view;
-    }
-
-    private String evalSolution(
-            String callerCodeInput,
-            String mainDefInput,
-            MuroMuroSolution muroMuroSolution,
-            Evaluator evaluator) {
-        UserInput userInput = new UserInput(callerCodeInput, mainDefInput);
-        return evalSolution(userInput, muroMuroSolution, evaluator);
     }
 
     private String evalSolution(

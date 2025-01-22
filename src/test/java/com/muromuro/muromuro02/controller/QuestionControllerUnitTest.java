@@ -284,7 +284,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(deviceDatabase, testValues);
+        runEvalTest_correctAnswer_CM(deviceDatabase, testValues);
     }
 
     @Test
@@ -295,7 +295,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(deviceDatabase, testValues);
+        runEvalTest_wrongAnswer_CM(deviceDatabase, testValues);
     }
 
     @Test
@@ -306,7 +306,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(deviceDatabase, testValues);
+        runEvalTest_timeout_CM(deviceDatabase, testValues);
     }
 
     @Test
@@ -317,7 +317,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(deviceDatabase, testValues);
+        runEvalTest_unknownResponse_CM(deviceDatabase, testValues);
     }
 
     @Test
@@ -341,7 +341,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(detectSubstrings, testValues);
+        runEvalTest_correctAnswer_CM(detectSubstrings, testValues);
     }
 
     @Test
@@ -351,7 +351,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(detectSubstrings, testValues);
+        runEvalTest_wrongAnswer_CM(detectSubstrings, testValues);
     }
 
     @Test
@@ -361,7 +361,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(detectSubstrings, testValues);
+        runEvalTest_timeout_CM(detectSubstrings, testValues);
     }
 
     @Test
@@ -371,7 +371,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(detectSubstrings, testValues);
+        runEvalTest_unknownResponse_CM(detectSubstrings, testValues);
     }
 
     @Test
