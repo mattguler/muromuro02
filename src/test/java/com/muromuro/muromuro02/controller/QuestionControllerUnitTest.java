@@ -117,7 +117,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(representAccountStates, testValues);
+        runEvalTest_correctAnswer_CM(representAccountStates, testValues);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(representAccountStates, testValues);
+        runEvalTest_wrongAnswer_CM(representAccountStates, testValues);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(representAccountStates, testValues);
+        runEvalTest_timeout_CM(representAccountStates, testValues);
     }
 
     @Test
@@ -147,7 +147,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(representAccountStates, testValues);
+        runEvalTest_unknownResponse_CM(representAccountStates, testValues);
     }
 
     @Test
@@ -393,7 +393,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer(debugList, testValues);
+        runEvalTest_correctAnswer_CM(debugList, testValues);
     }
 
     @Test
@@ -403,7 +403,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer(debugList, testValues);
+        runEvalTest_wrongAnswer_CM(debugList, testValues);
     }
 
     @Test
@@ -413,7 +413,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout(debugList, testValues);
+        runEvalTest_timeout_CM(debugList, testValues);
     }
 
     @Test
@@ -423,7 +423,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse(debugList, testValues);
+        runEvalTest_unknownResponse_CM(debugList, testValues);
     }
 
     @Test

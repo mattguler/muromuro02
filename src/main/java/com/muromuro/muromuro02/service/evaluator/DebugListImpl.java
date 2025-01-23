@@ -18,6 +18,29 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 2000;
     private static final int NUMBER_OF_TESTS = 2;
 
+    private static final String IMMUTABLE_CODE_FRAGMENT =
+            """
+                            // Do not make any changes below these lines.
+                    
+                            public List<Integer> getSeries() {
+                                return series;
+                            }
+                    
+                            public void printSeries(String title) {
+                                System.out.println(title);
+                                for (int num : series) {
+                                    System.out.println(num);
+                                }
+                            }
+                    
+                            public static void main(String[] args) {
+                                SeriesProcessor sp1 = new SeriesProcessor();
+                                sp1.printSeries("Iteration 1:");
+                                SeriesProcessor sp2 = new SeriesProcessor();
+                                sp2.printSeries("Iteration 2:");
+                            }
+                    """;
+
     private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
                     "Test for iteration %d passed",
@@ -54,8 +77,13 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
     @Override
     protected EvaluationCode buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
-        mainDefinition =
-                mainDefinition.replace("DebugListSoln", "DebugListEval");
+        if (!mainDefinition.contains(IMMUTABLE_CODE_FRAGMENT)) {
+            return evaluationCode
+                    .updateBuildResponse(
+                            new MuroMuroResponse(
+                                    MuroMuroResponse.Status.FAILURE,
+                                    "Changes not allowed in certain sections of the code."));
+        }
         return evaluationCode
                 .replaceMainDefinition(mainDefinition);
     }

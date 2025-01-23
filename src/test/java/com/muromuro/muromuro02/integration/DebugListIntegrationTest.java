@@ -1,8 +1,11 @@
 package com.muromuro.muromuro02.integration;
 
+import com.muromuro.muromuro02.model.UserInput;
+import com.muromuro.muromuro02.service.evaluator.Evaluator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -29,21 +32,43 @@ public class DebugListIntegrationTest {
     private static final String EVAL_URL = "/muromuro_questions/eval_debug_list";
 
     private static final String MAIN_DEFINITION_TEMPLATE =
-            """ 
-                    // The series declaration.
-                    %s
-                   
-                    // The constructor definition.
-                    %s
-                   
-                    // The createFiveElements() definition.
-                    %s
+            """
+                        public static final class SeriesProcessor {
+                            // The series declaration.
+                            %s
+                           
+                            // The constructor definition.
+                            %s
+                           
+                            // The createFiveElements() definition.
+                            %s
+                            
+                            // The addFiveElements() definition.
+                            %s
+                            
+                            // The removeFirstFiveElements() definition.
+                            %s
+                            
+                            // Do not make any changes below these lines.
                     
-                    // The addFiveElements() definition.
-                    %s
+                            public List<Integer> getSeries() {
+                                return series;
+                            }
                     
-                    // The removeFirstFiveElements() definition.
-                    %s
+                            public void printSeries(String title) {
+                                System.out.println(title);
+                                for (int num : series) {
+                                    System.out.println(num);
+                                }
+                            }
+                    
+                            public static void main(String[] args) {
+                                SeriesProcessor sp1 = new SeriesProcessor();
+                                sp1.printSeries("Iteration 1:");
+                                SeriesProcessor sp2 = new SeriesProcessor();
+                                sp2.printSeries("Iteration 2:");
+                            }
+                        }
                     """;
 
     private static final String NON_STATIC_SERIES =
@@ -54,7 +79,7 @@ public class DebugListIntegrationTest {
 
     private static final String CONSTRUCTOR_WITH_SERIES =
             """
-                    public DebugListSoln() {
+                    public SeriesProcessor() {
                         series = createFiveElements();
                         addFiveElements(series);
                         removeFirstFiveElements(series);
@@ -63,7 +88,7 @@ public class DebugListIntegrationTest {
 
     private static final String CONSTRUCTOR_WITHOUT_SERIES =
             """
-                    public DebugListSoln() {
+                    public SeriesProcessor() {
                         addFiveElements(series);
                         removeFirstFiveElements(series);
                     }
@@ -71,7 +96,7 @@ public class DebugListIntegrationTest {
 
     private static final String CONSTRUCTOR_WITH_TIMEOUT =
             """
-                    public DebugListSoln() {
+                    public SeriesProcessor() {
                         series = createFiveElements();
                         addFiveElements(series);
                         removeFirstFiveElements(series);
@@ -191,6 +216,11 @@ public class DebugListIntegrationTest {
         }
     }
 
+    // For initial-code testing.
+    @Autowired
+    @Qualifier("debugListImpl")
+    Evaluator debugListEval;
+
     @Autowired
     WebApplicationContext context;
 
@@ -264,6 +294,7 @@ public class DebugListIntegrationTest {
                                                         + "length exceeding the max allowable length.")));
     }
 
+    // Also tests for the disallowed changes in the code input.
     @Test
     public void testEval_withBadInput() throws Exception {
         performEval("blahblah")
@@ -271,17 +302,20 @@ public class DebugListIntegrationTest {
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Invalid solution.")));
+                                                "Wrong answer: Changes not allowed in "
+                                                        + "certain sections of the code.")));
     }
 
     @Test
-    public void testEval_withEmptyInput() throws Exception {
-        performEval("")
+    public void testEval_withInitialCodeInput() throws Exception {
+        UserInput initialCode = debugListEval.getInitialSolution();
+        performEval(initialCode.getMainDefinition())
                 .andExpect(
                         content()
                                 .string(
                                         containsString(
-                                                "Wrong answer: Invalid solution.")));
+                                                "Wrong answer: Incorrect solution. "
+                                                        + "Fails validation.")));
     }
 
     @Test
@@ -379,7 +413,7 @@ public class DebugListIntegrationTest {
         return this.mockMvc
                 .perform(
                         post(EVAL_URL)
-                                .param("userInput.mainDefinition", mainDefinition)
+                                .param("main-def-input", mainDefinition)
                                 .with(csrf()))
                 .andExpect(status().isOk());
     }
