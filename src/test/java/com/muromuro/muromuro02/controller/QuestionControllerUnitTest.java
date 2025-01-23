@@ -93,7 +93,12 @@ public class QuestionControllerUnitTest {
                 .andExpect(content().string(containsString("Design API with Pagination")))
                 .andExpect(content().string(containsString("Refactoring Too Many Ifs")))
                 .andExpect(content().string(containsString("Device Database")))
-                .andExpect(content().string(containsString("Detect Substrings")));
+                .andExpect(content().string(containsString("Detect Substrings")))
+                .andExpect(content().string(containsString("Debug List")))
+                .andExpect(content().string(containsString("Parse CSV")))
+                .andExpect(content().string(containsString("Long Running Functions")))
+                .andExpect(content().string(containsString("Incompatible Interfaces")))
+                .andExpect(content().string(containsString("Duplicate RPCs")));
     }
 
     @Test
@@ -117,7 +122,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(representAccountStates, testValues);
+        runEvalTest_correctAnswer(representAccountStates, testValues);
     }
 
     @Test
@@ -127,7 +132,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(representAccountStates, testValues);
+        runEvalTest_wrongAnswer(representAccountStates, testValues);
     }
 
     @Test
@@ -137,7 +142,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(representAccountStates, testValues);
+        runEvalTest_timeout(representAccountStates, testValues);
     }
 
     @Test
@@ -147,7 +152,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_represent_account_states")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(representAccountStates, testValues);
+        runEvalTest_unknownResponse(representAccountStates, testValues);
     }
 
     @Test
@@ -173,7 +178,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(designApiWithPagination, testValues);
+        runEvalTest_correctAnswer(designApiWithPagination, testValues);
     }
 
     @Test
@@ -184,7 +189,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(designApiWithPagination, testValues);
+        runEvalTest_wrongAnswer(designApiWithPagination, testValues);
     }
 
     @Test
@@ -195,7 +200,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(designApiWithPagination, testValues);
+        runEvalTest_timeout(designApiWithPagination, testValues);
     }
 
     @Test
@@ -206,7 +211,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(designApiWithPagination, testValues);
+        runEvalTest_unknownResponse(designApiWithPagination, testValues);
     }
 
     @Test
@@ -230,7 +235,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(refactorTooManyIfs, testValues);
+        runEvalTest_correctAnswer(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -240,7 +245,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(refactorTooManyIfs, testValues);
+        runEvalTest_wrongAnswer(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -250,7 +255,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(refactorTooManyIfs, testValues);
+        runEvalTest_timeout(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -260,7 +265,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_refactor_too_many_ifs")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(refactorTooManyIfs, testValues);
+        runEvalTest_unknownResponse(refactorTooManyIfs, testValues);
     }
 
     @Test
@@ -284,7 +289,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(deviceDatabase, testValues);
+        runEvalTest_correctAnswer(deviceDatabase, testValues);
     }
 
     @Test
@@ -295,7 +300,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(deviceDatabase, testValues);
+        runEvalTest_wrongAnswer(deviceDatabase, testValues);
     }
 
     @Test
@@ -306,7 +311,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(deviceDatabase, testValues);
+        runEvalTest_timeout(deviceDatabase, testValues);
     }
 
     @Test
@@ -317,7 +322,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(deviceDatabase, testValues);
+        runEvalTest_unknownResponse(deviceDatabase, testValues);
     }
 
     @Test
@@ -341,7 +346,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(detectSubstrings, testValues);
+        runEvalTest_correctAnswer(detectSubstrings, testValues);
     }
 
     @Test
@@ -351,7 +356,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(detectSubstrings, testValues);
+        runEvalTest_wrongAnswer(detectSubstrings, testValues);
     }
 
     @Test
@@ -361,7 +366,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(detectSubstrings, testValues);
+        runEvalTest_timeout(detectSubstrings, testValues);
     }
 
     @Test
@@ -371,7 +376,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_detect_substrings")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(detectSubstrings, testValues);
+        runEvalTest_unknownResponse(detectSubstrings, testValues);
     }
 
     @Test
@@ -393,7 +398,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(debugList, testValues);
+        runEvalTest_correctAnswer(debugList, testValues);
     }
 
     @Test
@@ -403,7 +408,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(debugList, testValues);
+        runEvalTest_wrongAnswer(debugList, testValues);
     }
 
     @Test
@@ -413,7 +418,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(debugList, testValues);
+        runEvalTest_timeout(debugList, testValues);
     }
 
     @Test
@@ -423,7 +428,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_debug_list")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(debugList, testValues);
+        runEvalTest_unknownResponse(debugList, testValues);
     }
 
     @Test
@@ -446,7 +451,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(parseCsv, testValues);
+        runEvalTest_correctAnswer(parseCsv, testValues);
     }
 
     @Test
@@ -456,7 +461,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(parseCsv, testValues);
+        runEvalTest_wrongAnswer(parseCsv, testValues);
     }
 
     @Test
@@ -466,7 +471,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(parseCsv, testValues);
+        runEvalTest_timeout(parseCsv, testValues);
     }
 
     @Test
@@ -476,7 +481,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_parse_csv")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(parseCsv, testValues);
+        runEvalTest_unknownResponse(parseCsv, testValues);
     }
 
     @Test
@@ -499,7 +504,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(longRunningFunctions, testValues);
+        runEvalTest_correctAnswer(longRunningFunctions, testValues);
     }
 
     @Test
@@ -509,7 +514,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(longRunningFunctions, testValues);
+        runEvalTest_wrongAnswer(longRunningFunctions, testValues);
     }
 
     @Test
@@ -519,7 +524,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(longRunningFunctions, testValues);
+        runEvalTest_timeout(longRunningFunctions, testValues);
     }
 
     @Test
@@ -529,7 +534,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_long_running_functions")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(longRunningFunctions, testValues);
+        runEvalTest_unknownResponse(longRunningFunctions, testValues);
     }
 
     @Test
@@ -552,7 +557,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(incompatibleInterfaces, testValues);
+        runEvalTest_correctAnswer(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -562,7 +567,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(incompatibleInterfaces, testValues);
+        runEvalTest_wrongAnswer(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -572,7 +577,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(incompatibleInterfaces, testValues);
+        runEvalTest_timeout(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -582,7 +587,7 @@ public class QuestionControllerUnitTest {
                         .setUrl("/muromuro_questions/eval_incompatible_interfaces")
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(incompatibleInterfaces, testValues);
+        runEvalTest_unknownResponse(incompatibleInterfaces, testValues);
     }
 
     @Test
@@ -607,7 +612,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_correctAnswer_CM(duplicateRpcs, testValues);
+        runEvalTest_correctAnswer(duplicateRpcs, testValues);
     }
 
     @Test
@@ -618,7 +623,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_wrongAnswer_CM(duplicateRpcs, testValues);
+        runEvalTest_wrongAnswer(duplicateRpcs, testValues);
     }
 
     @Test
@@ -629,7 +634,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_timeout_CM(duplicateRpcs, testValues);
+        runEvalTest_timeout(duplicateRpcs, testValues);
     }
 
     @Test
@@ -640,7 +645,7 @@ public class QuestionControllerUnitTest {
                         .setCallerCode(INITIAL_CALLER_CODE)
                         .setMainDefinition(USER_INPUT)
                         .build();
-        runEvalTest_unknownResponse_CM(duplicateRpcs, testValues);
+        runEvalTest_unknownResponse(duplicateRpcs, testValues);
     }
 
     private record TestValues(
@@ -742,23 +747,6 @@ public class QuestionControllerUnitTest {
                                                 testValues.expectedContent())));
     }
 
-    // TODO: Rename all the CodeMirror (CM) compatible versions of the methods below to
-    //      original names once the CodeMirror migration is complete.
-    //      Also remove all the old outdated methods.
-
-    private void runEvalTest_correctAnswer_CM(
-            Evaluator evaluator, TestValues testValues) throws Exception {
-        when(evaluator.evaluateSolution(any(UserInput.class)))
-                .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
-        ResultActions result = sendEvalCommand_CM(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Correct answer")));
-    }
-
     private void runEvalTest_correctAnswer(
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
@@ -770,23 +758,6 @@ public class QuestionControllerUnitTest {
                                 .string(
                                         containsString(
                                                 "Correct answer")));
-    }
-
-    private void runEvalTest_wrongAnswer_CM(
-            Evaluator evaluator, TestValues testValues) throws Exception {
-        when(evaluator.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.FAILURE,
-                                ERROR_MESSAGE));
-        ResultActions result = sendEvalCommand_CM(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Wrong answer: "
-                                                        + ERROR_MESSAGE)));
     }
 
     private void runEvalTest_wrongAnswer(
@@ -806,23 +777,6 @@ public class QuestionControllerUnitTest {
                                                         + ERROR_MESSAGE)));
     }
 
-    private void runEvalTest_timeout_CM(
-            Evaluator evaluator, TestValues testValues) throws Exception {
-        when(evaluator.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.TIMEOUT,
-                                TIMEOUT_MESSAGE));
-        ResultActions result = sendEvalCommand_CM(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Server timed out: "
-                                                        + TIMEOUT_MESSAGE)));
-    }
-
     private void runEvalTest_timeout(
             Evaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
@@ -838,23 +792,6 @@ public class QuestionControllerUnitTest {
                                         containsString(
                                                 "Server timed out: "
                                                         + TIMEOUT_MESSAGE)));
-    }
-
-    private void runEvalTest_unknownResponse_CM(
-            Evaluator evaluator, TestValues testValues) throws Exception {
-        when(evaluator.evaluateSolution(any(UserInput.class)))
-                .thenReturn(
-                        new MuroMuroResponse(
-                                MuroMuroResponse.Status.UNKNOWN,
-                                UNKNOWN_MESSAGE));
-        ResultActions result = sendEvalCommand_CM(testValues);
-        result
-                .andExpect(
-                        content()
-                                .string(
-                                        containsString(
-                                                "Unknown response: "
-                                                        + UNKNOWN_MESSAGE)));
     }
 
     private void runEvalTest_unknownResponse(
@@ -874,7 +811,7 @@ public class QuestionControllerUnitTest {
                                                         + UNKNOWN_MESSAGE)));
     }
 
-    private ResultActions sendEvalCommand_CM(
+    private ResultActions sendEvalCommand(
             TestValues testValues) throws Exception {
         ResultActions result;
         if (testValues.callerCode().isEmpty()) {
@@ -897,36 +834,6 @@ public class QuestionControllerUnitTest {
                                                     testValues.callerCode())
                                             .param(
                                                     "main-def-input",
-                                                    testValues.mainDefinition())
-                                            .with(csrf()))
-                            .andExpect(status().isOk());
-        }
-        return result;
-    }
-
-    private ResultActions sendEvalCommand(
-            TestValues testValues) throws Exception {
-        ResultActions result;
-        if (testValues.callerCode().isEmpty()) {
-            result =
-                    this.mockMvc
-                            .perform(
-                                    post(testValues.url)
-                                            .param(
-                                                    "userInput.mainDefinition",
-                                                    testValues.mainDefinition())
-                                            .with(csrf()))
-                            .andExpect(status().isOk());
-        } else {
-            result =
-                    this.mockMvc
-                            .perform(
-                                    post(testValues.url)
-                                            .param(
-                                                    "userInput.callerCode",
-                                                    testValues.callerCode())
-                                            .param(
-                                                    "userInput.mainDefinition",
                                                     testValues.mainDefinition())
                                             .with(csrf()))
                             .andExpect(status().isOk());
