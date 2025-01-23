@@ -59,21 +59,15 @@ public class QuestionController {
 
     @GetMapping("represent_account_states")
     public String representAccountStates(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(representAccountStates.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-
-        return "questions/represent_account_states";
+        String view = "questions/represent_account_states";
+        return getPage(model, view, representAccountStates);
     }
 
     @PostMapping("eval_represent_account_states")
     public String evalRepresentAccountStates(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                representAccountStates.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, representAccountStates);
     }
 
     @GetMapping("design_api_with_pagination")
@@ -134,19 +128,15 @@ public class QuestionController {
 
     @GetMapping("debug_list")
     public String debugList(Model model) {
-        MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(debugList.getInitialSolution());
-        model.addAttribute("muroMuroSolution", muroMuroSolution);
-        return "questions/debug_list";
+        String view = "questions/debug_list";
+        return getPage(model, view, debugList);
     }
 
     @PostMapping("eval_debug_list")
     public String evalDebugList(
+            @RequestParam("main-def-input") String mainDefInput,
             @ModelAttribute("muroMuroSolution") MuroMuroSolution muroMuroSolution) {
-        MuroMuroResponse response =
-                debugList.evaluateSolution(muroMuroSolution.getUserInput());
-        muroMuroSolution.setResponse(response);
-        return getFragmentForResponseStatus(response.getStatus());
+        return evalSolution(mainDefInput, muroMuroSolution, debugList);
     }
 
     @GetMapping("parse_csv")

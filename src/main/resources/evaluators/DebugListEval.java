@@ -10,53 +10,68 @@ import java.util.*;
 public class DebugListEval {
 
     // Start main definition implementation.
-    private List<Integer> series;
+    public static final class SeriesProcessor {
 
-    public DebugListEval() {
-        series = createFiveElements();
-        addFiveElements(series);
-        removeFirstFiveElements(series);
-    }
+        private List<Integer> series;
 
-    private List<Integer> createFiveElements() {
-        List<Integer> series = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            series.add(i);
+        public SeriesProcessor() {
+            series = createFiveElements();
+            addFiveElements(series);
+            removeFirstFiveElements(series);
         }
-        return series;
-    }
 
-    // Series is assumed to be not empty.
-    private void addFiveElements(List<Integer> series) {
-        int lastNum = series.get(series.size() - 1);
-        for (int i = 0; i < 5; i++) {
-            series.add(lastNum + i);
+        private List<Integer> createFiveElements() {
+            List<Integer> series = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                series.add(i);
+            }
+            return series;
         }
-    }
 
-    private void removeFirstFiveElements(List<Integer> series) {
-        for (int i = 0; i < 5; i++) {
-            series.remove(i);
+        // Series is assumed to be not empty.
+        private void addFiveElements(List<Integer> series) {
+            int lastNum = series.get(series.size() - 1);
+            for (int i = 0; i < 5; i++) {
+                series.add(lastNum + i);
+            }
+        }
+
+        private void removeFirstFiveElements(List<Integer> series) {
+            for (int i = 0; i < 5; i++) {
+                series.remove(i);
+            }
+        }
+
+        public List<Integer> getSeries() {
+            return series;
+        }
+
+        public void printSeries(String title) {
+            System.out.println(title);
+            for (int num : series) {
+                System.out.println(num);
+            }
+        }
+
+        // This is not used in the actual evaluation of the solution.
+        public static void main(String[] args) {
+            SeriesProcessor sp1 = new SeriesProcessor();
+            sp1.printSeries("Iteration 1:");
+            SeriesProcessor sp2 = new SeriesProcessor();
+            sp2.printSeries("Iteration 2:");
         }
     }
     // End main definition implementation.
 
-    public void printSeries(String title) {
-        System.out.println(title);
-        for (int num : series) {
-            System.out.println(num);
-        }
-    }
-
     // Returns the test result as a string, to be printed later to stdout.
-    public String runTest(int testId) {
-        if (series.size() != 5) {
+    public String runTest(SeriesProcessor sp, int testId) {
+        if (sp.getSeries().size() != 5) {
             return String.format(
                     "Test for iteration %d failed. The list should have only 5 elements.",
                     testId);
         }
         for (int i = 0; i < 5; i++) {
-            if (series.get(i) != i + (5 * testId)) {
+            if (sp.getSeries().get(i) != i + (5 * testId)) {
                 return String.format(
                         "Test for iteration %d failed. The list contains wrong numbers.",
                         testId);
@@ -66,12 +81,13 @@ public class DebugListEval {
     }
 
     public static void main(String[] args) {
-        DebugListEval db1 = new DebugListEval();
-        db1.printSeries("Iteration 1:");
-        String test1Result = db1.runTest(1);
-        DebugListEval db2 = new DebugListEval();
-        db2.printSeries("Iteration 2");
-        String test2Result = db2.runTest(2);
+        DebugListEval eval = new DebugListEval();
+        SeriesProcessor sp1 = new SeriesProcessor();
+        sp1.printSeries("Iteration 1:");
+        String test1Result = eval.runTest(sp1, 1);
+        SeriesProcessor sp2 = new SeriesProcessor();
+        sp2.printSeries("Iteration 2");
+        String test2Result = eval.runTest(sp2, 2);
         System.out.println();
         System.out.println(test1Result);
         System.out.println(test2Result);
