@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags for Bootstrap. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS link. -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <!-- Bootstrap Icons link. -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
+
+    <!-- Muromuro's own CSS and JS imports. -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/viewstyle.css}" />
+    <script th:src="@{/js/viewutils.js}"></script>
+
+    <!-- Some custom styling. -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+        .jumbotron {
+            background-color: #f8f9fa;
+            padding: 4rem 2rem;
+            margin-bottom: 2rem;
+            border-radius: .3rem;
+        }
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 300;
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        .feature-icon {
+            font-size: 2rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <title>Muromuro - Hire Real-World Software Engineers</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Muromuro</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">Stop Hiring Memorizers, Start Hiring Real-World Engineers</h1>
+    <p class="lead">Muromuro helps you identify software engineers who excel at solving the problems they'll actually face on the job.</p>
+    <hr class="my-4">
+    <p>Ditch the Leetcode grind and discover candidates with practical skills in API design, system architecture, and more.</p>
+    <a class="btn btn-primary btn-lg" href="#" role="button">Get Started</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="bi bi-code-slash feature-icon"></i>
+                <h3>Real-World Scenarios</h3>
+                <p>Our questions simulate real-life tasks, like designing a RESTful API or implementing pagination for large datasets.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="bi bi-puzzle feature-icon"></i>
+                <h3>Beyond Algorithms</h3>
+                <p>We evaluate candidates on their ability to architect solutions, write clean code, and think critically about practical challenges.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center">
+                <i class="bi bi-people feature-icon"></i>
+                <h3>Hire the Best, Not the Best Memorizers</h3>
+                <p>Muromuro helps you find talented engineers who can truly contribute to your team, not just those who have mastered Leetcode.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>The Problem: Leetcode Doesn't Reflect Reality</h2>
+            <p>The current hiring process prioritizes abstract algorithmic problems that have little to do with the day-to-day work of a software engineer. This leads to hiring candidates who might be good at memorization, but lack the practical skills needed to succeed.</p>
+            <img src="https://via.placeholder.com/800x300?text=Leetcode+vs+Real+World" alt="Leetcode vs Real World" class="img-fluid">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>The Solution: Muromuro</h2>
+            <p>Muromuro challenges candidates with realistic scenarios that test their ability to design, build, and maintain software systems. We believe this approach provides a much more accurate assessment of a candidate's true potential.</p>
+            <img src="https://via.placeholder.com/800x300?text=Muromuro+Solution" alt="Muromuro Solution" class="img-fluid">
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Example Challenge: API Design</h3>
+            <p><b>Scenario:</b> You are a senior backend engineer tasked with designing an API for a new e-commerce platform.</p>
+            <p><b>Questions:</b></p>
+            <ul>
+                <li>How would you design a RESTful API for managing products and orders?</li>
+                <li>What endpoints would you create?</li>
+                <li>How would you structure your data models?</li>
+                <li>How would you handle pagination for large product catalogs?</li>
+                <li>How would you secure your API?</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Why This Matters</h3>
+            <p>This type of challenge assesses a candidate's understanding of:</p>
+            <ul>
+                <li>API design principles</li>
+                <li>Data modeling</li>
+                <li>Scalability considerations</li>
+                <li>Security best practices</li>
+            </ul>
+            <p>These are the skills that truly matter in building and maintaining robust software systems.</p>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Ready to Hire Better Engineers?</h2>
+            <a class="btn btn-primary btn-lg" href="#" role="button">Try Muromuro Today</a>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-5 py-3 bg-light">
+    <div class="container text-center">
+        &copy; 2025 Muromuro LLC. All rights reserved.
+    </div>
+</footer>
+
+<!-- Bootstrap JS link. -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
