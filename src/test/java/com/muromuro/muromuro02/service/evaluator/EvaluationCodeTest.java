@@ -259,9 +259,7 @@ public class EvaluationCodeTest {
     public void testReplaceCallerCode_refactorTooManyIfsEval() {
         Exception thrown = assertThrows(
                 IllegalArgumentException.class,
-                () -> {
-                    refactorTooManyIfsEval.replaceCallerCode("//");
-                });
+                () -> refactorTooManyIfsEval.replaceCallerCode("//"));
         assertTrue(thrown.getMessage().contains("Could not find the beginning or end sequence."));
     }
 
@@ -287,9 +285,7 @@ public class EvaluationCodeTest {
     public void testReplaceCallerCode_representAccountStatesEval() {
         Exception thrown = assertThrows(
                 IllegalArgumentException.class,
-                () -> {
-                    representAccountStatesEval.replaceCallerCode("//");
-                });
+                () -> representAccountStatesEval.replaceCallerCode("//"));
         assertTrue(thrown.getMessage().contains("Could not find the beginning or end sequence."));
     }
 }
