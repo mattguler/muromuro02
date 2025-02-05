@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.resourcemgmt;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,49 +9,52 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-/** Configures the InitialSolution beans by reading the initial solution files from the resources. */
+/**
+ * Configures the JavaInitialSolution beans by reading the initial solution files from
+ * the resources.
+ */
 @Configuration
-public class InitialSolutionConfig {
+public class JavaInitialSolutionConfig {
 
     @Bean(name = "debugListSoln")
-    public InitialSolution getInitialSolutionForDebugList(
-            @Value("classpath:/initialsolutions/DebugListSoln.java") Resource initialSolutionResource)
+    public JavaInitialSolution getInitialSolutionForDebugList(
+            @Value("classpath:/initialsolutions/java/DebugListSoln.java") Resource initialSolutionResource)
             throws IOException {
         return buildInitialSolution(initialSolutionResource);
     }
 
     @Bean(name = "duplicateRpcsSoln")
-    public InitialSolution getSolnForDuplicateRpcs(
-            @Value("classpath:/initialsolutions/DuplicateRpcsSoln.java")
+    public JavaInitialSolution getSolnForDuplicateRpcs(
+            @Value("classpath:/initialsolutions/java/DuplicateRpcsSoln.java")
                     Resource initialSolutionResource) throws IOException {
         return buildInitialSolution(initialSolutionResource);
     }
 
     @Bean(name = "incompatibleInterfacesSoln")
-    public InitialSolution getSolnForIncompatibleInterfaces(
-            @Value("classpath:/initialsolutions/IncompatibleInterfacesSoln.java")
+    public JavaInitialSolution getSolnForIncompatibleInterfaces(
+            @Value("classpath:/initialsolutions/java/IncompatibleInterfacesSoln.java")
                     Resource initialSolutionResource) throws IOException {
         return buildInitialSolution(initialSolutionResource);
     }
 
     @Bean(name = "longRunningFunctionsSoln")
-    public InitialSolution getSolnForLongRunningFunctions(
-            @Value("classpath:initialsolutions/LongRunningFunctionsSoln.java") Resource initialSolutionResource)
+    public JavaInitialSolution getSolnForLongRunningFunctions(
+            @Value("classpath:initialsolutions/java/LongRunningFunctionsSoln.java") Resource initialSolutionResource)
             throws IOException {
         return buildInitialSolution(initialSolutionResource);
     }
 
     @Bean(name = "refactorTooManyIfsSoln")
-    public InitialSolution getInitialSolutionForRefactorTooManyIfs(
-            @Value("classpath:initialsolutions/RefactorTooManyIfsSoln.java") Resource initialSolutionResource)
+    public JavaInitialSolution getInitialSolutionForRefactorTooManyIfs(
+            @Value("classpath:initialsolutions/java/RefactorTooManyIfsSoln.java") Resource initialSolutionResource)
             throws IOException {
         return buildInitialSolution(initialSolutionResource);
     }
 
-    private InitialSolution buildInitialSolution(
+    private JavaInitialSolution buildInitialSolution(
             Resource initialSolutionResource) throws IOException {
         File initialSolutionFile = initialSolutionResource.getFile();
         String fileContent = new String(Files.readAllBytes(initialSolutionFile.toPath()));
-        return new InitialSolution(fileContent);
+        return new JavaInitialSolution(fileContent);
     }
 }
