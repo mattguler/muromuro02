@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.resourcemgmt;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,31 +8,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests the InitialSolution object. This is an integration test because
- * it requires the Spring Boot context to configure the InitialSolution bean.
+ * Tests the JavaInitialSolution object. This is an integration test because
+ * it requires the Spring Boot context to configure the JavaInitialSolution bean.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class InitialSolutionTest {
+public class JavaInitialSolutionTest {
 
     @Autowired
     @Qualifier("debugListSoln")
-    private InitialSolution debugListSoln;
+    private JavaInitialSolution debugListSoln;
 
     @Autowired
     @Qualifier("duplicateRpcsSoln")
-    private InitialSolution duplicateRpcsSoln;
+    private JavaInitialSolution duplicateRpcsSoln;
 
     @Autowired
     @Qualifier("incompatibleInterfacesSoln")
-    private InitialSolution incompatibleInterfacesSoln;
+    private JavaInitialSolution incompatibleInterfacesSoln;
 
     @Autowired
     @Qualifier("longRunningFunctionsSoln")
-    private InitialSolution longRunningFunctionsSoln;
+    private JavaInitialSolution longRunningFunctionsSoln;
 
     @Autowired
     @Qualifier("refactorTooManyIfsSoln")
-    private InitialSolution refactorTooManyIfsSoln;
+    private JavaInitialSolution refactorTooManyIfsSoln;
 
     @Test
     public void testGetContent_debugListSoln() {

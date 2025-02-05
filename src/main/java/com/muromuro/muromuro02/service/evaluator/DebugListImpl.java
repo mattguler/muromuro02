@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -53,13 +54,13 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
                     /* startTestId= */ 1,
                     /* endTestId= */ NUMBER_OF_TESTS);
 
-    private final InitialSolution initialSolution;
+    private final JavaInitialSolution initialSolution;
 
     @Autowired
     public DebugListImpl(
             DockerProxy dockerProxy,
             @Qualifier("debugList") EvaluationCode evaluationCode,
-            @Qualifier("debugListSoln") InitialSolution initialSolution) {
+            @Qualifier("debugListSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
     }

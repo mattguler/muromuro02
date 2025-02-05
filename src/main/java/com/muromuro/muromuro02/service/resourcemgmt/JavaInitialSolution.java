@@ -1,11 +1,11 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.resourcemgmt;
 
 /**
- * Represents the initial solution to a MuroMuro question.
+ * Represents the initial solution to a Java MuroMuro question.
  * Its content is read from a resource file, and then its relevant parts
  * are served to the user.
  */
-public class InitialSolution {
+public class JavaInitialSolution {
 
     private static final String INITIAL_CALLER_CODE_START =
             "// Start initial caller code implementation.";
@@ -18,7 +18,7 @@ public class InitialSolution {
 
     private final String content;
 
-    public InitialSolution(String content) {
+    public JavaInitialSolution(String content) {
         this.content = content;
     }
 

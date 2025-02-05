@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 5000;
     private static final int NUMBER_OF_TESTS = 3;
 
-    private final InitialSolution initialSolution;
+    private final JavaInitialSolution initialSolution;
 
     private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
@@ -40,7 +41,7 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     public LongRunningFunctionsImpl(
             DockerProxy dockerProxy,
             @Qualifier("longRunningFunctions") EvaluationCode evaluationCode,
-            @Qualifier("longRunningFunctionsSoln") InitialSolution initialSolution) {
+            @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
     }
