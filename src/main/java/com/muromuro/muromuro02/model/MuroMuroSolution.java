@@ -8,22 +8,20 @@ package com.muromuro.muromuro02.model;
  */
 public class MuroMuroSolution {
 
-    // TODO: Rename this to initialInput for better clarity, after the
-    //       CodeMirror migration is completed.
-    private UserInput userInput;
+    private UserInput initialInput;
     private MuroMuroResponse response;
 
     public MuroMuroSolution() {
-        userInput = new UserInput();
+        initialInput = new UserInput();
         response = new MuroMuroResponse(MuroMuroResponse.Status.UNDEFINED);
     }
 
-    public UserInput getUserInput() {
-        return userInput;
+    public UserInput getInitialInput() {
+        return initialInput;
     }
 
-    public void setUserInput(UserInput userInput) {
-        this.userInput = userInput;
+    public void setInitialInput(UserInput initialInput) {
+        this.initialInput = initialInput;
     }
 
     public MuroMuroResponse getResponse() {

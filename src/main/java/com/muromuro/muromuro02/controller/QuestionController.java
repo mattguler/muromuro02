@@ -195,7 +195,7 @@ public class QuestionController {
 
     private String getPage(Model model, String view, Evaluator evaluator) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
-        muroMuroSolution.setUserInput(evaluator.getInitialSolution());
+        muroMuroSolution.setInitialInput(evaluator.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
         return view;
     }

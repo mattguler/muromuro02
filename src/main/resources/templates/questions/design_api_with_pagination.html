@@ -111,9 +111,9 @@
     // Calling this function to help resolve the HTMX issues with Spring Security.
     configureHtmxWithCsrf();
     // CodeMirror related setup code.
-    const initialCallerCode = /*[[${muroMuroSolution.userInput.callerCode}]]*/ "";
+    const initialCallerCode = /*[[${muroMuroSolution.initialInput.callerCode}]]*/ "";
     setupCodeMirror("caller-code-editor", "caller-code-input", initialCallerCode);
-    const initialMainDef = /*[[${muroMuroSolution.userInput.mainDefinition}]]*/ "";
+    const initialMainDef = /*[[${muroMuroSolution.initialInput.mainDefinition}]]*/ "";
     setupCodeMirror("main-def-editor", "main-def-input", initialMainDef);
 </script>
 </body>
