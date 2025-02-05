@@ -54,12 +54,12 @@ public class QuestionController {
 
     @GetMapping("list")
     public String listQuestions(Model model) {
-        return "questions/list_questions";
+        return "questions/java/list_questions";
     }
 
     @GetMapping("represent_account_states")
     public String representAccountStates(Model model) {
-        String view = "questions/represent_account_states";
+        String view = "questions/java/represent_account_states";
         return getPage(model, view, representAccountStates);
     }
 
@@ -72,7 +72,7 @@ public class QuestionController {
 
     @GetMapping("design_api_with_pagination")
     public String designApiWithPagination(Model model) {
-        String view = "questions/design_api_with_pagination";
+        String view = "questions/java/design_api_with_pagination";
         return getPage(model, view, designApiWithPagination);
     }
 
@@ -87,7 +87,7 @@ public class QuestionController {
 
     @GetMapping("refactor_too_many_ifs")
     public String refactorTooManyIfs(Model model) {
-        String view = "questions/refactor_too_many_ifs";
+        String view = "questions/java/refactor_too_many_ifs";
         return getPage(model, view, refactorTooManyIfs);
     }
 
@@ -100,7 +100,7 @@ public class QuestionController {
 
     @GetMapping("device_database")
     public String deviceDatabase(Model model) {
-        String view = "questions/device_database";
+        String view = "questions/java/device_database";
         return getPage(model, view, deviceDatabase);
     }
 
@@ -115,7 +115,7 @@ public class QuestionController {
 
     @GetMapping("detect_substrings")
     public String detectSubstrings(Model model) {
-        String view = "questions/detect_substrings";
+        String view = "questions/java/detect_substrings";
         return getPage(model, view, detectSubstrings);
     }
 
@@ -128,7 +128,7 @@ public class QuestionController {
 
     @GetMapping("debug_list")
     public String debugList(Model model) {
-        String view = "questions/debug_list";
+        String view = "questions/java/debug_list";
         return getPage(model, view, debugList);
     }
 
@@ -141,7 +141,7 @@ public class QuestionController {
 
     @GetMapping("parse_csv")
     public String parseCsv(Model model) {
-        String view = "questions/parse_csv";
+        String view = "questions/java/parse_csv";
         return getPage(model, view, parseCsv);
     }
 
@@ -154,7 +154,7 @@ public class QuestionController {
 
     @GetMapping("long_running_functions")
     public String longRunningFunctions(Model model) {
-        String view = "questions/long_running_functions";
+        String view = "questions/java/long_running_functions";
         return getPage(model, view, longRunningFunctions);
     }
 
@@ -167,7 +167,7 @@ public class QuestionController {
 
     @GetMapping("incompatible_interfaces")
     public String incompatibleInterfaces(Model model) {
-        String view = "questions/incompatible_interfaces";
+        String view = "questions/java/incompatible_interfaces";
         return getPage(model, view, incompatibleInterfaces);
     }
 
@@ -180,7 +180,7 @@ public class QuestionController {
 
     @GetMapping("duplicate_rpcs")
     public String duplicateRpcs(Model model) {
-        String view = "questions/duplicate_rpcs";
+        String view = "questions/java/duplicate_rpcs";
         return getPage(model, view, duplicateRpcs);
     }
 
