@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
     @Autowired
     public DetectSubstringsImpl(
             DockerProxy dockerProxy,
-            @Qualifier("detectSubstrings") EvaluationCode evaluationCode) {
+            @Qualifier("detectSubstrings") JavaEvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
     }
 
@@ -56,7 +57,7 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
+    protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
         return evaluationCode
                 .replaceMainDefinition(userInput.getMainDefinition());
     }

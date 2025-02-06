@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.resourcemgmt;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
@@ -9,11 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests the EvaluationCode object. This is an integration test because
- * it requires the Spring Boot context to configure the EvaluationCode bean.
+ * Tests the JavaEvaluationCode object. This is an integration test because
+ * it requires the Spring Boot context to configure the JavaEvaluationCode bean.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class EvaluationCodeTest {
+public class JavaEvaluationCodeTest {
 
     private static final String PAGINATION_API_CALLER_CODE =
             "List<Employee> employees = getAllEmployees(dbProxy);";
@@ -31,43 +31,43 @@ public class EvaluationCodeTest {
 
     @Autowired
     @Qualifier("debugList")
-    private EvaluationCode debugListEval;
+    private JavaEvaluationCode debugListEval;
 
     @Autowired
     @Qualifier("designApiWithPagination")
-    private EvaluationCode designApiWithPaginationEval;
+    private JavaEvaluationCode designApiWithPaginationEval;
 
     @Autowired
     @Qualifier("detectSubstrings")
-    private EvaluationCode detectSubstringsEval;
+    private JavaEvaluationCode detectSubstringsEval;
 
     @Autowired
     @Qualifier("deviceDatabase")
-    private EvaluationCode deviceDatabaseEval;
+    private JavaEvaluationCode deviceDatabaseEval;
 
     @Autowired
     @Qualifier("duplicateRpcs")
-    private EvaluationCode duplicateRpcsEval;
+    private JavaEvaluationCode duplicateRpcsEval;
 
     @Autowired
     @Qualifier("incompatibleInterfaces")
-    private EvaluationCode incompatibleInterfacesEval;
+    private JavaEvaluationCode incompatibleInterfacesEval;
 
     @Autowired
     @Qualifier("longRunningFunctions")
-    private EvaluationCode longRunningFunctionsEval;
+    private JavaEvaluationCode longRunningFunctionsEval;
 
     @Autowired
     @Qualifier("parseCsv")
-    private EvaluationCode parseCsvEval;
+    private JavaEvaluationCode parseCsvEval;
 
     @Autowired
     @Qualifier("refactorTooManyIfs")
-    private EvaluationCode refactorTooManyIfsEval;
+    private JavaEvaluationCode refactorTooManyIfsEval;
 
     @Autowired
     @Qualifier("representAccountStates")
-    private EvaluationCode representAccountStatesEval;
+    private JavaEvaluationCode representAccountStatesEval;
 
     @Test
     public void testGetContent_debugListEval() {
@@ -191,7 +191,7 @@ public class EvaluationCodeTest {
         assertEquals(
                 MuroMuroResponse.Status.SUCCESS,
                 duplicateRpcsEval.getBuildResponse().getStatus());
-        EvaluationCode updatedEvalCode =
+        JavaEvaluationCode updatedEvalCode =
                 duplicateRpcsEval.updateBuildResponse(
                         new MuroMuroResponse(
                                 MuroMuroResponse.Status.FAILURE,

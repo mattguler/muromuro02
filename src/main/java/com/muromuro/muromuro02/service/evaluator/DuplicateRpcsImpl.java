@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,7 +39,7 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
     @Autowired
     public DuplicateRpcsImpl(
             DockerProxy dockerProxy,
-            @Qualifier("duplicateRpcs") EvaluationCode evaluationCode,
+            @Qualifier("duplicateRpcs") JavaEvaluationCode evaluationCode,
             @Qualifier("duplicateRpcsSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
@@ -57,8 +58,8 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
-        EvaluationCode updatedEvalCode =
+    protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
+        JavaEvaluationCode updatedEvalCode =
                 refineCallerCode(userInput.getCallerCode(), evaluationCode);
         if (updatedEvalCode.getBuildResponse().getStatus()
                 != MuroMuroResponse.Status.SUCCESS) {
@@ -97,11 +98,11 @@ public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
 
     /**
      * Makes updates to the given caller code help simulate the test scenarios
-     * for duplicating the RPCs. Makes updates to the given EvaluationCode, and
+     * for duplicating the RPCs. Makes updates to the given JavaEvaluationCode, and
      * returns the updated version.
      */
-    private EvaluationCode refineCallerCode(
-            String callerCode, EvaluationCode evalCode) {
+    private JavaEvaluationCode refineCallerCode(
+            String callerCode, JavaEvaluationCode evalCode) {
         if (!callerCode.contains("class " + CLIENT_NAME)) {
             return evalCode.updateBuildResponse(
                     new MuroMuroResponse(

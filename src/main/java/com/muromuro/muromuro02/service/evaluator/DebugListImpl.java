@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,7 +60,7 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
     @Autowired
     public DebugListImpl(
             DockerProxy dockerProxy,
-            @Qualifier("debugList") EvaluationCode evaluationCode,
+            @Qualifier("debugList") JavaEvaluationCode evaluationCode,
             @Qualifier("debugListSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
@@ -76,7 +77,7 @@ public class DebugListImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
+    protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
         if (!mainDefinition.contains(IMMUTABLE_CODE_FRAGMENT)) {
             return evaluationCode
