@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 
 import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
 import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
@@ -16,9 +17,9 @@ import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithI
 abstract class AbstractEvaluatorImpl implements Evaluator {
 
     private final DockerProxy dockerProxy;
-    protected final EvaluationCode evaluationCode;
+    protected final JavaEvaluationCode evaluationCode;
 
-    public AbstractEvaluatorImpl(DockerProxy dockerProxy, EvaluationCode evaluationCode) {
+    public AbstractEvaluatorImpl(DockerProxy dockerProxy, JavaEvaluationCode evaluationCode) {
         this.dockerProxy = dockerProxy;
         this.evaluationCode = evaluationCode;
     }
@@ -41,7 +42,7 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
         if (securityResponse.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return securityResponse;
         }
-        EvaluationCode updatedEvalCode = buildEvaluationCode(userInput);
+        JavaEvaluationCode updatedEvalCode = buildEvaluationCode(userInput);
         if (updatedEvalCode.getBuildResponse().getStatus()
                 != MuroMuroResponse.Status.SUCCESS) {
             return updatedEvalCode.getBuildResponse();
@@ -72,7 +73,7 @@ abstract class AbstractEvaluatorImpl implements Evaluator {
      * Builds the code that will be used to evaluate the user's solution.
      * This code will be used by the external resource (e.g. Docker) in the evaluation process.
      */
-    abstract protected EvaluationCode buildEvaluationCode(UserInput userInput);
+    abstract protected JavaEvaluationCode buildEvaluationCode(UserInput userInput);
 
     /**
      * Analyzes the evaluation output from the external resource (e.g. Docker)

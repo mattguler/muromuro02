@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,7 +41,7 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     @Autowired
     public LongRunningFunctionsImpl(
             DockerProxy dockerProxy,
-            @Qualifier("longRunningFunctions") EvaluationCode evaluationCode,
+            @Qualifier("longRunningFunctions") JavaEvaluationCode evaluationCode,
             @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
@@ -66,7 +67,7 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
+    protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
         return evaluationCode
                 .replaceMainDefinition(userInput.getMainDefinition());
     }

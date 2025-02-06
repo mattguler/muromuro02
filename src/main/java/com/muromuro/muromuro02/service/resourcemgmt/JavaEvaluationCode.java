@@ -1,14 +1,14 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.resourcemgmt;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 
 /**
- * Represents the code that is used to evaluate a solution.
+ * Represents the code that is used to evaluate a Java solution.
  * The actual eval code is read from a resource file, and then its relevant parts
  * are replaced by the user-input solutions. Then the resulting code is sent to
  * the remote Docker container to run an evaluation of the user solution.
  */
-public class EvaluationCode {
+public class JavaEvaluationCode {
 
     private static final String CALLER_CODE_START = "// Start caller code implementation.";
     private static final String CALLER_CODE_END = "// End caller code implementation.";
@@ -22,12 +22,12 @@ public class EvaluationCode {
     // It has a default value of success, until the eval code build fails for some reason.
     private final MuroMuroResponse buildResponse;
 
-    public EvaluationCode(String content) {
+    public JavaEvaluationCode(String content) {
         this.content = content;
         this.buildResponse = new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
     }
 
-    public EvaluationCode(String content, MuroMuroResponse buildResponse) {
+    public JavaEvaluationCode(String content, MuroMuroResponse buildResponse) {
         this.content = content;
         this.buildResponse = buildResponse;
     }
@@ -49,23 +49,23 @@ public class EvaluationCode {
 
     /**
      * Updates the build response status of the evaluation code.
-     * Returns a newly built EvaluationCode instance with the updated response status.
+     * Returns a newly built JavaEvaluationCode instance with the updated response status.
      */
-    public EvaluationCode updateBuildResponse(MuroMuroResponse buildResponse) {
-        return new EvaluationCode(this.content, buildResponse);
+    public JavaEvaluationCode updateBuildResponse(MuroMuroResponse buildResponse) {
+        return new JavaEvaluationCode(this.content, buildResponse);
     }
 
     /** Replaces the caller code in the evaluation code with the given string. */
-    public EvaluationCode replaceCallerCode(String callerCode) {
-        return new EvaluationCode(
+    public JavaEvaluationCode replaceCallerCode(String callerCode) {
+        return new JavaEvaluationCode(
                 replaceSection(
                         content, CALLER_CODE_START, CALLER_CODE_END, callerCode),
                 this.buildResponse);
     }
 
     /** Replaces the main definition in the evaluation code with the given string. */
-    public EvaluationCode replaceMainDefinition(String mainDefinition) {
-        return new EvaluationCode(
+    public JavaEvaluationCode replaceMainDefinition(String mainDefinition) {
+        return new JavaEvaluationCode(
                 replaceSection(
                         content,
                         MAIN_DEFINITION_START,

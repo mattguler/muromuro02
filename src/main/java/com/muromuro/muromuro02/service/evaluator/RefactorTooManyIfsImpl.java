@@ -3,6 +3,7 @@ package com.muromuro.muromuro02.service.evaluator;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
+import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +38,7 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
     @Autowired
     public RefactorTooManyIfsImpl(
             @Qualifier("refactorTooManyIfsSoln") JavaInitialSolution initialSolution,
-            @Qualifier("refactorTooManyIfs") EvaluationCode evaluationCode,
+            @Qualifier("refactorTooManyIfs") JavaEvaluationCode evaluationCode,
             DockerProxy dockerProxy) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
@@ -54,7 +55,7 @@ public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected EvaluationCode buildEvaluationCode(UserInput userInput) {
+    protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
         return evaluationCode
                 .replaceMainDefinition(userInput.getMainDefinition());
     }
