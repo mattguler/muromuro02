@@ -1,12 +1,12 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 
 /**
- * The Evaluator interface which is used to evaluate the MuroMuro solutions.
+ * The interface which is used to evaluate the Java MuroMuro solutions.
  */
-public interface Evaluator {
+public interface JavaEvaluator {
 
     /**
      * Returns the initial solution for the MuroMuro question.

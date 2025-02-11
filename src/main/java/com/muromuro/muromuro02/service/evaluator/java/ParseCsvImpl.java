@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -13,16 +13,16 @@ import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Utils.*;
 
-/** The evaluator for the Detect Substrings question. */
+/** The evaluator for the Parse CSV question. */
 @Service
-public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
+public class ParseCsvImpl extends AbstractJavaEvaluatorImpl {
 
-    private static final int USER_CODE_MAX_LENGTH = 2000;
+    private static final int USER_CODE_MAX_LENGTH = 4000;
     private static final int NUMBER_OF_TESTS = 5;
 
     private static final String INITIAL_SOLUTION =
             """
-                    public boolean containsFoobar(String input) {
+                    public List<Account> parseCsv(String csv) {
                         // Your implementation goes here.
                     }
                     """;
@@ -40,9 +40,9 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
                     /* endTestId= */ NUMBER_OF_TESTS - 1);
 
     @Autowired
-    public DetectSubstringsImpl(
+    public ParseCsvImpl(
             DockerProxy dockerProxy,
-            @Qualifier("detectSubstrings") JavaEvaluationCode evaluationCode) {
+            @Qualifier("parseCsv") JavaEvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
     }
 
@@ -63,7 +63,8 @@ public class DetectSubstringsImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, UserInput userInput) {
+    protected MuroMuroResponse analyzeEvaluation(
+            String dockerEvalOutput, UserInput userInput) {
         MuroMuroResponse initialAnalysis = analyzeForBasicErrors(dockerEvalOutput);
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;

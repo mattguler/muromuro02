@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -16,7 +16,7 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RefactorTooManyIfs question. */
 @Service
-public class RefactorTooManyIfsImpl extends AbstractEvaluatorImpl {
+public class RefactorTooManyIfsImpl extends AbstractJavaEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 2500;
     private static final int NUMBER_OF_TESTS = 2;

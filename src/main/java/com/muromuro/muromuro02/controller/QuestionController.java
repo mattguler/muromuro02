@@ -3,7 +3,7 @@ package com.muromuro.muromuro02.controller;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.MuroMuroSolution;
 import com.muromuro.muromuro02.model.UserInput;
-import com.muromuro.muromuro02.service.evaluator.Evaluator;
+import com.muromuro.muromuro02.service.evaluator.java.JavaEvaluator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -17,29 +17,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("muromuro_questions")
 public class QuestionController {
 
-    private final Evaluator representAccountStates;
-    private final Evaluator designApiWithPagination;
-    private final Evaluator refactorTooManyIfs;
-    private final Evaluator deviceDatabase;
-    private final Evaluator detectSubstrings;
-    private final Evaluator debugList;
-    private final Evaluator parseCsv;
-    private final Evaluator longRunningFunctions;
-    private final Evaluator incompatibleInterfaces;
-    private final Evaluator duplicateRpcs;
+    private final JavaEvaluator representAccountStates;
+    private final JavaEvaluator designApiWithPagination;
+    private final JavaEvaluator refactorTooManyIfs;
+    private final JavaEvaluator deviceDatabase;
+    private final JavaEvaluator detectSubstrings;
+    private final JavaEvaluator debugList;
+    private final JavaEvaluator parseCsv;
+    private final JavaEvaluator longRunningFunctions;
+    private final JavaEvaluator incompatibleInterfaces;
+    private final JavaEvaluator duplicateRpcs;
 
     @Autowired
     public QuestionController(
-            @Qualifier("representAccountStatesImpl") Evaluator representAccountStates,
-            @Qualifier("designApiWithPaginationImpl") Evaluator designApiWithPagination,
-            @Qualifier("refactorTooManyIfsImpl") Evaluator refactorTooManyIfs,
-            @Qualifier("deviceDatabaseImpl") Evaluator deviceDatabase,
-            @Qualifier("detectSubstringsImpl") Evaluator detectSubstrings,
-            @Qualifier("debugListImpl") Evaluator debugList,
-            @Qualifier("parseCsvImpl") Evaluator parseCsv,
-            @Qualifier("longRunningFunctionsImpl") Evaluator longRunningFunctions,
-            @Qualifier("incompatibleInterfacesImpl") Evaluator incompatibleInterfaces,
-            @Qualifier("duplicateRpcsImpl") Evaluator duplicateRpcs){
+            @Qualifier("representAccountStatesImpl") JavaEvaluator representAccountStates,
+            @Qualifier("designApiWithPaginationImpl") JavaEvaluator designApiWithPagination,
+            @Qualifier("refactorTooManyIfsImpl") JavaEvaluator refactorTooManyIfs,
+            @Qualifier("deviceDatabaseImpl") JavaEvaluator deviceDatabase,
+            @Qualifier("detectSubstringsImpl") JavaEvaluator detectSubstrings,
+            @Qualifier("debugListImpl") JavaEvaluator debugList,
+            @Qualifier("parseCsvImpl") JavaEvaluator parseCsv,
+            @Qualifier("longRunningFunctionsImpl") JavaEvaluator longRunningFunctions,
+            @Qualifier("incompatibleInterfacesImpl") JavaEvaluator incompatibleInterfaces,
+            @Qualifier("duplicateRpcsImpl") JavaEvaluator duplicateRpcs){
         this.representAccountStates = representAccountStates;
         this.designApiWithPagination = designApiWithPagination;
         this.refactorTooManyIfs = refactorTooManyIfs;
@@ -193,7 +193,7 @@ public class QuestionController {
         return evalSolution(userInput, muroMuroSolution, duplicateRpcs);
     }
 
-    private String getPage(Model model, String view, Evaluator evaluator) {
+    private String getPage(Model model, String view, JavaEvaluator evaluator) {
         MuroMuroSolution muroMuroSolution = new MuroMuroSolution();
         muroMuroSolution.setInitialInput(evaluator.getInitialSolution());
         model.addAttribute("muroMuroSolution", muroMuroSolution);
@@ -201,13 +201,13 @@ public class QuestionController {
     }
 
     private String evalSolution(
-            String mainDefInput, MuroMuroSolution muroMuroSolution, Evaluator evaluator) {
+            String mainDefInput, MuroMuroSolution muroMuroSolution, JavaEvaluator evaluator) {
         UserInput userInput = new UserInput("", mainDefInput);
         return evalSolution(userInput, muroMuroSolution, evaluator);
     }
 
     private String evalSolution(
-            UserInput userInput, MuroMuroSolution muroMuroSolution, Evaluator evaluator) {
+            UserInput userInput, MuroMuroSolution muroMuroSolution, JavaEvaluator evaluator) {
         MuroMuroResponse response = evaluator.evaluateSolution(userInput);
         muroMuroSolution.setResponse(response);
         return getFragmentForResponseStatus(response.getStatus());

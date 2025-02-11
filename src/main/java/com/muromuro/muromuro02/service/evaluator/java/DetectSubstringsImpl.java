@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -13,16 +13,16 @@ import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Utils.*;
 
-/** The evaluator for the Parse CSV question. */
+/** The evaluator for the Detect Substrings question. */
 @Service
-public class ParseCsvImpl extends AbstractEvaluatorImpl {
+public class DetectSubstringsImpl extends AbstractJavaEvaluatorImpl {
 
-    private static final int USER_CODE_MAX_LENGTH = 4000;
+    private static final int USER_CODE_MAX_LENGTH = 2000;
     private static final int NUMBER_OF_TESTS = 5;
 
     private static final String INITIAL_SOLUTION =
             """
-                    public List<Account> parseCsv(String csv) {
+                    public boolean containsFoobar(String input) {
                         // Your implementation goes here.
                     }
                     """;
@@ -40,9 +40,9 @@ public class ParseCsvImpl extends AbstractEvaluatorImpl {
                     /* endTestId= */ NUMBER_OF_TESTS - 1);
 
     @Autowired
-    public ParseCsvImpl(
+    public DetectSubstringsImpl(
             DockerProxy dockerProxy,
-            @Qualifier("parseCsv") JavaEvaluationCode evaluationCode) {
+            @Qualifier("detectSubstrings") JavaEvaluationCode evaluationCode) {
         super(dockerProxy, evaluationCode);
     }
 
@@ -63,8 +63,7 @@ public class ParseCsvImpl extends AbstractEvaluatorImpl {
     }
 
     @Override
-    protected MuroMuroResponse analyzeEvaluation(
-            String dockerEvalOutput, UserInput userInput) {
+    protected MuroMuroResponse analyzeEvaluation(String dockerEvalOutput, UserInput userInput) {
         MuroMuroResponse initialAnalysis = analyzeForBasicErrors(dockerEvalOutput);
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;

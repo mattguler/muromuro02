@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -11,15 +11,18 @@ import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
 
 /**
- * The abstract evaluator implementation which is used to evaluate the MuroMuro solutions.
+ * The abstract evaluator implementation which is used to evaluate the Java MuroMuro solutions.
  * This class is here to decrease the amount of duplicate code in the evaluator implementations.
+ * TODO: Maybe have versions of this class targeting other programming languages as well.
+ *       Could also have another abstract base class that contains code common for all languages.
  */
-abstract class AbstractEvaluatorImpl implements Evaluator {
+abstract class AbstractJavaEvaluatorImpl implements JavaEvaluator {
 
     private final DockerProxy dockerProxy;
+    // TODO: Maybe define a common EvaluationCode interface for this.
     protected final JavaEvaluationCode evaluationCode;
 
-    public AbstractEvaluatorImpl(DockerProxy dockerProxy, JavaEvaluationCode evaluationCode) {
+    public AbstractJavaEvaluatorImpl(DockerProxy dockerProxy, JavaEvaluationCode evaluationCode) {
         this.dockerProxy = dockerProxy;
         this.evaluationCode = evaluationCode;
     }

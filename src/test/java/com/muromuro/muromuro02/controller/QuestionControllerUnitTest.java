@@ -2,7 +2,7 @@ package com.muromuro.muromuro02.controller;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
-import com.muromuro.muromuro02.service.evaluator.Evaluator;
+import com.muromuro.muromuro02.service.evaluator.java.JavaEvaluator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,43 +39,43 @@ public class QuestionControllerUnitTest {
 
     @MockBean
     @Qualifier("representAccountStatesImpl")
-    private Evaluator representAccountStates;
+    private JavaEvaluator representAccountStates;
 
     @MockBean
     @Qualifier("designApiWithPaginationImpl")
-    private Evaluator designApiWithPagination;
+    private JavaEvaluator designApiWithPagination;
 
     @MockBean
     @Qualifier("refactorTooManyIfsImpl")
-    private Evaluator refactorTooManyIfs;
+    private JavaEvaluator refactorTooManyIfs;
 
     @MockBean
     @Qualifier("deviceDatabaseImpl")
-    private Evaluator deviceDatabase;
+    private JavaEvaluator deviceDatabase;
 
     @MockBean
     @Qualifier("detectSubstringsImpl")
-    private Evaluator detectSubstrings;
+    private JavaEvaluator detectSubstrings;
 
     @MockBean
     @Qualifier("debugListImpl")
-    private Evaluator debugList;
+    private JavaEvaluator debugList;
 
     @MockBean
     @Qualifier("parseCsvImpl")
-    private Evaluator parseCsv;
+    private JavaEvaluator parseCsv;
 
     @MockBean
     @Qualifier("longRunningFunctionsImpl")
-    private Evaluator longRunningFunctions;
+    private JavaEvaluator longRunningFunctions;
 
     @MockBean
     @Qualifier("incompatibleInterfacesImpl")
-    private Evaluator incompatibleInterfaces;
+    private JavaEvaluator incompatibleInterfaces;
 
     @MockBean
     @Qualifier("duplicateRpcsImpl")
-    private Evaluator duplicateRpcs;
+    private JavaEvaluator duplicateRpcs;
 
     @Test
     public void testListQuestions() throws Exception {
@@ -703,7 +703,7 @@ public class QuestionControllerUnitTest {
     }
 
     private void runGetTest(
-            Evaluator evaluator, TestValues testValues) throws Exception {
+            JavaEvaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.getInitialSolution())
                 .thenReturn(
                         new UserInput(
@@ -748,7 +748,7 @@ public class QuestionControllerUnitTest {
     }
 
     private void runEvalTest_correctAnswer(
-            Evaluator evaluator, TestValues testValues) throws Exception {
+            JavaEvaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS));
         ResultActions result = sendEvalCommand(testValues);
@@ -761,7 +761,7 @@ public class QuestionControllerUnitTest {
     }
 
     private void runEvalTest_wrongAnswer(
-            Evaluator evaluator, TestValues testValues) throws Exception {
+            JavaEvaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
@@ -778,7 +778,7 @@ public class QuestionControllerUnitTest {
     }
 
     private void runEvalTest_timeout(
-            Evaluator evaluator, TestValues testValues) throws Exception {
+            JavaEvaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(
@@ -795,7 +795,7 @@ public class QuestionControllerUnitTest {
     }
 
     private void runEvalTest_unknownResponse(
-            Evaluator evaluator, TestValues testValues) throws Exception {
+            JavaEvaluator evaluator, TestValues testValues) throws Exception {
         when(evaluator.evaluateSolution(any(UserInput.class)))
                 .thenReturn(
                         new MuroMuroResponse(

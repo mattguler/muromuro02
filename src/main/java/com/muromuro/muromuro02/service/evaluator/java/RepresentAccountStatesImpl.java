@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -14,7 +14,7 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the RepresentAccountStates question. */
 @Service
-public class RepresentAccountStatesImpl extends AbstractEvaluatorImpl {
+public class RepresentAccountStatesImpl extends AbstractJavaEvaluatorImpl {
     private static final int USER_CODE_MAX_LENGTH = 1000;
 
     private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
