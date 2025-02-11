@@ -68,7 +68,7 @@ public class DesignApiWithPaginationImpl extends AbstractJavaEvaluatorImpl {
     public DesignApiWithPaginationImpl(
             DockerProxy dockerProxy,
             @Qualifier("designApiWithPagination") JavaEvaluationCode evaluationCode,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
     }
 

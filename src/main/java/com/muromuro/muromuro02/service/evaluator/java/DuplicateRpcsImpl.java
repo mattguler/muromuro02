@@ -42,7 +42,7 @@ public class DuplicateRpcsImpl extends AbstractJavaEvaluatorImpl {
             DockerProxy dockerProxy,
             @Qualifier("duplicateRpcs") JavaEvaluationCode evaluationCode,
             @Qualifier("duplicateRpcsSoln") JavaInitialSolution initialSolution,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }
