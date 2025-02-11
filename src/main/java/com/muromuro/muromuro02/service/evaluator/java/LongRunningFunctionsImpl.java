@@ -13,9 +13,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
 import static com.muromuro.muromuro02.service.utils.Utils.*;
+import com.muromuro.muromuro02.service.utils.Security;
 
 /** The evaluator for the Long Running Functions question. */
 @Service
@@ -42,8 +41,9 @@ public class LongRunningFunctionsImpl extends AbstractJavaEvaluatorImpl {
     public LongRunningFunctionsImpl(
             DockerProxy dockerProxy,
             @Qualifier("longRunningFunctions") JavaEvaluationCode evaluationCode,
-            @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution) {
-        super(dockerProxy, evaluationCode);
+            @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution,
+            Security security) {
+        super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }
 
@@ -61,8 +61,8 @@ public class LongRunningFunctionsImpl extends AbstractJavaEvaluatorImpl {
     @Override
     protected MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, getUserCodeMaxLength()),
-                checkIfCodeSecure(userInput, ENABLE_MULTI_THREAD_SUPPORT),
+                security.validateCodeLength(userInput, getUserCodeMaxLength()),
+                security.checkIfCodeSecure(userInput, ENABLE_MULTI_THREAD_SUPPORT),
                 validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 

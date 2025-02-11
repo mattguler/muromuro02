@@ -5,6 +5,7 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
+import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +44,9 @@ public class IncompatibleInterfacesImpl extends AbstractJavaEvaluatorImpl {
     public IncompatibleInterfacesImpl(
             DockerProxy dockerProxy,
             @Qualifier("incompatibleInterfaces") JavaEvaluationCode evaluationCode,
-            @Qualifier("incompatibleInterfacesSoln") JavaInitialSolution initialSolution) {
-        super(dockerProxy, evaluationCode);
+            @Qualifier("incompatibleInterfacesSoln") JavaInitialSolution initialSolution,
+            Security security) {
+        super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }
 
