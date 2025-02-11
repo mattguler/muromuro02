@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -16,7 +16,7 @@ import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 /** The evaluator for the Duplicate RPCs question. */
 @Service
-public class DuplicateRpcsImpl extends AbstractEvaluatorImpl {
+public class DuplicateRpcsImpl extends AbstractJavaEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 5000;
     private static final String CLIENT_NAME = "KVListClient";

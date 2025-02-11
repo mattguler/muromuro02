@@ -1,48 +1,49 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
 import static com.muromuro.muromuro02.service.utils.Utils.*;
 
-/** The evaluator for the Long Running Functions question. */
+/** The evaluator for the Incompatible Interfaces question. */
 @Service
-public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
+public class IncompatibleInterfacesImpl extends AbstractJavaEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 5000;
-    private static final int NUMBER_OF_TESTS = 3;
-
-    private final JavaInitialSolution initialSolution;
+    private static final int NUMBER_OF_TESTS = 2;
 
     private final Map<Integer, Pattern> passingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d passed",
-                    /* startTestId= */ 0,
-                    /* endTestId= */ NUMBER_OF_TESTS - 1);
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
     private final Map<Integer, Pattern> failingTestPatterns =
             createTestMatcherPatterns(
                     "Test %d failed",
-                    /* startTestId= */ 0,
-                    /* endTestId= */ NUMBER_OF_TESTS - 1);
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
 
-    @Autowired
-    public LongRunningFunctionsImpl(
+    private final Map<Integer, Pattern> partialTestPatterns =
+            createTestMatcherPatterns(
+                    "Test %d failed. Offset adjustments to y values are missing.",
+                    /* startTestId= */ 1,
+                    /* endTestId= */ NUMBER_OF_TESTS);
+
+    private final JavaInitialSolution initialSolution;
+
+    public IncompatibleInterfacesImpl(
             DockerProxy dockerProxy,
-            @Qualifier("longRunningFunctions") JavaEvaluationCode evaluationCode,
-            @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution) {
+            @Qualifier("incompatibleInterfaces") JavaEvaluationCode evaluationCode,
+            @Qualifier("incompatibleInterfacesSoln") JavaInitialSolution initialSolution) {
         super(dockerProxy, evaluationCode);
         this.initialSolution = initialSolution;
     }
@@ -55,15 +56,6 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
     @Override
     protected int getUserCodeMaxLength() {
         return USER_CODE_MAX_LENGTH;
-    }
-
-    // Overriding this method to enable the multi-thread support.
-    @Override
-    protected MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
-        return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, getUserCodeMaxLength()),
-                checkIfCodeSecure(userInput, ENABLE_MULTI_THREAD_SUPPORT),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     @Override
@@ -79,7 +71,15 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
         if (initialAnalysis.getStatus() != MuroMuroResponse.Status.SUCCESS) {
             return initialAnalysis;
         }
-        if (matchesAnyTestPattern(dockerEvalOutput, failingTestPatterns)) {
+        if (matchesAnyTestPattern(dockerEvalOutput, partialTestPatterns)) {
+            return new MuroMuroResponse(
+                    MuroMuroResponse.Status.FAILURE,
+                    buildFailureMessage(
+                            dockerEvalOutput,
+                            "Getting closer. Please make sure to check whether\n"
+                                    + "all offset adjustments to y values are done correctly."));
+        }
+        else if (matchesAnyTestPattern(dockerEvalOutput, failingTestPatterns)) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
                     buildFailureMessage(
@@ -87,9 +87,16 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
                             "Incorrect solution. Fails validation."));
         }
         else if (matchesAllTestPatterns(dockerEvalOutput, passingTestPatterns)) {
+            if (getIfCountInCode(userInput) > 0) {
+                return new MuroMuroResponse(
+                        MuroMuroResponse.Status.SUCCESS,
+                        "However, the solution could be better "
+                                + "without the if-statements.");
+            }
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.SUCCESS, buildSuccessMessage());
         }
+
         // We should not be reaching here.
         return new MuroMuroResponse(
                 MuroMuroResponse.Status.UNKNOWN,
@@ -97,5 +104,11 @@ public class LongRunningFunctionsImpl extends AbstractEvaluatorImpl {
                         dockerEvalOutput,
                         "Internal server failure.\n"
                                 + "Please contact support with the following output."));
+    }
+
+    private static int getIfCountInCode(UserInput userInput) {
+        String mainDef = userInput.getMainDefinition();
+        return countKeywordOccurrences(mainDef, "if(")
+                + countKeywordOccurrences(mainDef, "if (");
     }
 }

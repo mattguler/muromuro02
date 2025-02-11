@@ -1,4 +1,4 @@
-package com.muromuro.muromuro02.service.evaluator;
+package com.muromuro.muromuro02.service.evaluator.java;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import static com.muromuro.muromuro02.service.utils.Utils.*;
 
 @Service
-public class DebugListImpl extends AbstractEvaluatorImpl {
+public class DebugListImpl extends AbstractJavaEvaluatorImpl {
 
     private static final int USER_CODE_MAX_LENGTH = 2000;
     private static final int NUMBER_OF_TESTS = 2;

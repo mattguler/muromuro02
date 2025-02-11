@@ -1,7 +1,7 @@
 package com.muromuro.muromuro02.integration;
 
 import com.muromuro.muromuro02.model.UserInput;
-import com.muromuro.muromuro02.service.evaluator.Evaluator;
+import com.muromuro.muromuro02.service.evaluator.java.JavaEvaluator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,7 +219,7 @@ public class DebugListIntegrationTest {
     // For initial-code testing.
     @Autowired
     @Qualifier("debugListImpl")
-    Evaluator debugListEval;
+    JavaEvaluator debugListEval;
 
     @Autowired
     WebApplicationContext context;
