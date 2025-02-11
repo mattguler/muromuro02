@@ -2,6 +2,7 @@ package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
@@ -20,12 +21,19 @@ public class SecurityTest {
                     + "    } \n"
                     + "} \n";
 
+    private Security security;
+
+    @BeforeEach
+    public void setUp() {
+        security = new Security();
+    }
+
     @Test
     public void testValidateCallerCodeLength_fails() {
         int maxLength = 1000;
         UserInput userInput =
                 new UserInput(buildStringOfLength(maxLength + 1), "");
-        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        MuroMuroResponse response = security.validateCodeLength(userInput, maxLength);
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The solution seems insecure, with its length exceeding the max allowable length.",
@@ -36,7 +44,7 @@ public class SecurityTest {
     public void testValidateCallerCodeLength_passes() {
         int maxLength = 1000;
         UserInput userInput = new UserInput(buildStringOfLength(maxLength), "");
-        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        MuroMuroResponse response = security.validateCodeLength(userInput, maxLength);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
     }
 
@@ -45,7 +53,7 @@ public class SecurityTest {
         int maxLength = 1000;
         UserInput userInput =
                 new UserInput("", buildStringOfLength(maxLength + 1));
-        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        MuroMuroResponse response = security.validateCodeLength(userInput, maxLength);
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The solution seems insecure, with its length exceeding the max allowable length.",
@@ -56,7 +64,7 @@ public class SecurityTest {
     public void testValidateMainDefinitionLength_passes() {
         int maxLength = 1000;
         UserInput userInput = new UserInput("", buildStringOfLength(maxLength));
-        MuroMuroResponse response = Security.validateCodeLength(userInput, maxLength);
+        MuroMuroResponse response = security.validateCodeLength(userInput, maxLength);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
     }
 
@@ -131,7 +139,7 @@ public class SecurityTest {
             String codeWithKeyword, boolean expectedResult, Security.Options... options) {
         UserInput userInput =
                 new UserInput(buildExampleJavaCode(codeWithKeyword), "");
-        MuroMuroResponse response = Security.checkIfCodeSecure(userInput, options);
+        MuroMuroResponse response = security.checkIfCodeSecure(userInput, options);
         if (expectedResult) {
             assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         }
@@ -144,7 +152,7 @@ public class SecurityTest {
             String codeWithKeyword, boolean expectedResult, Security.Options... options) {
         UserInput userInput =
                 new UserInput("", buildExampleJavaCode(codeWithKeyword));
-        MuroMuroResponse response = Security.checkIfCodeSecure(userInput, options);
+        MuroMuroResponse response = security.checkIfCodeSecure(userInput, options);
         if (expectedResult) {
             assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         }

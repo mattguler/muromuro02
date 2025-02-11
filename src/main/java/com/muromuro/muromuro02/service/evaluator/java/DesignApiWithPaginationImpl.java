@@ -4,6 +4,7 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
+import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -66,8 +67,9 @@ public class DesignApiWithPaginationImpl extends AbstractJavaEvaluatorImpl {
     @Autowired
     public DesignApiWithPaginationImpl(
             DockerProxy dockerProxy,
-            @Qualifier("designApiWithPagination") JavaEvaluationCode evaluationCode) {
-        super(dockerProxy, evaluationCode);
+            @Qualifier("designApiWithPagination") JavaEvaluationCode evaluationCode,
+            Security security) {
+        super(dockerProxy, evaluationCode, security);
     }
 
     @Override

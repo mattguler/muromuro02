@@ -4,9 +4,8 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
+import com.muromuro.muromuro02.service.utils.Security;
 
-import static com.muromuro.muromuro02.service.utils.Security.checkIfCodeSecure;
-import static com.muromuro.muromuro02.service.utils.Security.validateCodeLength;
 import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
 import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
 
@@ -21,10 +20,15 @@ abstract class AbstractJavaEvaluatorImpl implements JavaEvaluator {
     private final DockerProxy dockerProxy;
     // TODO: Maybe define a common EvaluationCode interface for this.
     protected final JavaEvaluationCode evaluationCode;
+    protected final Security security;
 
-    public AbstractJavaEvaluatorImpl(DockerProxy dockerProxy, JavaEvaluationCode evaluationCode) {
+    public AbstractJavaEvaluatorImpl(
+            DockerProxy dockerProxy, 
+            JavaEvaluationCode evaluationCode,
+            Security security) {
         this.dockerProxy = dockerProxy;
         this.evaluationCode = evaluationCode;
+        this.security = security;
     }
 
     /**
@@ -67,8 +71,8 @@ abstract class AbstractJavaEvaluatorImpl implements JavaEvaluator {
      */
     protected MuroMuroResponse checkIfCodeSecureAndCorrect(UserInput userInput) {
         return MuroMuroResponse.combineResponses(
-                validateCodeLength(userInput, getUserCodeMaxLength()),
-                checkIfCodeSecure(userInput),
+                security.validateCodeLength(userInput, getUserCodeMaxLength()),
+                security.checkIfCodeSecure(userInput),
                 validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 

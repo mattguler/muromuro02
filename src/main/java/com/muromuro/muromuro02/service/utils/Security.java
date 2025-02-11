@@ -2,6 +2,7 @@ package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Set;
 /**
  * The Security class which is used to validate the security of the user's solution.
  */
+@Service
 public class Security {
 
     public enum Options {
@@ -17,14 +19,14 @@ public class Security {
         ENABLE_FILE_IO_SUPPORT
     }
 
-    private static final String SYSTEM_KEYWORD = "System";
-    private static final String PROCESS_KEYWORD = "Process";
+    private final String SYSTEM_KEYWORD = "System";
+    private final String PROCESS_KEYWORD = "Process";
 
     /**
      * Validates if the given user input code is below a certain given length.
      * Returns a MuroMuroResponse object containing the status and the error message if applicable.
      */
-    public static MuroMuroResponse validateCodeLength(UserInput userInput, int maxLength) {
+    public MuroMuroResponse validateCodeLength(UserInput userInput, int maxLength) {
         if (userInput.getCallerCode().length() > maxLength
                 || userInput.getMainDefinition().length() > maxLength) {
             return new MuroMuroResponse(
@@ -41,7 +43,7 @@ public class Security {
      * The code snippet is considered secure if it does not contain any specific target keyword.
      * Pass in optional arguments to enable support for multithreading and/or file io operations.
      */
-    public static MuroMuroResponse checkIfCodeSecure(UserInput userInput, Options... options) {
+    public MuroMuroResponse checkIfCodeSecure(UserInput userInput, Options... options) {
         List<String> targetWords = getTargetWords(options);
         for (String target : targetWords) {
             if (userInput.getCallerCode().contains(target)
@@ -72,7 +74,7 @@ public class Security {
         return new MuroMuroResponse(MuroMuroResponse.Status.SUCCESS);
     }
 
-    private static List<String> getTargetWords(Options[] options) {
+    private List<String> getTargetWords(Options[] options) {
         List<String> targetWords =
                 new ArrayList<>(List.of(
                         "Runtime",
@@ -95,7 +97,7 @@ public class Security {
      * false otherwise. However, also returns false if it is a System.out.print or
      * a System.err.print call.
      */
-    private static boolean containsSystemCalls(String input) {
+    private boolean containsSystemCalls(String input) {
         int index = input.indexOf(SYSTEM_KEYWORD);
         while (index >= 0) {
             if (!input.startsWith("System.out.print", index)
@@ -112,7 +114,7 @@ public class Security {
      * false otherwise. However, also returns false if the word is "Processor"
      * or "runProcess".
      */
-    private static boolean containsProcessCalls(String input) {
+    private boolean containsProcessCalls(String input) {
         int index = input.indexOf(PROCESS_KEYWORD);
         while (index >= 0) {
             if (index < 3 && !input.startsWith("Processor", index)) {

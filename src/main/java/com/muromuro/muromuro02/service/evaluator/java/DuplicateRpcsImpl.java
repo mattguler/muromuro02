@@ -5,6 +5,7 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
+import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,14 @@ public class DuplicateRpcsImpl extends AbstractJavaEvaluatorImpl {
                     /* endTestId= */ NUMBER_OF_TESTS);
 
     private final JavaInitialSolution initialSolution;
-
+ 
     @Autowired
     public DuplicateRpcsImpl(
             DockerProxy dockerProxy,
             @Qualifier("duplicateRpcs") JavaEvaluationCode evaluationCode,
-            @Qualifier("duplicateRpcsSoln") JavaInitialSolution initialSolution) {
-        super(dockerProxy, evaluationCode);
+            @Qualifier("duplicateRpcsSoln") JavaInitialSolution initialSolution,
+            Security security) {
+        super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }
 
