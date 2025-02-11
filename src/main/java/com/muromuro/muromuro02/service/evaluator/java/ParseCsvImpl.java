@@ -44,7 +44,7 @@ public class ParseCsvImpl extends AbstractJavaEvaluatorImpl {
     public ParseCsvImpl(
             DockerProxy dockerProxy,
             @Qualifier("parseCsv") JavaEvaluationCode evaluationCode,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
     }
 

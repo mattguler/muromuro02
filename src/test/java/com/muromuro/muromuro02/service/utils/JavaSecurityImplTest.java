@@ -13,7 +13,7 @@ import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULT
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Unit tests the methods in the Security class. */
-public class SecurityTest {
+public class JavaSecurityImplTest {
     private static final String EXAMPLE_JAVA_CODE_STR_FORMAT =
             "public class Example { \n"
                     + "    public static void main(String[] args) { \n"
@@ -25,7 +25,7 @@ public class SecurityTest {
 
     @BeforeEach
     public void setUp() {
-        security = new Security();
+        security = new JavaSecurityImpl();
     }
 
     @Test

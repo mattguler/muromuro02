@@ -45,7 +45,7 @@ public class IncompatibleInterfacesImpl extends AbstractJavaEvaluatorImpl {
             DockerProxy dockerProxy,
             @Qualifier("incompatibleInterfaces") JavaEvaluationCode evaluationCode,
             @Qualifier("incompatibleInterfacesSoln") JavaInitialSolution initialSolution,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }

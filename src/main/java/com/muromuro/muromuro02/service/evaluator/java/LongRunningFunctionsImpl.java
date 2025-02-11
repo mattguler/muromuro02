@@ -42,7 +42,7 @@ public class LongRunningFunctionsImpl extends AbstractJavaEvaluatorImpl {
             DockerProxy dockerProxy,
             @Qualifier("longRunningFunctions") JavaEvaluationCode evaluationCode,
             @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }

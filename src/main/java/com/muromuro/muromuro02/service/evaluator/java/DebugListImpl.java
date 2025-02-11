@@ -63,7 +63,7 @@ public class DebugListImpl extends AbstractJavaEvaluatorImpl {
             DockerProxy dockerProxy,
             @Qualifier("debugList") JavaEvaluationCode evaluationCode,
             @Qualifier("debugListSoln") JavaInitialSolution initialSolution,
-            Security security) {
+            @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
         this.initialSolution = initialSolution;
     }
