@@ -60,7 +60,7 @@ public class DebugListImpl extends AbstractJavaEvaluatorImpl {
 
     @Autowired
     public DebugListImpl(
-            DockerProxy dockerProxy,
+            @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("debugList") JavaEvaluationCode evaluationCode,
             @Qualifier("debugListSoln") JavaInitialSolution initialSolution,
             @Qualifier("javaSecurityImpl") Security security) {

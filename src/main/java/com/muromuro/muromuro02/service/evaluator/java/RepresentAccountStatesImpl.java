@@ -35,7 +35,7 @@ public class RepresentAccountStatesImpl extends AbstractJavaEvaluatorImpl {
 
     @Autowired
     public RepresentAccountStatesImpl(
-            DockerProxy dockerProxy,
+            @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("representAccountStates") JavaEvaluationCode evaluationCode,
             @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);

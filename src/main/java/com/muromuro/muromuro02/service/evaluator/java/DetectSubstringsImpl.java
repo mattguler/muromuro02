@@ -42,7 +42,7 @@ public class DetectSubstringsImpl extends AbstractJavaEvaluatorImpl {
 
     @Autowired
     public DetectSubstringsImpl(
-            DockerProxy dockerProxy,
+            @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("detectSubstrings") JavaEvaluationCode evaluationCode,
             @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, security);
