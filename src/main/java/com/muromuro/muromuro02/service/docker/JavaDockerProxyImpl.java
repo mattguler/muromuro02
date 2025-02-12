@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 /**
- * The implementation of the Docker proxy.
+ * The implementation of the Docker proxy for evaluating Java solutions.
  * TODO: Write some tests for this class.
  */
 @Service
-public class DockerProxyImpl implements DockerProxy {
+public class JavaDockerProxyImpl implements DockerProxy {
 
     private static final int TIMEOUT_IN_SECONDS = 10;
 
     private final DockerClient dockerClient;
 
     @Autowired
-    public DockerProxyImpl(DockerClient dockerClient) {
+    public JavaDockerProxyImpl(DockerClient dockerClient) {
         this.dockerClient = dockerClient;
     }
 
