@@ -6,8 +6,8 @@ import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.utils.Security;
 
-import static com.muromuro.muromuro02.service.utils.Utils.buildFailureMessage;
-import static com.muromuro.muromuro02.service.utils.Utils.validateNotStartsWithImports;
+import static com.muromuro.muromuro02.service.utils.ValidationUtils.buildFailureMessage;
+import static com.muromuro.muromuro02.service.utils.CodeUtils.validateNotStartsWithImports;
 
 /**
  * The abstract evaluator implementation which is used to evaluate the Java MuroMuro solutions.

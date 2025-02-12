@@ -13,7 +13,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.CodeUtils.*;
+import static com.muromuro.muromuro02.service.utils.ValidationUtils.*;
 import com.muromuro.muromuro02.service.utils.Security;
 
 /** The evaluator for the Long Running Functions question. */

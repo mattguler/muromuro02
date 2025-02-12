@@ -5,7 +5,7 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
-import com.muromuro.muromuro02.service.utils.Utils;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +35,7 @@ public class JavaDockerProxyImpl implements DockerProxy {
     public String startContainer(String evaluatorCode) {
         String imageId = "openjdk:17";
         String containerName = UUID.randomUUID().toString();
-        String className = Utils.getClassName(evaluatorCode);
+        String className = CodeUtils.getClassName(evaluatorCode);
         if (className == null) {
             throw new IllegalArgumentException(
                     "Could not find class name in given code:\n" + evaluatorCode);

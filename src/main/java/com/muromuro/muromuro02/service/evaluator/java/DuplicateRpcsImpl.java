@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.ValidationUtils.*;
 
 /** The evaluator for the Duplicate RPCs question. */
 @Service

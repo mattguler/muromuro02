@@ -3,19 +3,16 @@ package com.muromuro.muromuro02.service.utils;
 import com.muromuro.muromuro02.model.MuroMuroResponse;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Unit tests the methods in the Utils class. */
-public class UtilsTest {
+/** Unit tests for the CodeUtils class. */
+public class CodeUtilsTest {
 
     @Test
     public void testReplaceEnumNames_singleEnum_success() {
         String oldString = "public enum Blahblah {BLAH1, BLAH2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals("public enum AccountState {BLAH1, BLAH2}", newString);
     }
 
@@ -25,7 +22,7 @@ public class UtilsTest {
                 "public enum Blahblah\n"
                         + "{BLAH1, BLAH2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(
                 "public enum AccountState\n"
                         + "{BLAH1, BLAH2}", newString);
@@ -37,7 +34,7 @@ public class UtilsTest {
                 "public enum Blahblah {BLAH1, BLAH2}\n"
                         + "public enum Something{THING1, THING2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(
                 "public enum AccountState {BLAH1, BLAH2}\n"
                         + "public enum AccountState{THING1, THING2}",
@@ -52,7 +49,7 @@ public class UtilsTest {
                         + "public enum Something{\n"
                         + "  THING1, THING2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(
                 "public enum AccountState\n"
                         + "  {BLAH1, BLAH2}\n"
@@ -65,7 +62,7 @@ public class UtilsTest {
     public void testReplaceEnumNames_failure() {
         String oldString = "boolean isActive = false;";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals("boolean isActive = false;", newString);
     }
 
@@ -73,7 +70,7 @@ public class UtilsTest {
     public void testReplaceEnumNames_empty() {
         String oldString = "";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals("", newString);
     }
 
@@ -81,7 +78,7 @@ public class UtilsTest {
     public void testReplaceEnumNames_badlyFormed_failure() {
         String oldString = "public enum Blah Blah {BLAH1, BLAH2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals("public enum Blah Blah {BLAH1, BLAH2}", newString);
     }
 
@@ -91,7 +88,7 @@ public class UtilsTest {
                 "public enum Blah Blah {BLAH1, BLAH2}\n"
                         + "public enum Something {THING1, THING2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(
                 "public enum Blah Blah {BLAH1, BLAH2}\n"
                         + "public enum AccountState {THING1, THING2}",
@@ -104,7 +101,7 @@ public class UtilsTest {
                 "// This enum is about something.\n"
                         + "public enum Something {THING1, THING2}";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(
                 "// This enum is about something.\n"
                         + "public enum AccountState {THING1, THING2}",
@@ -116,7 +113,7 @@ public class UtilsTest {
         String oldString =
                 "// There is no real enum here. Just this comment.";
         String newString =
-                Utils.replaceEnumNames(oldString, "AccountState");
+                CodeUtils.replaceEnumNames(oldString, "AccountState");
         assertEquals(oldString, newString);
     }
 
@@ -124,11 +121,11 @@ public class UtilsTest {
     public void testReplaceTargetWords_success() {
         String oldString = "public enum Blahblah {Blah1, Blah2, blah3}";
         String newString =
-                Utils.replaceTargetWords(oldString, "BLAH1", "blah1", "Blah1");
+                CodeUtils.replaceTargetWords(oldString, "BLAH1", "blah1", "Blah1");
         newString =
-                Utils.replaceTargetWords(newString, "BLAH2", "blah2", "Blah2");
+                CodeUtils.replaceTargetWords(newString, "BLAH2", "blah2", "Blah2");
         newString =
-                Utils.replaceTargetWords(newString, "BLAH3", "blah3", "Blah3");
+                CodeUtils.replaceTargetWords(newString, "BLAH3", "blah3", "Blah3");
         assertEquals("public enum Blahblah {BLAH1, BLAH2, BLAH3}", newString);
     }
 
@@ -142,13 +139,13 @@ public class UtilsTest {
                         "  Suspended\n" +
                         "}";
         String newString =
-                Utils.replaceTargetWords(oldString, "INACTIVE", "Inactive", "inactive");
+                CodeUtils.replaceTargetWords(oldString, "INACTIVE", "Inactive", "inactive");
         newString =
-                Utils.replaceTargetWords(newString, "ACTIVE", "Active", "Active");
+                CodeUtils.replaceTargetWords(newString, "ACTIVE", "Active", "Active");
         newString =
-                Utils.replaceTargetWords(newString, "SUSPENDED", "Suspended", "suspended");
+                CodeUtils.replaceTargetWords(newString, "SUSPENDED", "Suspended", "suspended");
         newString =
-                Utils.replaceTargetWords(newString, "DELETED", "Deleted", "deleted");
+                CodeUtils.replaceTargetWords(newString, "DELETED", "Deleted", "deleted");
         assertEquals(
                 "enum SomeEnumName {\n" +
                         "  ACTIVE,\n" +
@@ -162,28 +159,28 @@ public class UtilsTest {
     @Test
     public void testGetClassName_success() {
         String code = "public class SomeClass {};";
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertEquals("SomeClass", className);
     }
 
     @Test
     public void testGetClassName_empty() {
         String code = "";
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertNull(className);
     }
 
     @Test
     public void testGetClassName_failure1() {
         String code = "// There is nothing to see here.";
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertNull(className);
     }
 
     @Test
     public void testGetClassName_failure2() {
         String code = "// There is no actual class in this code string.";
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertNull(className);
     }
 
@@ -192,7 +189,7 @@ public class UtilsTest {
         String code =
                 "// There is the word class in this comment.\n"
                         + "public class SomeClass {};";
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertEquals("SomeClass", className);
     }
 
@@ -204,14 +201,14 @@ public class UtilsTest {
                         + "    public static class InnerClass {}\n"
                         + "}";
         // Should return the outer class only.
-        String className = Utils.getClassName(code);
+        String className = CodeUtils.getClassName(code);
         assertEquals("SomeClass", className);
     }
 
     @Test
     public void testValidateNotStartsWithImports_noImport() {
         String code = "public class SomeClass {}";
-        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        MuroMuroResponse response = CodeUtils.validateNotStartsWithImports(code);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         assertTrue(response.getMessage().isEmpty());
     }
@@ -221,7 +218,7 @@ public class UtilsTest {
         String code =
                 "\n    \nimport java.util.*;\n"
                         + "public class SomeClass {}";
-        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        MuroMuroResponse response = CodeUtils.validateNotStartsWithImports(code);
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
         assertEquals(
                 "The code should not contain any import statements.",
@@ -231,7 +228,7 @@ public class UtilsTest {
     @Test
     public void testValidateNotStartsWithImports_empty() {
         String code = "";
-        MuroMuroResponse response = Utils.validateNotStartsWithImports(code);
+        MuroMuroResponse response = CodeUtils.validateNotStartsWithImports(code);
         assertEquals(MuroMuroResponse.Status.SUCCESS, response.getStatus());
         assertTrue(response.getMessage().isEmpty());
     }
@@ -239,117 +236,28 @@ public class UtilsTest {
     @Test
     public void testCountKeywordOccurrences_empty() {
         String code = "";
-        int count = Utils.countKeywordOccurrences(code, "static");
+        int count = CodeUtils.countKeywordOccurrences(code, "static");
         assertEquals(0, count);
     }
 
     @Test
     public void testCountKeywordOccurrences_noKeyword() {
         String code = "public class SomeClass {}";
-        int count = Utils.countKeywordOccurrences(code, "static");
+        int count = CodeUtils.countKeywordOccurrences(code, "static");
         assertEquals(0, count);
     }
 
     @Test
     public void testCountKeywordOccurrences_singleKeyword() {
         String code = "public static class SomeClass {}";
-        int count = Utils.countKeywordOccurrences(code, "static");
+        int count = CodeUtils.countKeywordOccurrences(code, "static");
         assertEquals(1, count);
     }
 
     @Test
     public void testCountKeywordOccurrences_multipleKeywords() {
         String code = "public static class SomeClass { static int someField; }";
-        int count = Utils.countKeywordOccurrences(code, "static");
+        int count = CodeUtils.countKeywordOccurrences(code, "static");
         assertEquals(2, count);
-    }
-
-    @Test
-    public void testBuildFailureMessage() {
-        String errorMessage = "Error happened.";
-        String dockerEvalOutput = "Various build errors.";
-        String fullMessage = Utils.buildFailureMessage(dockerEvalOutput, errorMessage);
-        assertEquals(
-                "Error happened.\n\nBuild and run output:\nVarious build errors.",
-                fullMessage);
-    }
-
-    @Test
-    public void testCreateTestMatcherPatterns() {
-        Map<Integer, Pattern> patterns =
-                Utils.createTestMatcherPatterns(
-                        "Test %d passed.", 0, 4);
-        assertEquals(5, patterns.size());
-        assertTrue(patterns.get(0).matcher("Test 0 passed.").find());
-        assertTrue(patterns.get(1).matcher("Test 1 passed.").find());
-        assertTrue(patterns.get(2).matcher("Test 2 passed.").find());
-        assertTrue(patterns.get(3).matcher("Test 3 passed.").find());
-        assertTrue(patterns.get(4).matcher("Test 4 passed.").find());
-    }
-
-    @Test
-    public void testMatchesTestPattern() {
-        Map<Integer, Pattern> patterns =
-                Utils.createTestMatcherPatterns(
-                        "Test %d failed.", 0, 4);
-        assertEquals(5, patterns.size());
-        assertTrue(
-                Utils.matchesTestPattern(
-                        "Test 4 failed.", patterns, 4));
-        assertFalse(
-                Utils.matchesTestPattern(
-                        "Test 2 passed.", patterns, 2));
-    }
-
-    @Test
-    public void testMatchesAllTestPatterns() {
-        Map<Integer, Pattern> patterns =
-                Utils.createTestMatcherPatterns(
-                        "Test %d passed.", 0, 4);
-        assertEquals(5, patterns.size());
-        String matchingInput =
-                """
-                        Test 0 passed.
-                        Test 1 passed.
-                        Test 2 passed.
-                        Test 3 passed.
-                        Test 4 passed.
-                        """;
-        assertTrue(Utils.matchesAllTestPatterns(matchingInput, patterns));
-        String nonMatchingInput =
-                """
-                        Test 0 passed.
-                        Test 1 passed.
-                        Test 2 failed.
-                        Test 3 passed.
-                        Test 4 passed.
-                        """;
-        assertFalse(Utils.matchesAllTestPatterns(nonMatchingInput, patterns));
-    }
-
-    @Test
-    public void testMatchesAnyTestPattern() {
-        Map<Integer, Pattern> patterns =
-                Utils.createTestMatcherPatterns(
-                        "Test %d failed.", 0, 4);
-        assertEquals(5, patterns.size());
-        String matchingInput =
-                """
-                        Test 0 passed.
-                        Test 1 passed.
-                        Test 2 failed.
-                        Test 3 passed.
-                        Test 4 passed.
-                        """;
-        assertTrue(Utils.matchesAnyTestPattern(matchingInput, patterns));
-        String nonMatchingInput =
-                """
-                        Test 0 passed.
-                        Test 1 passed.
-                        Test 2 passed.
-                        Test 3 passed.
-                        Test 4 passed.
-                        """;
-        assertFalse(Utils.matchesAnyTestPattern(nonMatchingInput, patterns));
     }
 }
