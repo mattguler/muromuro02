@@ -14,7 +14,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.ValidationUtils.*;
 
 /** The evaluator for the DeviceDatabase question. */
 @Service

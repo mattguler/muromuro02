@@ -11,11 +11,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.muromuro.muromuro02.service.utils.Utils.*;
+import static com.muromuro.muromuro02.service.utils.CodeUtils.replaceEnumNames;
+import static com.muromuro.muromuro02.service.utils.CodeUtils.replaceTargetWords;
+import static com.muromuro.muromuro02.service.utils.ValidationUtils.buildSuccessMessage;
 
 /** The evaluator for the RepresentAccountStates question. */
 @Service
 public class RepresentAccountStatesImpl extends AbstractJavaEvaluatorImpl {
+
     private static final int USER_CODE_MAX_LENGTH = 1000;
 
     private static final String ACCOUNT_STATE_ENUM_NAME = "AccountState";
