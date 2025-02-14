@@ -4,6 +4,7 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.muromuro.muromuro02.service.utils.CodeUtils.replaceEnumNames;
-import static com.muromuro.muromuro02.service.utils.CodeUtils.replaceTargetWords;
 import static com.muromuro.muromuro02.service.utils.ValidationUtils.buildSuccessMessage;
 
 /** The evaluator for the RepresentAccountStates question. */
@@ -40,8 +39,9 @@ public class RepresentAccountStatesImpl extends AbstractJavaEvaluatorImpl {
     public RepresentAccountStatesImpl(
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("representAccountStates") JavaEvaluationCode evaluationCode,
+            CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
-        super(dockerProxy, evaluationCode, security);
+        super(dockerProxy, evaluationCode, codeUtils, security);
     }
 
     /**
@@ -61,16 +61,20 @@ public class RepresentAccountStatesImpl extends AbstractJavaEvaluatorImpl {
     @Override
     protected JavaEvaluationCode buildEvaluationCode(UserInput userInput) {
         String mainDefinition = userInput.getMainDefinition();
-        mainDefinition = replaceEnumNames(mainDefinition, ACCOUNT_STATE_ENUM_NAME);
+        mainDefinition = codeUtils.replaceEnumNames(mainDefinition, ACCOUNT_STATE_ENUM_NAME);
         // Note: The order of these replacements is important. Inactive should come before Active.
         mainDefinition =
-                replaceTargetWords(mainDefinition, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
+                codeUtils.replaceTargetWords(
+                    mainDefinition, ACCOUNT_STATE_INACTIVE, "Inactive", "inactive");
         mainDefinition =
-                replaceTargetWords(mainDefinition, ACCOUNT_STATE_ACTIVE, "Active", "active");
+                codeUtils.replaceTargetWords(
+                    mainDefinition, ACCOUNT_STATE_ACTIVE, "Active", "active");
         mainDefinition =
-                replaceTargetWords(mainDefinition, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
+                codeUtils.replaceTargetWords(
+                    mainDefinition, ACCOUNT_STATE_SUSPENDED, "Suspended", "suspended");
         mainDefinition =
-                replaceTargetWords(mainDefinition, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
+                codeUtils.replaceTargetWords(
+                    mainDefinition, ACCOUNT_STATE_DELETED, "Deleted", "deleted");
         return evaluationCode
                 .replaceMainDefinition(mainDefinition);
     }

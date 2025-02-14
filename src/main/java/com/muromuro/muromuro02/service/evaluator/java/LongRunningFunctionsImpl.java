@@ -5,6 +5,8 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
+import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.muromuro.muromuro02.service.utils.Security.Options.ENABLE_MULTI_THREAD_SUPPORT;
-import static com.muromuro.muromuro02.service.utils.CodeUtils.*;
 import static com.muromuro.muromuro02.service.utils.ValidationUtils.*;
-import com.muromuro.muromuro02.service.utils.Security;
 
 /** The evaluator for the Long Running Functions question. */
 @Service
@@ -43,8 +43,9 @@ public class LongRunningFunctionsImpl extends AbstractJavaEvaluatorImpl {
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("longRunningFunctions") JavaEvaluationCode evaluationCode,
             @Qualifier("longRunningFunctionsSoln") JavaInitialSolution initialSolution,
+            CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
-        super(dockerProxy, evaluationCode, security);
+        super(dockerProxy, evaluationCode, codeUtils, security);
         this.initialSolution = initialSolution;
     }
 
@@ -64,7 +65,7 @@ public class LongRunningFunctionsImpl extends AbstractJavaEvaluatorImpl {
         return MuroMuroResponse.combineResponses(
                 security.validateCodeLength(userInput, getUserCodeMaxLength()),
                 security.checkIfCodeSecure(userInput, ENABLE_MULTI_THREAD_SUPPORT),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
+                codeUtils.validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     @Override

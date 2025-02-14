@@ -5,6 +5,7 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.muromuro.muromuro02.service.utils.CodeUtils.*;
 import static com.muromuro.muromuro02.service.utils.ValidationUtils.*;
 
 /** The evaluator for the Incompatible Interfaces question. */
@@ -46,8 +46,9 @@ public class IncompatibleInterfacesImpl extends AbstractJavaEvaluatorImpl {
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("incompatibleInterfaces") JavaEvaluationCode evaluationCode,
             @Qualifier("incompatibleInterfacesSoln") JavaInitialSolution initialSolution,
+            CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
-        super(dockerProxy, evaluationCode, security);
+        super(dockerProxy, evaluationCode, codeUtils, security);
         this.initialSolution = initialSolution;
     }
 
@@ -109,9 +110,9 @@ public class IncompatibleInterfacesImpl extends AbstractJavaEvaluatorImpl {
                                 + "Please contact support with the following output."));
     }
 
-    private static int getIfCountInCode(UserInput userInput) {
+    private int getIfCountInCode(UserInput userInput) {
         String mainDef = userInput.getMainDefinition();
-        return countKeywordOccurrences(mainDef, "if(")
-                + countKeywordOccurrences(mainDef, "if (");
+        return codeUtils.countKeywordOccurrences(mainDef, "if(")
+                + codeUtils.countKeywordOccurrences(mainDef, "if (");
     }
 }

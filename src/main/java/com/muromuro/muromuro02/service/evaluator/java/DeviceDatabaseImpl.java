@@ -4,6 +4,7 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,8 +75,9 @@ public class DeviceDatabaseImpl extends AbstractJavaEvaluatorImpl {
     public DeviceDatabaseImpl(
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("deviceDatabase") JavaEvaluationCode evaluationCode,
+            CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
-        super(dockerProxy, evaluationCode, security);
+        super(dockerProxy, evaluationCode, codeUtils, security);
     }
 
     @Override
