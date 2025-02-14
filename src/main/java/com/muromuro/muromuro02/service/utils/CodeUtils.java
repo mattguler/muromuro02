@@ -1,6 +1,7 @@
 package com.muromuro.muromuro02.service.utils;
 
 import com.muromuro.muromuro02.model.MuroMuroResponse;
+import org.springframework.stereotype.Component;
 
 /**
  * Utility class providing methods for Java code string manipulation and analysis.
@@ -8,17 +9,18 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
  * and perform various parsing and manipulation operations before the actual
  * compilation or execution of the code.
  */
+@Component
 public class CodeUtils {
 
     /**
      * Finds and replaces all the enum names in the given oldString with the replacement name.
      * Returns the updated string if successful, or the old string otherwise.
      */
-    public static String replaceEnumNames(String oldString, String replacement) {
+    public String replaceEnumNames(String oldString, String replacement) {
         return replaceEnumNames(oldString, replacement, 0);
     }
 
-    private static String replaceEnumNames(String oldString, String replacement, int fromIndex) {
+    private String replaceEnumNames(String oldString, String replacement, int fromIndex) {
         String targetWord = "enum ";
         int startingIndex = oldString.indexOf(targetWord, fromIndex);
         if (startingIndex < 0) {
@@ -38,7 +40,7 @@ public class CodeUtils {
     /**
      * Finds and replaces all the potential word targets in the given oldString with the replacement value.
      */
-    public static String replaceTargetWords(String oldString, String replacement, String... targetWords) {
+    public String replaceTargetWords(String oldString, String replacement, String... targetWords) {
         String newString = oldString;
         for (String target : targetWords) {
             newString = newString.replace(target, replacement);
@@ -50,11 +52,11 @@ public class CodeUtils {
      * Finds and retrieves the class name in the given Java code string.
      * Returns null if the class name cannot be found.
      */
-    public static String getClassName(String code) {
+    public String getClassName(String code) {
         return getClassName(code, 0);
     }
 
-    private static String getClassName(String code, int fromIndex) {
+    private String getClassName(String code, int fromIndex) {
         String targetWord = "class ";
         int startingIndex = code.indexOf(targetWord, fromIndex);
         if (startingIndex < 0) {
@@ -75,7 +77,7 @@ public class CodeUtils {
      * Trims the whitespace from the beginning and the end of the string of words
      * before returning them. Cannot do anything about the whitespace in between the words.
      */
-    private static String getWordsBetween(
+    private String getWordsBetween(
             String code, int startingIndex, char endingChar) {
         StringBuilder actualTarget = new StringBuilder();
         int index = startingIndex;
@@ -95,7 +97,7 @@ public class CodeUtils {
     /**
      * Validates that the given code string does not start with any import statements.
      */
-    public static MuroMuroResponse validateNotStartsWithImports(String code) {
+    public MuroMuroResponse validateNotStartsWithImports(String code) {
         if (code.trim().startsWith("import ")) {
             return new MuroMuroResponse(
                     MuroMuroResponse.Status.FAILURE,
@@ -107,7 +109,7 @@ public class CodeUtils {
     /**
      * Counts and returns how many times the given keyword string appears in the given code string.
      */
-    public static int countKeywordOccurrences(String code, String keyword) {
+    public int countKeywordOccurrences(String code, String keyword) {
         int count = 0;
         int index = 0;
         while (index < code.length()) {

@@ -4,10 +4,10 @@ import com.muromuro.muromuro02.model.MuroMuroResponse;
 import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import com.muromuro.muromuro02.service.utils.Security;
 
 import static com.muromuro.muromuro02.service.utils.ValidationUtils.buildFailureMessage;
-import static com.muromuro.muromuro02.service.utils.CodeUtils.validateNotStartsWithImports;
 
 /**
  * The abstract evaluator implementation which is used to evaluate the Java MuroMuro solutions.
@@ -20,14 +20,17 @@ abstract class AbstractJavaEvaluatorImpl implements JavaEvaluator {
     private final DockerProxy dockerProxy;
     // TODO: Maybe define a common EvaluationCode interface for this.
     protected final JavaEvaluationCode evaluationCode;
+    protected final CodeUtils codeUtils;
     protected final Security security;
 
     public AbstractJavaEvaluatorImpl(
             DockerProxy dockerProxy, 
             JavaEvaluationCode evaluationCode,
+            CodeUtils codeUtils,
             Security security) {
         this.dockerProxy = dockerProxy;
         this.evaluationCode = evaluationCode;
+        this.codeUtils = codeUtils;
         this.security = security;
     }
 
@@ -73,7 +76,7 @@ abstract class AbstractJavaEvaluatorImpl implements JavaEvaluator {
         return MuroMuroResponse.combineResponses(
                 security.validateCodeLength(userInput, getUserCodeMaxLength()),
                 security.checkIfCodeSecure(userInput),
-                validateNotStartsWithImports(userInput.getMainDefinition()));
+                codeUtils.validateNotStartsWithImports(userInput.getMainDefinition()));
     }
 
     /**

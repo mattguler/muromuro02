@@ -5,6 +5,7 @@ import com.muromuro.muromuro02.model.UserInput;
 import com.muromuro.muromuro02.service.docker.DockerProxy;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaEvaluationCode;
 import com.muromuro.muromuro02.service.resourcemgmt.JavaInitialSolution;
+import com.muromuro.muromuro02.service.utils.CodeUtils;
 import com.muromuro.muromuro02.service.utils.Security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,8 +64,9 @@ public class DebugListImpl extends AbstractJavaEvaluatorImpl {
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("debugList") JavaEvaluationCode evaluationCode,
             @Qualifier("debugListSoln") JavaInitialSolution initialSolution,
+            CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
-        super(dockerProxy, evaluationCode, security);
+        super(dockerProxy, evaluationCode, codeUtils, security);
         this.initialSolution = initialSolution;
     }
 

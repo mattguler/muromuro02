@@ -21,10 +21,12 @@ public class JavaDockerProxyImpl implements DockerProxy {
     private static final int TIMEOUT_IN_SECONDS = 10;
 
     private final DockerClient dockerClient;
+    private final CodeUtils codeUtils;
 
     @Autowired
-    public JavaDockerProxyImpl(DockerClient dockerClient) {
+    public JavaDockerProxyImpl(DockerClient dockerClient, CodeUtils codeUtils) {
         this.dockerClient = dockerClient;
+        this.codeUtils = codeUtils;
     }
 
     /**
@@ -35,7 +37,7 @@ public class JavaDockerProxyImpl implements DockerProxy {
     public String startContainer(String evaluatorCode) {
         String imageId = "openjdk:17";
         String containerName = UUID.randomUUID().toString();
-        String className = CodeUtils.getClassName(evaluatorCode);
+        String className = codeUtils.getClassName(evaluatorCode);
         if (className == null) {
             throw new IllegalArgumentException(
                     "Could not find class name in given code:\n" + evaluatorCode);
