@@ -75,7 +75,7 @@ public class DeviceDatabaseImpl extends AbstractJavaEvaluatorImpl {
     public DeviceDatabaseImpl(
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("deviceDatabase") JavaEvaluationCode evaluationCode,
-            CodeUtils codeUtils,
+            @Qualifier("javaCodeUtilsImpl") CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, codeUtils, security);
     }

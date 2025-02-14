@@ -7,6 +7,7 @@ import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.muromuro.muromuro02.service.utils.CodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -24,7 +25,9 @@ public class JavaDockerProxyImpl implements DockerProxy {
     private final CodeUtils codeUtils;
 
     @Autowired
-    public JavaDockerProxyImpl(DockerClient dockerClient, CodeUtils codeUtils) {
+    public JavaDockerProxyImpl(
+            DockerClient dockerClient,
+            @Qualifier("javaCodeUtilsImpl") CodeUtils codeUtils) {
         this.dockerClient = dockerClient;
         this.codeUtils = codeUtils;
     }

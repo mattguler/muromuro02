@@ -42,7 +42,7 @@ public class RefactorTooManyIfsImpl extends AbstractJavaEvaluatorImpl {
             @Qualifier("refactorTooManyIfsSoln") JavaInitialSolution initialSolution,
             @Qualifier("refactorTooManyIfs") JavaEvaluationCode evaluationCode,
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
-            CodeUtils codeUtils,
+            @Qualifier("javaCodeUtilsImpl") CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, codeUtils, security);
         this.initialSolution = initialSolution;
