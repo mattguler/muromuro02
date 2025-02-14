@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Unit tests for the CodeUtils class. */
-public class CodeUtilsTest {
+public class JavaCodeUtilsImplTest {
 
     private CodeUtils codeUtils;
 
     @BeforeEach
     public void setUp() {
-        codeUtils = new CodeUtils();
+        codeUtils = new JavaCodeUtilsImpl();
     }
 
     @Test

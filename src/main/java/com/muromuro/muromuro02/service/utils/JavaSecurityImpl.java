@@ -27,6 +27,7 @@ public class JavaSecurityImpl implements Security {
      * Validates if the given user input code is below a certain given length.
      * Returns a MuroMuroResponse object containing the status and the error message if applicable.
      */
+    @Override
     public MuroMuroResponse validateCodeLength(UserInput userInput, int maxLength) {
         if (userInput.getCallerCode().length() > maxLength
                 || userInput.getMainDefinition().length() > maxLength) {
@@ -44,6 +45,7 @@ public class JavaSecurityImpl implements Security {
      * The code snippet is considered secure if it does not contain any specific target keyword.
      * Pass in optional arguments to enable support for multithreading and/or file io operations.
      */
+    @Override
     public MuroMuroResponse checkIfCodeSecure(UserInput userInput, Security.Options... options) {
         List<String> targetWords = getTargetWords(options);
         for (String target : targetWords) {

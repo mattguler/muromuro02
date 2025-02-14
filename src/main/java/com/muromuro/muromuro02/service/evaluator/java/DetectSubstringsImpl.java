@@ -45,7 +45,7 @@ public class DetectSubstringsImpl extends AbstractJavaEvaluatorImpl {
     public DetectSubstringsImpl(
             @Qualifier("javaDockerProxyImpl") DockerProxy dockerProxy,
             @Qualifier("detectSubstrings") JavaEvaluationCode evaluationCode,
-            CodeUtils codeUtils,
+            @Qualifier("javaCodeUtilsImpl") CodeUtils codeUtils,
             @Qualifier("javaSecurityImpl") Security security) {
         super(dockerProxy, evaluationCode, codeUtils, security);
     }
