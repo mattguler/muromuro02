@@ -200,6 +200,31 @@ public class CodeUtilsTest {
     }
 
     @Test
+    public void testGetClassName_withComments() {
+        String code =
+                """
+                        // There is the word class in this comment.
+                        public class SomeClass {};
+                        """;
+        String className = codeUtils.getClassName(code);
+        assertEquals("SomeClass", className);
+    }
+
+    @Test
+    public void testGetClassName_withInnerClass() {
+        String code =
+                """
+                        // There is the word class in this comment.
+                        public class SomeClass {
+                            public static class InnerClass {}
+                        }
+                        """;
+        // Should return the outer class only.
+        String className = codeUtils.getClassName(code);
+        assertEquals("SomeClass", className);
+    }
+
+    @Test
     public void testValidateNotStartsWithImports_success() {
         String code = "public class SomeClass {};";
         MuroMuroResponse response = codeUtils.validateNotStartsWithImports(code);
@@ -208,7 +233,11 @@ public class CodeUtilsTest {
 
     @Test
     public void testValidateNotStartsWithImports_failure() {
-        String code = "import java.util.List;";
+        String code =
+                """
+                        import java.util.List;
+                        public class SomeClass {}
+                        """;
         MuroMuroResponse response = codeUtils.validateNotStartsWithImports(code);
         assertEquals(MuroMuroResponse.Status.FAILURE, response.getStatus());
     }
